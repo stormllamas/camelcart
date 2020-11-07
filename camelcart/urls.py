@@ -14,5 +14,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if not settings.DEBUG:
+if settings.DEBUG:
     urlpatterns += [url(r'^.*$', frontend_views.IndexView.as_view(), name="page404")]
