@@ -1,0 +1,233 @@
+import React, { Fragment, useEffect, useState } from 'react'
+import { HashLink as Link } from 'react-router-hash-link';
+import { Redirect, useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux';
+
+import Preloader from '../common/Preloader'
+import FoodCart from './FoodCart'
+import RestaurantDetailItem from './RestaurantDetailItem'
+
+import { getSeller, getProducts, setCourse } from '../../actions/logistics'
+
+
+const RestaurantDetail = ({
+  logistics: { 
+    currentOrderLoading,
+    currentOrder,
+
+    sellerLoading,
+    seller,
+
+    courseFilter,
+
+    productsLoading, moreProductsLoading,
+    products
+  },
+  getSeller,
+  getProducts,
+  setCourse
+}) => {
+  const history = useHistory()
+  const querySearch = new URLSearchParams(history.location.search);
+
+  const setQuery = (query, filter, set) => {
+    const sellerQuery = querySearch.get('b')
+    query.split('--').forEach(q => {
+      filter !== q && set({
+        course: q,
+        history,
+        sellerQuery
+      })
+    })
+  }
+  
+  useEffect(() => {
+    const sellerQuery = querySearch.get('b')
+    getSeller({
+      sellerQuery
+    })
+  }, []);
+
+  useEffect(() => {
+    const sellerQuery = querySearch.get('b')
+    if (!sellerLoading) {
+      $('.tabs').tabs();
+      $('.loader').fadeOut();
+      $('.middle-content').fadeIn();
+      $('.modal').modal({
+        dismissible: true,
+        inDuration: 300,
+        outDuration: 200,
+      });
+      const courseQuery = querySearch.get('course')
+      if (courseQuery) {
+        setQuery(courseQuery, courseFilter, setCourse)
+      } else {
+        setCourse({
+          course: 'Meals',
+          history,
+          sellerQuery
+        })
+      }
+    } else {
+      $('.loader').show();
+      $('.middle-content').hide();
+    }
+  }, [sellerLoading]);
+
+  useEffect(() => {
+    if (!productsLoading) {
+      $('.tabs').tabs();
+    }
+  }, [productsLoading]);
+
+  
+  useEffect(() => {
+    if (!sellerLoading && courseFilter && seller !== null) {
+      getProducts({
+        getMore: false
+      })
+    }
+  }, [courseFilter, sellerLoading]);
+  
+  return (
+    !sellerLoading && (
+      seller !== null ? (
+        <Fragment>
+          <section className="section section-restaurant-header pb-1">
+            <div className="container">
+              {!currentOrderLoading && currentOrder && (
+                currentOrder.order_items.length > 0 && (
+                  <div className="fixed-action-btn">
+                    <a className="btn-floating btn-large green modal-trigger waves-effect" data-target="cartmodal">
+                      <i className="large material-icons">shopping_cart</i>
+                    </a>
+                  </div>
+                )
+              )}
+              <div className="row mb-0">
+                <div className="col s12">
+                  <h4 className="mb-1">{seller.name}</h4>
+                </div>
+                {seller.categories.length > 0 && (
+                  <div className="col s12">
+                    <ul className="mt-0">
+                      {seller.categories.map((category) => (
+                        <span key={category.id} className="grey-text mr-2">{category.name}</span>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <div className="col s12">
+                  {/* {product.reviews.length > 0 ? [...Array(product.total_rating).keys()].map(star => <i key={star} className="fas fa-star"></i>) : <p className="bdg bdg-mute bdg-small">No Rating Yet</p>}
+                  {product.reviews.length > 0 && [...Array(Math.max(5-product.total_rating, 0)).keys()].map(star => <i key={star} className="fas fa-star gray"></i>)} */}
+                  <ul className="mt-2 mb-0">
+                    <i className="material-icons orange-text">star</i>
+                    <i className="material-icons orange-text">star</i>
+                    <i className="material-icons orange-text">star</i>
+                    <i className="material-icons orange-text">star</i>
+                    <i className="material-icons orange-text">star_half</i>
+                  </ul>
+                  <p className="grey-text mt-0">4.85 (2934 ratings)</p>
+                </div>
+                <div className="col s12">
+                  <div className="divider"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section className="section section-restaurant-features list-slider pt-0">
+            <div className="container">
+              <div className="row mb-0">
+                <div className="col s12">
+                  <h5>Featured Items</h5>
+                </div>
+              </div>
+              <div className="row mb-0">
+                <div className="col s12 flex-row wrapper">
+                  {seller.features.map(feature => (
+                    <div key={feature.id} className="p-1">
+                      <Link to={`restaurant/product?item=${feature.name_to_url}`} className="slider-img bg-cover rad-2 grey lighten-3" style={{ backgroundImage: `url(${feature.thumbnail})`}}/>
+                      <p className="mt-1 mb-0">{feature.name}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+          <section className="section section-restaurant-products">
+            <div className="container">
+              <div className="row">
+                <div className="col s12">
+                  <ul className="tabs">
+                    <li className="tab col s3">
+                      <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Meals' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Meals', history})}>Meals</a>
+                    </li>
+                    <li className="tab col s3">
+                      <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Soup' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Soup', history})}>Soup</a>
+                    </li>
+                    <li className="tab col s3">
+                      <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Sides' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Sides', history})}>Sides</a>
+                    </li>
+                    <li className="tab col s3">
+                      <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Dessert' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Dessert', history})}>Dessert</a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="col s12 active-tab">
+                  <div className="row pt-2">
+                  {!productsLoading && (
+                    products.results.map((product, index) => (
+                      <RestaurantDetailItem key={product.id} product={product} products={products} index={index} productsLoading={productsLoading} />
+                    ))
+                  )}
+                  {moreProductsLoading || productsLoading ? (
+                    <div className="flex-col center middle relative preloader-wrapper">
+                      <Preloader color="green" size="small" adds=""/>
+                    </div>
+                  ) : undefined}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <div id="cartmodal" className="modal bottom-sheet full-height">
+            <a className="modal-action modal-close cancel"><i className="material-icons grey-text">close</i></a>
+            <FoodCart seller={seller}/>
+          </div>
+        </Fragment>
+      ) : (
+        <section className="section section-restaurant-header pb-1">
+          <div className="container">
+            <div className="row mb-0">
+              <div className="col s12">
+                <h4 className="mb-1">Not Found</h4>
+              </div>
+              <div className="col s12">
+                <Link to="/food" className="flex-row middle blue-text"><i className="material-icons">chevron_left</i>
+                  <p>Go Back</p>
+                </Link>
+              </div>
+              <div className="col s12">
+                <div className="divider"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )
+    )
+  )
+}
+
+RestaurantDetail.propTypes = {
+  getSeller: PropTypes.func.isRequired,
+  getProducts: PropTypes.func.isRequired,
+  setCourse: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+  logistics: state.logistics,
+});
+
+export default connect(mapStateToProps, { getSeller, getProducts, setCourse })(RestaurantDetail);

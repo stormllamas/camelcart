@@ -1,0 +1,288 @@
+from django.conf import settings
+
+from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
+from configuration.models import SiteConfiguration
+try:
+  site_config = SiteConfiguration.objects.first()
+except:
+  site_config = None
+
+# Tools
+import string
+import random
+from datetime import date
+from django.utils import timezone
+import datetime
+
+def generate_id(prf):
+  if prf:
+    prefix = prf
+  else:
+    prefix = ""
+  
+  date_str = date.today().strftime('Y%m%d')[2:] + str(timezone.now().second)
+  rand_str = "".join([random.choice(string.digits) for count in range(3)])
+  return prefix + date_str + rand_str
+
+class CategoryGroup(models.Model):
+  name = models.CharField(max_length=50, blank=True, null=True)
+
+  def __str__(self):
+    return self.name
+
+class Category(models.Model):
+  name = models.CharField(max_length=50, blank=True, null=True)
+  category_group = models.ForeignKey(CategoryGroup, related_name='categories', on_delete=models.CASCADE)
+  thumbnail = models.ImageField(upload_to='photos/sellers/%Y/%m/%d/', blank=True)
+
+  def __str__(self):
+    return self.name
+
+  @property
+  def seller_count(self):
+    return len(Seller.objects.filter(categories=self.id))
+
+class Seller(models.Model):
+  name = models.CharField(max_length=50, unique=True)
+  contact = models.CharField(max_length=50)
+  description = models.TextField(max_length=4000, default='')
+  latitude = models.CharField(max_length=25, blank=True, null=True)
+  longitude = models.CharField(max_length=25, blank=True, null=True)
+  address = models.CharField(max_length=225, blank=True, null=True)
+  thumbnail = models.ImageField(upload_to='photos/sellers/%Y/%m/%d/', blank=True)
+  categories = models.ManyToManyField(Category)
+
+  def __str__(self):
+    return self.name
+
+  @property
+  def name_to_url(self):
+    return self.name.replace(' ','-').replace('&', 'and')
+
+class Product(models.Model):
+  # Basic Details
+  name = models.CharField(max_length=50, unique=True)
+  seller = models.ForeignKey(Seller, related_name='products', on_delete=models.SET_NULL, null=True)
+  categories = models.ManyToManyField(Category)
+  feature = models.BooleanField(default=False)
+  description = models.TextField(max_length=4000, default='Sample food description')
+  # Photos
+  thumbnail = models.ImageField(upload_to='photos/%Y/%m/%d/', null=False)
+  photo_1 = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
+  photo_2 = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
+  photo_3 = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
+  # Tracking
+  date_published = models.DateTimeField(default=timezone.now, blank=True)
+  is_published = models.BooleanField(default=True)
+
+  def __str__(self):
+    return f'{self.name}'
+    
+  @property
+  def get_summary_as_markdown(self):
+    return mark_safe(markdown(self.description, safe_mode='escape'))
+
+  @property
+  def name_to_url(self):
+    return self.name.replace(' ','-').replace('&', 'and')
+
+  @property
+  def first_variant_price(self):
+    return ProductVariant.objects.filter(product=self).order_by('date_published').first().price
+
+class ProductVariant(models.Model):
+  product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE)
+  # Basic Details
+  name = models.CharField(max_length=50)
+  price = models.DecimalField(max_digits=30, decimal_places=2)
+  # Sale
+  sale_price = models.DecimalField(max_digits=30, decimal_places=2, null=True, blank=True)
+  sale_price_start_date = models.DateTimeField(default=None, blank=True, null=True)
+  sale_price_end_date = models.DateTimeField(default=None, blank=True, null=True)
+  # Tracking
+  views = models.PositiveIntegerField(default=0)
+  orders = models.PositiveIntegerField(default=0)
+  date_published = models.DateTimeField(default=timezone.now, blank=True)
+  is_published = models.BooleanField(default=True)
+
+  def __str__(self):
+    return f'{self.name}'
+
+  @property
+  def sale_price_active(self):
+    if self.sale_price:
+      if self.sale_price_start_date:
+        if self.sale_price_start_date < timezone.now() or self.sale_price_start_date == None:
+          if self.sale_price_end_date:
+            if self.sale_price_end_date > timezone.now() or self.sale_price_end_date == None:
+              return True
+            else:
+              return False
+          else:
+            return True
+        else:
+          return False
+      elif self.sale_price_end_date:
+        if self.sale_price_end_date > timezone.now() or self.sale_price_end_date == None:
+          return True
+        else:
+          return False
+      else:
+        return True
+    else:
+      return False
+
+  @property
+  def final_price(self):
+    if self.sale_price_active:
+      return self.sale_price
+    else:
+      return self.price
+  
+class Order(models.Model):
+  # Basic Details
+  ref_code = models.CharField(max_length=15, blank=True, null=True)
+  user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='orders', on_delete=models.CASCADE, null=False)
+  order_type = models.CharField(max_length=15, blank=True, null=True)
+  seller = models.ForeignKey(Seller, related_name='orders', on_delete=models.CASCADE, blank=True, null=True)
+
+  # Personal Details
+  first_name = models.CharField(max_length=55, blank=True, null=True)
+  last_name = models.CharField(max_length=55, blank=True, null=True)
+  contact = models.CharField(max_length=55, blank=True, null=True)
+  email = models.CharField(max_length=55, blank=True, null=True)
+  gender = models.CharField(max_length=25, blank=True, null=True)
+
+  # Delivery Details
+  unit = models.CharField(max_length=2, blank=True, null=True)
+  weight = models.PositiveIntegerField(default=0)
+  height = models.PositiveIntegerField(default=0)
+  width = models.PositiveIntegerField(default=0)
+  length = models.PositiveIntegerField(default=0)
+  description = models.TextField(max_length=4000, blank=True, null=True)
+
+  # Pickup Location
+  loc1_latitude = models.CharField(max_length=91, blank=True, null=True)
+  loc1_longitude = models.CharField(max_length=91, blank=True, null=True)
+  loc1_address = models.CharField(max_length=225, blank=True, null=True)
+  # Destination Location
+  loc2_latitude = models.CharField(max_length=91, blank=True, null=True)
+  loc2_longitude = models.CharField(max_length=91, blank=True, null=True)
+  loc2_address = models.CharField(max_length=225, blank=True, null=True)
+  # Distance Information
+  distance_text = models.CharField(max_length=55, blank=True, null=True)
+  distance_value = models.PositiveIntegerField(default=0)
+  duration_text = models.CharField(max_length=55, blank=True, null=True)
+  duration_value = models.PositiveIntegerField(default=0)
+
+  # Status
+  is_ordered = models.BooleanField(default=False)
+  date_ordered = models.DateTimeField(null=True, blank=True)
+
+  rider = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='accepted_orders', on_delete=models.SET_NULL, blank=True, null=True)
+  date_claimed = models.DateTimeField(null=True, blank=True)
+
+  is_paid = models.BooleanField(default=False)
+  date_paid = models.DateTimeField(null=True, blank=True)
+  payment_type = models.PositiveIntegerField(default=1) # (1) for COD (2) for Card or Detail
+
+  is_pickedup = models.BooleanField(default=False)
+  date_pickedup = models.DateTimeField(null=True, blank=True)
+
+  is_delivered = models.BooleanField(default=False)
+  date_delivered = models.DateTimeField(null=True, blank=True)
+  # Payment information for Paypal
+  auth_id = models.CharField(max_length=125, blank=True, null=True)
+  capture_id = models.CharField(max_length=125, blank=True, null=True)
+
+  def save(self, *args, **kwargs):
+    if self.ref_code == None or self.ref_code == '':
+      self.ref_code = generate_id('')
+
+    super(Order, self).save(*args, **kwargs)
+
+  def __str__(self):
+    return self.ref_code
+
+  class Meta:
+    verbose_name_plural="Orders"
+
+  @property
+  def count(self):
+    return sum([item.quantity for item in self.order_items.all()])
+
+  @property
+  def subtotal(self):
+    return sum([item.quantity*item.product_variant.final_price for item in self.order_items.all()])
+
+  @property
+  def ordered_subtotal(self):
+    return sum([item.quantity*item.ordered_price for item in self.order_items.all()])
+
+  @property
+  def shipping(self):
+    total = round((self.distance_value/1000), 0)*site_config.per_km_price
+    if total < 25:
+      total = 25
+    return total
+
+  @property
+  def total(self):
+    return float(self.subtotal)+float(self.shipping)
+
+class OrderItem(models.Model):
+  order = models.ForeignKey(Order, related_name='order_items', on_delete=models.CASCADE)
+  product_variant = models.ForeignKey(ProductVariant, related_name='order_items', on_delete=models.CASCADE)
+  quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
+
+  is_ordered = models.BooleanField(default=False)
+  date_ordered = models.DateTimeField(null=True, blank=True)
+  ordered_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+  is_pickedup = models.BooleanField(default=False)
+  date_pickedup = models.DateTimeField(null=True, blank=True)
+  
+  is_delivered = models.BooleanField(default=False)
+  date_delivered = models.DateTimeField(null=True, blank=True)
+
+  def __str__(self):
+    return f'{self.product_variant.product.name}'
+  
+  @property
+  def price(self):
+    return self.product_variant.price * self.quantity
+
+class Favorite(models.Model):
+  product = models.ForeignKey(Product, related_name='favorited_by', on_delete=models.CASCADE)
+  user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='favorites', on_delete=models.CASCADE)
+
+  def __str__(self):
+    return f'{self.user} - {self.product.name}'
+
+class ProductReview(models.Model):
+  RATING_CHOICES = [
+    ('1','1'),
+    ('2','2'),
+    ('3','3'),
+    ('4','4'),
+    ('5','5')
+  ]
+  order_item = models.OneToOneField(OrderItem, related_name='review', on_delete=models.CASCADE)
+  product_variant = models.ForeignKey(ProductVariant, related_name='reviews', on_delete=models.CASCADE)
+  user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='product_reviews', on_delete=models.CASCADE)
+  rating = models.CharField(max_length=1, choices=RATING_CHOICES, default='5')
+  comment = models.TextField(max_length=4000, null=True, blank=True)
+
+class OrderReview(models.Model):
+  RATING_CHOICES = [
+    ('1','1'),
+    ('2','2'),
+    ('3','3'),
+    ('4','4'),
+    ('5','5')
+  ]
+  order = models.OneToOneField(Order, related_name='review', on_delete=models.CASCADE)
+  user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='order_reviews', on_delete=models.CASCADE)
+  rating = models.CharField(max_length=1, choices=RATING_CHOICES, default='5')
+  comment = models.TextField(max_length=4000, null=True, blank=True)

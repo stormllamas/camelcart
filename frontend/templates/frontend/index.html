@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camel Cart</title>
+  <link rel="icon" href="{% static 'frontend/img/camel-express_logo-1.png' %}" />
+
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- Custom Stylesheet for Font Family-->
+  <link href="{% static 'frontend/css/stylesheet.css' %}" rel="stylesheet">
+  <link href="{% static 'frontend/dist/css/main.css' %}" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/>
+</head>
+
+<body class="grey lighten-4">
+  <div id="master"></div>
+
+
+  <!-- Scripts -->
+  <script src="https://www.paypal.com/sdk/js?client-id=AcXZvvIN6xQK699Ei6vnb2dbfgt5Tku8w0t0uq2ZH505HlRex6Jlawc3F4-3nd_6yBLBdTU9ypf88EaV&currency=PHP&intent=authorize"></script>
+  <script src="{% static 'frontend/main.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBi8DvnA6CTed6XFHBnbXggQG1Ry7YhktA&libraries=places"></script>
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>

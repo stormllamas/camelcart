@@ -1,0 +1,48 @@
+@import 'config';
+
+body {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 500;
+  line-height: 1.6;
+  background: #fff;
+  color: #222;
+
+  .disable-scrollbar {
+    overflow: hidden;
+  }
+}
+
+#header {
+  background: darken($orange, .1);
+  padding: 15px 40px;
+
+  #branding {
+  
+    #admin-header {
+      font-family: 'Bahnschrift', sans-serif !important;
+      font-weight: 600;
+      color: #fff;
+        
+      img {
+        height: 50px;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+div.breadcrumbs {
+  background: darken($orange, 12);
+}
+
+.module h2, .module caption, .inline-group h2 {
+  background: $green;
+}
+
+.button.default, input[type=submit].default, .submit-row input.default {
+  background: $green;
+
+  &:hover {
+    background: darken($green, 12);
+  }
+}

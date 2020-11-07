@@ -1,0 +1,30 @@
+body {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 500;
+  line-height: 1.6;
+  background: #fff;
+  color: #222; }
+  body .disable-scrollbar {
+    overflow: hidden; }
+
+#header {
+  background: #faa634;
+  padding: 15px 40px; }
+  #header #branding #admin-header {
+    font-family: 'Bahnschrift', sans-serif !important;
+    font-weight: 600;
+    color: #fff; }
+    #header #branding #admin-header img {
+      height: 50px;
+      margin-right: 0.5rem; }
+
+div.breadcrumbs {
+  background: #eb8a06; }
+
+.module h2, .module caption, .inline-group h2 {
+  background: #4CAF50; }
+
+.button.default, input[type=submit].default, .submit-row input.default {
+  background: #4CAF50; }
+  .button.default:hover, input[type=submit].default:hover, .submit-row input.default:hover {
+    background: #39843c; }
