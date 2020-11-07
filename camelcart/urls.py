@@ -5,6 +5,8 @@ from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path, include
 
+from frontend import views as frontend_views
+
 urlpatterns = [
     path('', include('frontend.urls')),
     path('', include('accounts.urls')),
@@ -14,5 +16,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if settings.DEBUG:
+if not settings.DEBUG:
     urlpatterns += [url(r'^.*$', frontend_views.IndexView.as_view(), name="page404")]
