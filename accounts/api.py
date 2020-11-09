@@ -129,7 +129,7 @@ class SocialAuthAPI(GenericAPIView):
         user.save()
 
         current_site = get_current_site(self.request)
-        mail_subject = 'Welcome to Camel Cart'
+        mail_subject = 'Welcome to Trike'
         message = render_to_string(
           'welcome_email.html',
           {
@@ -140,7 +140,7 @@ class SocialAuthAPI(GenericAPIView):
         # send_mail(
         #   mail_subject,
         #   message,
-        #   'Camel Cart',
+        #   'Trike',
         #   [user.email],
         #   fail_silently=False
         # )
@@ -172,7 +172,7 @@ class SingupAPI(GenericAPIView):
     user.save()
     
     current_site = get_current_site(self.request)
-    mail_subject = 'Activate your Camel Cart account'
+    mail_subject = 'Activate your Trike account'
     message = render_to_string(
       'acc_active_email.html',
       {
@@ -187,7 +187,7 @@ class SingupAPI(GenericAPIView):
     send_mail(
       mail_subject,
       message,
-      'Camel Cart',
+      'Trike',
       [email],
       fail_silently=False
     )
@@ -207,7 +207,7 @@ class ActivateAPI(GenericAPIView):
       user.save()
 
       current_site = get_current_site(self.request)
-      mail_subject = 'Welcome to Camel Cart'
+      mail_subject = 'Welcome to Trike'
       message = render_to_string(
         'welcome_email.html',
         {
@@ -218,7 +218,7 @@ class ActivateAPI(GenericAPIView):
       send_mail(
         mail_subject,
         message,
-        'Camel Cart',
+        'Trike',
         [user.email],
         fail_silently=False
       )
@@ -328,7 +328,7 @@ class PasswordResetAPI(GenericAPIView):
       user = None
     if user is not None:
       current_site = get_current_site(self.request)
-      mail_subject = 'Reset your Camel Cart account\'s Password'
+      mail_subject = 'Reset your Trike account\'s Password'
       message = render_to_string(
         'password_reset_email.html',
         {
@@ -342,7 +342,7 @@ class PasswordResetAPI(GenericAPIView):
       # send_mail(
       #   mail_subject,
       #   message,
-      #   'Camel Cart',
+      #   'Trike',
       #   [email],
       #   fail_silently=False
       # )

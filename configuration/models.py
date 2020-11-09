@@ -7,7 +7,7 @@ class SiteConfiguration(SingletonModel):
   maintenance_mode = models.BooleanField(default=False)
   beta_mode = models.BooleanField(default=False)
 
-  site_name = models.CharField(max_length=255, default='Camel Cart')
+  site_name = models.CharField(max_length=255, default='Trike')
   site_message = models.CharField(max_length=125, blank=True, null=True)
   
   # Contact Information
