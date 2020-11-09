@@ -5,7 +5,7 @@ from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListMode
 from rest_framework.response import Response
 
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from camelcart.permissions import IsOrderOwner, SiteEnabled, IsOrderItemOwner
+from trike.permissions import IsOrderOwner, SiteEnabled, IsOrderItemOwner
 
 # Models
 from .models import Order, OrderItem, Seller, CategoryGroup, Category, Product, ProductReview, OrderReview
@@ -20,7 +20,7 @@ except:
 from .serializers import OrderSerializer, OrderItemSerializer, SellerSerializer, CategoryGroupSerializer, CategorySerializer, ProductSerializer, ProductReviewSerializer, OrderReviewSerializer
 
 # Tools
-from camelcart.pagination import OctPagination
+from trike.pagination import OctPagination
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.utils import timezone

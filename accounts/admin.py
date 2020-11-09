@@ -1,12 +1,17 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User, Address
-from logistics.models import Favorite
+from logistics.models import Favorite, CommissionPayment
 
 class FavoritesInLine(admin.TabularInline):
     model = Favorite
     extra = 0
     verbose_name_plural = "Favorites"
+
+class CommissionPaymentInLine(admin.TabularInline):
+    model = CommissionPayment
+    extra = 0
+    verbose_name_plural = "CommissionPayments"
 
 class AddressInLine(admin.TabularInline):
     model = Address
@@ -15,8 +20,8 @@ class AddressInLine(admin.TabularInline):
 
 class MyUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        # ('Address Details', {'fields': ['address_street', 'address_line_2', 'address_city', 'address_region', 'address_country', 'address_zipcode']}),
-        ('Contact Info', {'fields': ['contact', 'picture']}),
+        ('Contact Info', {'fields': ['contact']}),
+        ('Rider Info', {'fields': ['plate_number', 'picture']}),
     )
     list_display = ('email', 'first_name', 'last_name', 'username', 'contact')
     list_display_links = ('email',)
@@ -24,6 +29,6 @@ class MyUserAdmin(UserAdmin):
     list_per_page = 25
     search_fields = ('username', 'first_name', 'last_name')
 
-    inlines = [FavoritesInLine, AddressInLine]
+    inlines = [FavoritesInLine, AddressInLine, CommissionPaymentInLine]
 
 admin.site.register(User, MyUserAdmin)

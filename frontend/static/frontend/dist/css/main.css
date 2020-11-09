@@ -906,7 +906,7 @@
   border-radius: 5px !important; }
 
 .rad-4 {
-  border-radius: 10px !important; }
+  border-radius: 100px !important; }
 
 .rad-5 {
   border-radius: 50% !important;
@@ -1542,7 +1542,7 @@ a {
   justify-content: center;
   color: #FAA634; }
   #topbar .brand-logo img {
-    max-height: 40px; }
+    max-height: 32px; }
   #topbar .brand-logo span {
     line-height: 1.5rem; }
 

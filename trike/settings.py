@@ -49,7 +49,7 @@ MIDDLEWARE = [
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'camelcart.urls'
+ROOT_URLCONF = 'trike.urls'
 
 TEMPLATES = [
   {
@@ -67,7 +67,7 @@ TEMPLATES = [
   },
 ]
 
-WSGI_APPLICATION = 'camelcart.wsgi.application'
+WSGI_APPLICATION = 'trike.wsgi.application'
 
 
 # Database

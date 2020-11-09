@@ -106,6 +106,7 @@ export const socialSignin = ({first_name, last_name, email, picture, facebook_id
     })
     history.push('/')
   } catch (err) {
+    console.log(err)
     M.toast({
       html: 'Authentication error',
       displayLength: 3500,

@@ -12,10 +12,11 @@ from django.core.validators import validate_email
 #Auth
 from rest_framework.response import Response
 from knox.models import AuthToken
-from camelcart.permissions import IsOwner
+from trike.permissions import IsOwner
 
 # Models
 from .models import Address
+from logistics.models import Order, CommissionPayment
 from django.conf import settings
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -33,6 +34,45 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 import datetime
 import re
+
+def get_user_data(user) :
+  addresses = [{
+    'id': address.id,
+    'user': address.user.id,
+    'latitude': address.latitude,
+    'longitude': address.longitude,
+    'address': address.address,
+  } for address in user.addresses.all()]
+
+  groups = [group.name for group in user.groups.all()]
+  if user.is_staff:
+    groups.append('admin')
+
+  return {
+    'id': user.id,
+    'username': user.username,
+    'email': user.email,
+    'first_name': user.first_name,
+    'last_name': user.last_name,
+    'contact': user.contact,
+    'gender': user.gender,
+    'picture': user.picture.url if user.picture else None,
+
+    'addresses': addresses,
+    'groups': groups,
+    
+    'date_joned': user.date_joined,
+    'platenumber': user.date_joined,
+
+    'is_staff': user.is_staff,
+    'is_superuser': user.is_superuser,
+
+    'rider_info': {
+      'plate_number': user.plate_number,
+      'accounts_payable': sum([int(sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]))+order.shipping for order in Order.objects.filter(rider=user, is_delivered=True)]) - sum([int(payment.amount) for payment in CommissionPayment.objects.filter(rider=user)]),
+      'review_total': user.rider_rating
+    } if 'rider' in groups or user.is_superuser else None
+  }
     
 class LoginAPI(GenericAPIView):
   serializer_class = LoginSerializer
@@ -42,21 +82,10 @@ class LoginAPI(GenericAPIView):
     serializer.is_valid(raise_exception=True)
     user = serializer.validated_data
 
-    addresses = [{
-      'id': address.id,
-      'user': address.user.id,
-      'latitude': address.latitude,
-      'longitude': address.longitude,
-      'address': address.address,
-    } for address in user.addresses.all()]
-
-    user_data = UserSerializer(user, context=self.get_serializer_context()).data
-    user_data['addresses'] = addresses
-
     _, token = AuthToken.objects.create(user)
 
     response = Response({
-      'user': user_data,
+      'user': get_user_data(user),
       'token': token
     })
 
@@ -79,35 +108,9 @@ class SocialAuthAPI(GenericAPIView):
           user = None
 
         if user:
-          addresses = [{
-            'id': address.id,
-            'user': address.user.id,
-            'latitude': address.latitude,
-            'longitude': address.longitude,
-            'address': address.address,
-          } for address in user.addresses.all()]
-
-          groups = [{
-            'id': group.id,
-            'name': group.name,
-          } for group in user.groups.all()]
-
           _, token = AuthToken.objects.create(user)
           response = Response({
-            'user': {
-              'id': user.id,
-              'username': user.username,
-              'email': user.email,
-              'first_name': user.first_name,
-              'last_name': user.last_name,
-              'contact': user.contact,
-              'gender': user.gender,
-              'picture': user.picture,
-              'is_staff': user.is_staff,
-              'is_superuser': user.is_superuser,
-              'addresses': addresses,
-              'groups': groups,
-            },
+            'user': get_user_data(user),
             'token': token
           })
 
@@ -125,15 +128,15 @@ class SocialAuthAPI(GenericAPIView):
         user.is_active = True
         user.save()
 
-        # current_site = get_current_site(self.request)
-        # mail_subject = 'Welcome to Camel Cart'
-        # message = render_to_string(
-        #   'welcome_email.html',
-        #   {
-        #     'user': user,
-        #     'domain': current_site.domain,
-        #   }
-        # )
+        current_site = get_current_site(self.request)
+        mail_subject = 'Welcome to Camel Cart'
+        message = render_to_string(
+          'welcome_email.html',
+          {
+            'user': user,
+            'domain': current_site.domain,
+          }
+        )
         # send_mail(
         #   mail_subject,
         #   message,
@@ -141,36 +144,10 @@ class SocialAuthAPI(GenericAPIView):
         #   [user.email],
         #   fail_silently=False
         # )
-        
-        addresses = [{
-          'id': address.id,
-          'user': address.user.id,
-          'latitude': address.latitude,
-          'longitude': address.longitude,
-          'address': address.address,
-        } for address in user.addresses.all()]
-
-        groups = [{
-          'id': group.id,
-          'name': group.name,
-        } for group in user.groups.all()]
 
         _, token = AuthToken.objects.create(user)
         response = Response({
-          'user': {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'contact': user.contact,
-            'gender': user.gender,
-            'picture': user.picture,
-            'is_staff': user.is_staff,
-            'is_superuser': user.is_superuser,
-            'addresses': addresses,
-            'groups': groups,
-          },
+          'user': get_user_data(user),
           'token': token
         })
 
@@ -294,35 +271,7 @@ class UserAPI(RetrieveAPIView, UpdateAPIView):
     return self.request.user
 
   def get(self, request):
-    user = request.user
-    
-    addresses = [{
-      'id': address.id,
-      'user': address.user.id,
-      'latitude': address.latitude,
-      'longitude': address.longitude,
-      'address': address.address,
-    } for address in user.addresses.all()]
-
-    groups = [{
-      'id': group.id,
-      'name': group.name,
-    } for group in user.groups.all()]
-    
-    return Response({
-      'id': user.id,
-      'username': user.username,
-      'email': user.email,
-      'first_name': user.first_name,
-      'last_name': user.last_name,
-      'contact': user.contact,
-      'gender': user.gender,
-      'picture': user.picture,
-      'is_staff': user.is_staff,
-      'is_superuser': user.is_superuser,
-      'addresses': addresses,
-      'groups': groups,
-    })
+    return Response(get_user_data(request.user))
 
 class AddressAPI(CreateModelMixin, DestroyModelMixin, RetrieveModelMixin,viewsets.GenericViewSet):
   serializer_class = AddressSerializer

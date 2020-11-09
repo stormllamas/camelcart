@@ -50,7 +50,7 @@ const Topbar = ({
         <nav id="topbar" className="white">
           <div className="container">
             <div className="nav-wrapper">
-              <Link to="/" className="brand-logo"><img src="/static/frontend/img/camel-express_simple_logo_1.png" alt="came cart logo" className="responsive-img mr-1"/> <span className="">Camel Cart</span></Link>
+              <Link to="/" className="brand-logo"><img src="/static/frontend/img/Trike_logo-whole.png" alt="came cart logo" className="responsive-img mr-1"/></Link>
               <a href="#" data-target="mobile-nav" className="sidenav-trigger show-on-large grey-text text-darken-2 show-on-small-and-up">
                 <i className="material-icons">menu</i>
               </a>
@@ -68,17 +68,21 @@ const Topbar = ({
       <ul id="mobile-nav" className="sidenav">
         <li>
           <div className="user-view">
-            <div className="background green p-0">
+            <div className="background orange darken-2 p-0">
               {/* <img src="https://source.unsplash.com/random/800x600/?wave" className="responsive-img" alt=""/> */}
             </div>
-            <Link to="/profile">
-              {user && user.picture ? (
-                <img src={user.picture} alt="" className="sidenav-close circle"/>
-              ) : (
-                <img src="/static/frontend/img/user.jpg" alt="" className="sidenav-close circle"/>
-              )}
-            </Link>
-            <span className="name white-text">{user ? (user.first_name, user.last_name) : ''}</span>
+            {user && (
+              user.groups.includes('rider') ? (
+                <Link to="/profile">
+                  {user.picture ? (
+                    <img src={user.picture} alt="" className="sidenav-close circle"/>
+                  ) : (
+                    <img src="/static/frontend/img/user.jpg" alt="" className="sidenav-close circle"/>
+                  )}
+                </Link>
+              ) : undefined
+            )}
+            <span className="name white-text">{user ? (user.first_name + ' ' + user.last_name) : ''}</span>
             <span className="email white-text">{user ? (user.email) : ''}</span>
           </div>
         </li>

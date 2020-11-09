@@ -5,7 +5,7 @@ from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListMode
 from rest_framework.response import Response
 
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from camelcart.permissions import SiteEnabled, HasGroupPermission, IsOrderItemRider, IsOrderRider
+from trike.permissions import SiteEnabled, HasGroupPermission, IsOrderItemRider, IsOrderRider
 
 # Serializers
 from .serializers import OrderItemSerializer as AdminOrderItemSerializer
@@ -19,7 +19,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 # Tools
-from camelcart.pagination import ManagerPagination
+from trike.pagination import ManagerPagination
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
@@ -112,7 +112,7 @@ class OrdersAPI(GenericAPIView):
     pickedup = self.request.query_params.get('pickedup', None)
     if pickedup == 'true':
       if request.user.is_superuser:
-        pickedup_query.add(Q(is_pickedup=True, rider=request.user), Q.AND)
+        pickedup_query.add(Q(is_pickedup=True), Q.AND)
       else:
         pickedup_query.add(Q(is_pickedup=True, rider=request.user), Q.AND)
     elif pickedup == 'false':
@@ -165,7 +165,7 @@ class OrdersAPI(GenericAPIView):
       'shipping': order.shipping,
       'total': order.total,
       'count': order.count,
-      'subtotal': sum([item.quantity*item.ordered_price if item.is_ordered and item.ordered_price else 0 for item in order.order_items.all()]),
+      'subtotal': sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]),
       'date_ordered': order.date_ordered,
     } for order in Order.objects.filter(Q(is_ordered=True) & delivered_query & claimed_query & pickedup_query & keywords_query).order_by('-date_delivered','-date_claimed','-date_ordered')[from_item:to_item]]
 

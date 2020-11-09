@@ -26,7 +26,7 @@ def generate_id(prf):
   return prefix + date_str + rand_str
 
 class CategoryGroup(models.Model):
-  name = models.CharField(max_length=50, blank=True, null=True)
+  name = models.CharField(max_length=50)
 
   def __str__(self):
     return self.name
@@ -63,7 +63,7 @@ class Seller(models.Model):
 class Product(models.Model):
   # Basic Details
   name = models.CharField(max_length=50, unique=True)
-  seller = models.ForeignKey(Seller, related_name='products', on_delete=models.SET_NULL, null=True)
+  seller = models.ForeignKey(Seller, related_name='products', on_delete=models.CASCADE)
   categories = models.ManyToManyField(Category)
   feature = models.BooleanField(default=False)
   description = models.TextField(max_length=4000, default='Sample food description')
@@ -139,13 +139,13 @@ class ProductVariant(models.Model):
       return self.sale_price
     else:
       return self.price
-  
+      
 class Order(models.Model):
   # Basic Details
   ref_code = models.CharField(max_length=15, blank=True, null=True)
   user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='orders', on_delete=models.CASCADE, null=False)
   order_type = models.CharField(max_length=15, blank=True, null=True)
-  seller = models.ForeignKey(Seller, related_name='orders', on_delete=models.CASCADE, blank=True, null=True)
+  seller = models.ForeignKey(Seller, related_name='orders', on_delete=models.SET_NULL, blank=True, null=True)
 
   # Personal Details
   first_name = models.CharField(max_length=55, blank=True, null=True)
@@ -180,7 +180,7 @@ class Order(models.Model):
   is_ordered = models.BooleanField(default=False)
   date_ordered = models.DateTimeField(null=True, blank=True)
 
-  rider = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='accepted_orders', on_delete=models.SET_NULL, blank=True, null=True)
+  rider = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='claimed_orders', on_delete=models.SET_NULL, blank=True, null=True)
   date_claimed = models.DateTimeField(null=True, blank=True)
 
   is_paid = models.BooleanField(default=False)
@@ -286,3 +286,18 @@ class OrderReview(models.Model):
   user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='order_reviews', on_delete=models.CASCADE)
   rating = models.CharField(max_length=1, choices=RATING_CHOICES, default='5')
   comment = models.TextField(max_length=4000, null=True, blank=True)
+
+class CommissionPayment(models.Model):
+  ref_code = models.CharField(max_length=15, blank=True, null=True)
+  rider = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='commission_payments', on_delete=models.CASCADE)
+  date_paid = models.DateTimeField(null=False, blank=False)
+  amount = models.DecimalField(max_digits=30, decimal_places=2)
+
+  def save(self, *args, **kwargs):
+    if self.ref_code == None or self.ref_code == '':
+      self.ref_code = generate_id('')
+
+    super(CommissionPayment, self).save(*args, **kwargs)
+
+  def __str__(self):
+    return self.ref_code

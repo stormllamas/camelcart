@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 
+# Models
+from logistics.models import OrderReview
+
 # Custom User
 from django.contrib.auth.models import UserManager, AbstractUser
 
@@ -12,7 +15,8 @@ class User(AbstractUser):
   username = models.CharField(max_length=55, unique=True)
   contact = models.CharField(max_length=55, blank=True, null=True)
   gender = models.CharField(max_length=10, blank=True, null=True)
-  picture = models. URLField(max_length=500, blank=True, null=True)
+  picture = models.ImageField(upload_to='photos/profile_pictures/%Y/%m/%d/', blank=True, null=True)
+  plate_number = models.CharField(max_length=55, unique=True, blank=True, null=True)
 
   objects = UserManager()
   USERNAME_FIELD = 'email'
@@ -21,9 +25,14 @@ class User(AbstractUser):
   def __str__(self):
     return self.email
 
-  # @property
-  # def favoritesPID(self):
-  #   return [favorite.product.id for favorite in self.favorites.all()]
+  @property
+  def rider_rating(self):
+    try:
+      rating = normal_round(sum([int(review.rating) for review in OrderReview.objects.filter(order__rider=self)])/OrderReview.objects.filter(order__rider=self).count())
+    except:
+      rating = 0
+    return rating
+
 
    
 class Address(models.Model):
