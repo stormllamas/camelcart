@@ -12,7 +12,8 @@ import { login, socialSignin } from '../../actions/auth';
 const Login = ({
   auth: {isAuthenticated, userLoading },
   socialSignin,
-  login
+  login,
+  setCurLocation
 }) => {
   const history = useHistory()
 
@@ -39,6 +40,10 @@ const Login = ({
       socialSignin(body, history)
     }
   }
+  
+  useEffect(() => {
+    setCurLocation(history.location)
+  }, [history]);
 
   return (
     <section className="section section-login">

@@ -788,6 +788,9 @@
 .mr-5 {
   margin-right: 3rem !important; }
 
+.ml-n1 {
+  margin-left: -0.25rem !important; }
+
 .ml-0 {
   margin-left: 0 !important; }
 
@@ -1602,6 +1605,9 @@ a {
         box-shadow: none !important;
         outline: none !important; }
 
+.manager-card-panel {
+  min-height: 50vh; }
+
 .section-icons .card-panel {
   display: block;
   position: relative;
@@ -1794,17 +1800,12 @@ a {
   max-height: 438px;
   min-height: 438px; }
 
-.admin-sidenav li.active {
+.sidenav li.active {
   background-color: #FAA634; }
-  .admin-sidenav li.active a {
+  .sidenav li.active a {
     color: #fff; }
-    .admin-sidenav li.active a i {
+    .sidenav li.active a i {
       color: #fff; }
-
-.admin-sidenav .user-view {
-  height: 120px; }
-  .admin-sidenav .user-view .background {
-    padding: 1.5rem 4rem; }
 
 .section-product-review .reviewed-product {
   height: 100px;

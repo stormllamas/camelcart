@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 
 import AuthPrompt from '../layout/AuthPrompt'
+import moment from 'moment'
 
 import { addAddress, deleteAddress, updateUser } from '../../actions/auth'
 import { USER_UPDATED } from '../../actions/types';
@@ -13,7 +14,8 @@ const Profile = ({
   auth: { userLoading, user, isAuthenticated },
   logistics: { currentOrder, currentOrderLoading },
   addAddress, deleteAddress,
-  updateUser
+  updateUser,
+  setCurLocation
 }) => {
   const history = useHistory()
 
@@ -227,6 +229,10 @@ const Profile = ({
       showGoogleMaps();
     }
   }, [userLoading]);
+  
+  useEffect(() => {
+    setCurLocation(history.location)
+  }, [history]);
 
   useEffect(() => {
     $('select').formSelect();
@@ -327,6 +333,21 @@ const Profile = ({
               </div>
             </div>
           </div>
+          {user.groups.includes('rider') || user.groups.includes('admin') ? (
+            <Fragment>
+              <div className="divider"></div>
+              <div className="container">
+                <div className="row mt-2">
+                  <div className="col s12">
+                    <div className="grey-text">
+                      <small>Date Joined</small>
+                      <p className="valign-wrapper mt-1 mb-0"><i className="material-icons prefix light-blue-text fs-24 mr-2">calendar_today</i>{moment(user.date_joined).format('ll')}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Fragment>
+          ) : undefined}
           <div className="divider"></div>
           <div className="container">
             <div className="row mt-2">

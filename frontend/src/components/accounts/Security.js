@@ -8,7 +8,8 @@ import { updatePassword } from '../../actions/auth'
 
 const Security = ({
   auth: { isAuthenticated },
-  updatePassword
+  updatePassword,
+  setCurLocation
 }) => {
   const history = useHistory()
 
@@ -35,6 +36,10 @@ const Security = ({
       });
     }
   }
+  
+  useEffect(() => {
+    setCurLocation(history.location)
+  }, [history]);
 
   return (
     isAuthenticated ? (

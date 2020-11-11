@@ -7,6 +7,7 @@ import moment from 'moment'
 
 import Preloader from '../common/Preloader'
 import Pagination from '../common/Pagination'
+import ManagerBreadcrumbs from './ManagerBreadcrumbs'
 
 import { getOrders, getOrder } from '../../actions/manager'
 
@@ -19,13 +20,17 @@ const Delivered = ({
   },
   getOrders,
   getOrder,
-  deliverOrderItem, deliverOrder
+  setCurLocation
 }) => {
   const history = useHistory()
   const query = new URLSearchParams(history.location.search);
 
   const [keywords, setKeywords] = useState('')
   const [page, setPage] = useState(1)
+  
+  useEffect(() => {
+    setCurLocation(history.location)
+  }, [history]);
   
   useEffect(() => {
     if (!ordersLoading) {
@@ -85,6 +90,7 @@ const Delivered = ({
             </div>
           </nav>
         </div>
+        <ManagerBreadcrumbs/>
         <section className="section section-delivered admin">
           <div className="container widen">
             <div className="row mt-3">
@@ -97,7 +103,7 @@ const Delivered = ({
             </div>
             <div className="row table-row">
               <div className="col s12">
-                <div className="card-panel white rad-4 no-shadow">
+                <div className="card-panel white rad-3 no-shadow">
                   <div className="row m-0 mb-2">
                     <div className="col s12 m6 l6">
                       {!ordersLoading && orders.count > 50 ? <Pagination data={orders} setPage={setPage} pageSize={50} currentPage={page}/> : undefined}
@@ -121,21 +127,27 @@ const Delivered = ({
                         </tr>
                       </thead>
                       <tbody>
-                        {orders.results.map(order => (
-                          <tr key={order.id}>
-                            <td className="mw-medium">{moment(order.date_ordered).format('lll')}</td>
-                            <td className="mw-medium">{moment(order.date_delivered).format('lll')}</td>
-                            <td><a href="" data-target="ordermodal" className="mw-small modal-trigger fw-6 blue-text text-lighten-2" onClick={() => getOrder({ id:order.id })}>{order.ref_code}</a></td>
-                            <td className="mw-small">{order.order_type}</td>
-                            <td className={`fw-6 ${order.payment_type === 1 ? 'orange-text' : 'green-text'}`}>{order.payment_type === 1 ? 'COD' : 'Card'}</td>
-                            <td className="mw-large pr-2">{order.loc1_address}</td>
-                            <td className="mw-large pr-2">{order.loc2_address}</td>
-                            <td className="mw-medium">{order.count} items</td>
-                            <td className="mw-medium">₱ {order.net_total}</td>
-                            <td className="mw-medium">₱ {order.ordered_price}</td>
-                            <td className="mw-medium">₱ {order.shipping}</td>
+                        {orders.results.length > 0 ? (
+                          orders.results.map(order => (
+                            <tr key={order.id}>
+                              <td className="mw-medium">{moment(order.date_ordered).format('lll')}</td>
+                              <td className="mw-medium">{moment(order.date_delivered).format('lll')}</td>
+                              <td><a href="" data-target="ordermodal" className="mw-small modal-trigger fw-6 blue-text text-lighten-2" onClick={() => getOrder({ id:order.id })}>{order.ref_code}</a></td>
+                              <td className="mw-small">{order.order_type}</td>
+                              <td className={`fw-6 ${order.payment_type === 1 ? 'orange-text' : 'green-text'}`}>{order.payment_type === 1 ? 'COD' : 'Card'}</td>
+                              <td className="mw-large pr-2">{order.loc1_address}</td>
+                              <td className="mw-large pr-2">{order.loc2_address}</td>
+                              <td className="mw-medium">{order.count} items</td>
+                              <td className="mw-medium">₱ {order.total.toFixed(2)}</td>
+                              <td className="mw-medium">₱ {order.subtotal.toFixed(2)}</td>
+                              <td className="mw-medium">₱ {order.shipping.toFixed(2)}</td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="12" className="grey-text center fs-20 pt-5 pb-5 full-height uppercase">No more orders</td>
                           </tr>
-                        ))}
+                        )}
                       </tbody>
                     </table>
                   </div>

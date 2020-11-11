@@ -23,7 +23,8 @@ const AdminDashboard = ({
   renderSalesPieChart,
   getDashboardData,
   getOrders,
-  getOrder
+  getOrder,
+  setCurLocation
 }) => {
   const history = useHistory()
 
@@ -81,6 +82,10 @@ const AdminDashboard = ({
     setFromDate(new Date(moment().subtract(days, 'days').format("YYYY-MM-DD")))
     setToDate(new Date(moment().format("YYYY-MM-DD")))
   }
+  
+  useEffect(() => {
+    setCurLocation(history.location)
+  }, [history]);
   
   useEffect(() => {
     getOrders({
@@ -183,7 +188,7 @@ const AdminDashboard = ({
             </div>
             <div className="row">
               <div className="col l3 m6 s12">
-                <div className="card-panel white rad-4 no-shadow relative">
+                <div className="card-panel white rad-3 no-shadow relative">
                   <h5 className="m-0 mb-1 fw-6">Revenue</h5>
                   <p className="m-0 fs-22">₱ <span className="count">{dashboardData.shipping_total}</span></p>
                   <div className="side-icon flex-col center">
@@ -193,7 +198,7 @@ const AdminDashboard = ({
                 </div>
               </div>
               <div className="col l3 m6 s12">
-                <div className="card-panel white rad-4 no-shadow relative">
+                <div className="card-panel white rad-3 no-shadow relative">
                   <h5 className="m-0 mb-1 fw-6">Sales</h5>
                   <p className="m-0 fs-22">₱ <span className="count">{dashboardData.sales_total}</span></p>
                   <div className="side-icon flex-col center">
@@ -203,7 +208,7 @@ const AdminDashboard = ({
                 </div>
               </div>
               <div className="col l3 m6 s12">
-                <div className="card-panel white rad-4 no-shadow relative">
+                <div className="card-panel white rad-3 no-shadow relative">
                   <h5 className="m-0 mb-1 fw-6">Sold</h5>
                   <p className="m-0 fs-22"><span className="count">{dashboardData.sold}</span></p>
                   <div className="side-icon flex-col center">
@@ -213,7 +218,7 @@ const AdminDashboard = ({
                 </div>
               </div>
               <div className="col l3 m6 s12">
-                <div className="card-panel white rad-4 no-shadow relative">
+                <div className="card-panel white rad-3 no-shadow relative">
                   <h5 className="m-0 mb-1 fw-6">Checkouts</h5>
                   <p className="m-0 fs-22"><span className="count">{dashboardData.checkouts}</span></p>
                   <div className="side-icon flex-col center">
@@ -225,7 +230,7 @@ const AdminDashboard = ({
             </div>
             <div className="row">
               <div className="col l7 s12">
-                <div className="card-panel white rad-4 no-shadow admin-dashboard">
+                <div className="card-panel white rad-3 no-shadow admin-dashboard">
                   <div className="row m-0 mb-2">
                     <h5 className="m-0 fw-6">Daily Revenue</h5>
                   </div>
@@ -233,7 +238,7 @@ const AdminDashboard = ({
                 </div>
               </div>
               <div className="col l5 s12">
-                <div className="card-panel white rad-4 no-shadow">
+                <div className="card-panel white rad-3 no-shadow">
                   <div className="row">
                     <div className="flex-row middle separate col s12">
                       <h5 className="mb-0 mt-0 mr-3 fw-6">Sales by Category</h5>
@@ -243,7 +248,7 @@ const AdminDashboard = ({
                 </div>
               </div>
               <div className="col l5 s12">
-                <div className="card-panel white rad-4 no-shadow">
+                <div className="card-panel white rad-3 no-shadow">
                   <h5 className="m-0 mb-3">Top Brands</h5>
                   <ul className="collection with-header top-brands no-shadow">
                     {dashboardData.top_brands.map(brand => (
@@ -257,7 +262,7 @@ const AdminDashboard = ({
                 </div>
               </div>
               <div className="col l7 s12">
-                <div id="dashboard-recent-orders" className="card-panel white rad-4 no-shadow height-530">
+                <div id="dashboard-recent-orders" className="card-panel white rad-3 no-shadow height-530">
                   <div className="row m-0">
                     <h5 className="m-0 mb-3">Recent Orders</h5>
                   </div>

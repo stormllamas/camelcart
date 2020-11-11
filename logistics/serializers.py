@@ -35,7 +35,7 @@ class SellerSerializer(serializers.ModelSerializer):
       'id', 'name', 'contact', 'description',
       'latitude', 'longitude',
       'thumbnail', 'categories',
-      'name_to_url'
+      'name_to_url', 'total_rating', 'total_rating_unrounded', 'review_count'
     ]
 
 class CategoryGroupSerializer(serializers.ModelSerializer):
@@ -54,7 +54,9 @@ class ProductSerializer(serializers.ModelSerializer):
     fields = [
       'id', 'name', 'seller', 'categories', 'description',
       'thumbnail', 'photo_1', 'photo_2', 'photo_3',
-      'feature', 'name_to_url', 'first_variant_price',
+      'feature', 'name_to_url',
+      'cheapest_variant_price',
+      'total_rating',
     ]
 
 class ProductReviewSerializer(serializers.ModelSerializer):

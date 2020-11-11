@@ -47,6 +47,8 @@ def get_user_data(user) :
   groups = [group.name for group in user.groups.all()]
   if user.is_staff:
     groups.append('admin')
+  if user.is_superuser:
+    groups.append('superuser')
 
   return {
     'id': user.id,
@@ -62,7 +64,6 @@ def get_user_data(user) :
     'groups': groups,
     
     'date_joned': user.date_joined,
-    'platenumber': user.date_joined,
 
     'is_staff': user.is_staff,
     'is_superuser': user.is_superuser,

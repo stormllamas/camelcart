@@ -120,16 +120,9 @@ const RestaurantDetail = ({
                   </div>
                 )}
                 <div className="col s12">
-                  {/* {product.reviews.length > 0 ? [...Array(product.total_rating).keys()].map(star => <i key={star} className="fas fa-star"></i>) : <p className="bdg bdg-mute bdg-small">No Rating Yet</p>}
-                  {product.reviews.length > 0 && [...Array(Math.max(5-product.total_rating, 0)).keys()].map(star => <i key={star} className="fas fa-star gray"></i>)} */}
-                  <ul className="mt-2 mb-0">
-                    <i className="material-icons orange-text">star</i>
-                    <i className="material-icons orange-text">star</i>
-                    <i className="material-icons orange-text">star</i>
-                    <i className="material-icons orange-text">star</i>
-                    <i className="material-icons orange-text">star_half</i>
-                  </ul>
-                  <p className="grey-text mt-0">4.85 (2934 ratings)</p>
+                  {seller.review_count > 0 ? [...Array(seller.total_rating).keys()].map(star => <i key={star} className="material-icons orange-text">star</i>) : <div className="mb-2"><span className="bdg bdg-mute bdg-small m-0 mb-2 grey lighten-2 fs-16 rad-1 p-1">Unrated</span></div>}
+                  {seller.review_count > 0 && [...Array(Math.max(5-seller.total_rating, 0)).keys()].map(star => <i key={star} className="material-icons grey-text text-lighten-2">star</i>)}
+                  {seller.review_count > 0 && <p className="grey-text mt-0">{seller.total_rating_unrounded.toFixed(2)} ({seller.review_count} ratings)</p>}
                 </div>
                 <div className="col s12">
                   <div className="divider"></div>

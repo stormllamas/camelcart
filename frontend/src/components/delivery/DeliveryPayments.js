@@ -57,7 +57,7 @@ const DeliveryPayments = ({
           purchase_units: [
             {
               invoice_id: currentOrder.ref_code,
-              description: "Camel Cart delivery request on "+ getDateNow(),
+              description: "Trike delivery request on "+ getDateNow(),
               amount: {
                 currency_code: "PHP",
                 value: currentOrder.total,
@@ -69,7 +69,7 @@ const DeliveryPayments = ({
                 },
               },
               payee: {
-                email: 'support@camelcart.com',
+                email: 'support@trikeph.com',
                 account_id: '72BMFG9YMYA2A'
               },
               shipping: {

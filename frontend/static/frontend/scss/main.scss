@@ -148,6 +148,10 @@ a {
   }
 }
 
+.manager-card-panel {
+  min-height: 50vh;
+}
+
 .section-icons {
   .card-panel {
     display: block;
@@ -457,7 +461,7 @@ a {
   min-height: 438px;
 }
 
-.admin-sidenav {
+.sidenav {
   li.active {
     background-color: $orange;
 
@@ -466,13 +470,6 @@ a {
       i {
         color: #fff;
       }
-    }
-  }
-  .user-view {
-    height: 120px;
-
-    .background {
-      padding: 1.5rem 4rem;
     }
   }
 }

@@ -1,6 +1,5 @@
-import React, { useEffect, Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux'
 
 import Topbar from '../layout/Topbar';
@@ -13,6 +12,8 @@ const PrivateRoute = ({
   location,
   ...rest
 }) => {
+
+  const [curLocation, setCurLocation] = useState('')
 
   useEffect(() => {
     if (!userLoading && !siteInfoLoading) {
@@ -29,17 +30,17 @@ const PrivateRoute = ({
       {...rest}
       render={ props => {
         if (userLoading || siteInfoLoading) {
-          return <Topbar/>
+          return <Topbar curLocation={curLocation}/>
         } else {
           if (siteInfo.maintenance_mode) {
             return <Redirect to='/site?0' />
           } else {
             return (
               <Fragment>
-                <Topbar/>
+                <Topbar curLocation={curLocation}/>
                 <div className="middle-wrapper">
                   <div className="middle-content">
-                    <Component {...props} />
+                    <Component {...props} setCurLocation={setCurLocation} />
                   </div>
                 </div>
                 {isAuthenticated && <Footer/>}

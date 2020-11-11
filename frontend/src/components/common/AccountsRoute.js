@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Route, Redirect, useHistory } from 'react-router-dom'
 import { connect } from 'react-redux'
 
@@ -11,6 +11,8 @@ const AccountsRoute = ({
   ...rest
 }) => {
   const history = useHistory()
+
+  const [curLocation, setCurLocation] = useState('')
   
   useEffect(() => {
     if (!userLoading) {
@@ -26,7 +28,7 @@ const AccountsRoute = ({
       {...rest}
       render={ props => {
         if (userLoading || siteInfoLoading) {
-          return <Topbar/>
+          return <Topbar curLocation={curLocation}/>
         } else {
           if (siteInfo.maintenance_mode) {
             return <Redirect to='/site?0' />
@@ -35,10 +37,10 @@ const AccountsRoute = ({
           } else {
             return (
               <Fragment>
-                <Topbar/>
+                <Topbar curLocation={curLocation}/>
                 <div className="middle-wrapper">
                   <div className="middle-content">
-                    <Component {...props} />
+                    <Component {...props} setCurLocation={setCurLocation} />
                   </div>
                 </div>
               </Fragment>

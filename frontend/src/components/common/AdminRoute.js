@@ -1,20 +1,18 @@
-import React, { useEffect, Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 
 import AdminTopbar from '../manager/AdminTopbar';
-import Footer from '../layout/Footer';
 
 const AdminRoute = ({
   component: Component,
   auth: { userLoading, isAuthenticated, user },
-  siteConfig: { siteInfoLoading, siteInfo },
+  siteConfig: { siteInfoLoading },
   location,
   ...rest
 }) => {
-  const history = useHistory()
+
+  const [curLocation, setCurLocation] = useState('')
 
   useEffect(() => {
     if (!userLoading && !siteInfoLoading) {
@@ -32,15 +30,15 @@ const AdminRoute = ({
       {...rest}
       render={ props => {
         if (userLoading || siteInfoLoading) {
-          return <AdminTopbar/>
+          return <AdminTopbar curLocation={curLocation}/>
         } else {
           if (user) {
             return user.is_staff && isAuthenticated ? (
               <Fragment>
-                <AdminTopbar/>
+                <AdminTopbar curLocation={curLocation}/>
                 <div className="middle-wrapper">
                   <div className="middle-content">
-                    <Component {...props} />
+                    <Component {...props} setCurLocation={setCurLocation} />
                   </div>
                 </div>
               </Fragment>

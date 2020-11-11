@@ -11,7 +11,8 @@ import { signup, socialSignin } from '../../actions/auth'
 const Signup = ({
   auth: { userLoading },
   signup,
-  socialSignin
+  socialSignin,
+  setCurLocation
 }) => {
   const history = useHistory()
 
@@ -82,6 +83,10 @@ const Signup = ({
       $('.loader').fadeIn();
     }
   }, [userLoading])
+  
+  useEffect(() => {
+    setCurLocation(history.location)
+  }, [history]);
   
   return (
     <Fragment>

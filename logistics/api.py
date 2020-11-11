@@ -106,6 +106,9 @@ class SellerAPI(GenericAPIView):
       'address': seller.address,
       'thumbnail': seller.thumbnail.url,
       'name_to_url': seller.name_to_url,
+      'total_rating': seller.total_rating,
+      'total_rating_unrounded': seller.total_rating_unrounded,
+      'review_count': seller.review_count,
       'categories': categories,
       'features': features,
     })
@@ -177,6 +180,7 @@ class ProductAPI(GenericAPIView):
       'photo_1': product.photo_1.url if product.photo_1 else None,
       'photo_2': product.photo_2.url if product.photo_2 else None,
       'photo_3': product.photo_3.url if product.photo_3 else None,
+      'total_rating': product.total_rating,
       'variants': variants
     })
 
@@ -335,9 +339,13 @@ class OrdersAPI(GenericAPIView):
       'date_ordered': order.date_ordered,
 
       'rider': {
-        'id': order.rider.id if order.rider != None else None,
-        'name': f'{order.rider.first_name} {order.rider.last_name}' if order.rider != None else None,
-      },
+        'id': order.rider.id,
+        'name': f'{order.rider.first_name} {order.rider.last_name}',
+        'contact': order.rider.contact,
+        'picture': order.rider.picture.url,
+        'plate_number': order.rider.plate_number
+      } if order.rider != None else None,
+      
       'is_claimed': True if order.rider != None else False, 'date_claimed': order.date_claimed,
       'is_pickedup': order.is_pickedup, 'date_pickedup': order.date_pickedup,
       'is_delivered': order.is_delivered, 'date_delivered': order.date_delivered,

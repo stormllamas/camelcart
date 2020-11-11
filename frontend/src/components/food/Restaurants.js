@@ -98,11 +98,11 @@ const Restaurants = ({
               ))
             ) : undefined}
           </ul>
-          {/* {moreSellersLoading || sellersLoading ? (
+          {moreSellersLoading || sellersLoading ? (
             <div className="flex-col center relative preloader-wrapper">
               <Preloader color="green" size="small" adds=""/>
             </div>
-          ) : undefined} */}
+          ) : undefined}
         </div>
       </section>
     </Fragment>

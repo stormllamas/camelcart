@@ -14,6 +14,7 @@ import random
 from datetime import date
 from django.utils import timezone
 import datetime
+import math
 
 def generate_id(prf):
   if prf:
@@ -24,6 +25,11 @@ def generate_id(prf):
   date_str = date.today().strftime('Y%m%d')[2:] + str(timezone.now().second)
   rand_str = "".join([random.choice(string.digits) for count in range(3)])
   return prefix + date_str + rand_str
+
+def normal_round(n):
+  if n - math.floor(n) < 0.5:
+    return math.floor(n)
+  return math.ceil(n)
 
 class CategoryGroup(models.Model):
   name = models.CharField(max_length=50)
@@ -60,6 +66,26 @@ class Seller(models.Model):
   def name_to_url(self):
     return self.name.replace(' ','-').replace('&', 'and')
 
+  @property
+  def total_rating(self):
+    try:
+      rating = normal_round(sum([int(review.rating) for review in ProductReview.objects.filter(product_variant__product__seller=self)])/self.review_count)
+    except:
+      rating = 0
+    return rating
+
+  @property
+  def total_rating_unrounded(self):
+    try:
+      rating = sum([int(review.rating) for review in ProductReview.objects.filter(product_variant__product__seller=self)])/self.review_count
+    except:
+      rating = 0
+    return rating
+
+  @property
+  def review_count(self):
+    return ProductReview.objects.filter(product_variant__product__seller=self).count()
+
 class Product(models.Model):
   # Basic Details
   name = models.CharField(max_length=50, unique=True)
@@ -88,8 +114,16 @@ class Product(models.Model):
     return self.name.replace(' ','-').replace('&', 'and')
 
   @property
-  def first_variant_price(self):
-    return ProductVariant.objects.filter(product=self).order_by('date_published').first().price
+  def cheapest_variant_price(self):
+    return ProductVariant.objects.filter(product=self).order_by('price', 'id').first().final_price
+
+  @property
+  def total_rating(self):
+    try:
+      rating = normal_round(sum([int(review.rating) for review in ProductReview.objects.filter(product_variant__product=self)])/ProductReview.objects.filter(product_variant__product=self).count())
+    except:
+      rating = 0
+    return rating
 
 class ProductVariant(models.Model):
   product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE)

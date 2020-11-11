@@ -9,8 +9,7 @@ import { logout } from '../../actions/auth';
 
 const Topbar = ({
   auth: { isAuthenticated, userLoading, user },
-  // siteConfig: { maintenanceMode, betaMode },
-  logout
+  logout,
 }) => {
   const history = useHistory()
 
@@ -50,7 +49,7 @@ const Topbar = ({
         <nav id="topbar" className="white">
           <div className="container">
             <div className="nav-wrapper">
-              <Link to="/" className="brand-logo"><img src="/static/frontend/img/Trike_logo-whole.png" alt="came cart logo" className="responsive-img mr-1"/></Link>
+              <Link to="/" className="brand-logo"><img src="/static/frontend/img/Trike_logo-whole.png" alt="trike logo" className="responsive-img mr-1"/></Link>
               <a href="#" data-target="mobile-nav" className="sidenav-trigger show-on-large grey-text text-darken-2 show-on-small-and-up">
                 <i className="material-icons">menu</i>
               </a>
@@ -66,13 +65,13 @@ const Topbar = ({
         </nav>
       </div>
       <ul id="mobile-nav" className="sidenav">
-        <li>
-          <div className="user-view">
-            <div className="background orange darken-2 p-0">
-              {/* <img src="https://source.unsplash.com/random/800x600/?wave" className="responsive-img" alt=""/> */}
-            </div>
-            {user && (
-              user.groups.includes('rider') ? (
+        {user ? (
+          user.groups.includes('rider') || user.groups.includes('admin') ? (
+            <li>
+              <div className="user-view">
+                <div className="background orange p-0">
+                  {/* <img src="https://source.unsplash.com/random/800x600/?wave" className="responsive-img" alt=""/> */}
+                </div>
                 <Link to="/profile">
                   {user.picture ? (
                     <img src={user.picture} alt="" className="sidenav-close circle"/>
@@ -80,20 +79,43 @@ const Topbar = ({
                     <img src="/static/frontend/img/user.jpg" alt="" className="sidenav-close circle"/>
                   )}
                 </Link>
-              ) : undefined
-            )}
-            <span className="name white-text">{user ? (user.first_name + ' ' + user.last_name) : ''}</span>
-            <span className="email white-text">{user ? (user.email) : ''}</span>
-          </div>
-        </li>
+                <span className="name white-text">{user ? (user.first_name + ' ' + user.last_name) : ''}</span>
+                <span className="email white-text">{user ? (user.email) : ''}</span>
+              </div>
+            </li>
+          ) : (
+            <li>
+              <div className="user-view mb-5">
+                <div className="flex-col center">
+                  <img src="/static/frontend/img/Trike_logo-whole.png" alt="trike logo" className="responsive-img" style={{ height:"30px" }}/>
+                </div>
+              </div>
+            </li>
+          )
+        ) : (
+          <li>
+            <div className="user-view mb-5">
+              <div className="flex-col center">
+                <img src="/static/frontend/img/Trike_logo-whole.png" alt="trike logo" className="responsive-img" style={{ height:"30px" }}/>
+              </div>
+            </div>
+          </li>
+        )}
         <li className={history.location.pathname === "/" ? "active" : ""}>
           <Link to="/" className="sidenav-close waves-effect"><i className="material-icons">home</i>Home</Link>
         </li>
         {!userLoading && isAuthenticated ? (
           <Fragment>
-            <li>
+            <li className={history.location.pathname.includes('bookings') ? "active" : ''}>
               <Link to="/bookings" className="sidenav-close waves-effect" ><i className="material-icons">assignment</i>My Bookings</Link>
             </li>
+            {user.groups.includes('rider') || user.groups.includes('admin') ? (
+              <Fragment>
+                <li>
+                  <Link to="/order_manager/unclaimed" className="sidenav-close waves-effect" ><i className="material-icons">fact_check</i>Order Manager</Link>
+                </li>
+              </Fragment>
+            ) : undefined}
           </Fragment>
         ) : undefined}
         {/* <li>
@@ -135,10 +157,10 @@ const Topbar = ({
             <li>
               <a className="subheader">Account Controls</a>
             </li>
-            <li>
+            <li className={history.location.pathname.includes('profile') ? "active" : ''}>
               <Link to="/profile" className="sidenav-close waves-effect" ><i className="material-icons">account_circle</i>My Profile</Link>
             </li>
-            <li>
+            <li className={history.location.pathname.includes('security') ? "active" : ''}>
               <Link to="/security" className="sidenav-close waves-effect" ><i className="material-icons">security</i>Security</Link>
             </li>
             <li>

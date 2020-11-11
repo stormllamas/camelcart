@@ -98,6 +98,14 @@ const Bookings = ({
                           <div className="col s12 mb-1 flex-col center">
                             <h6 className="valign-wrapper green-text text-lighten-2"><i className="material-icons mr-1">search</i> RIDER FOUND</h6>
                           </div>
+                          <div className="col s12 mb-1 flex-row center middle">
+                            <div className="bg-cover circle" style={{ backgroundImage: `url(${order.rider.picture}`, height: '100px', width: '100px'}}></div>
+                            <div className="ml-2 flex-col start grey-text">
+                              <p className="m-0 fw-6">{order.rider.name}</p>
+                              <p className="m-0">{order.rider.contact}</p>
+                              <p className="m-0 fs-17 fw-6">{order.rider.plate_number}</p>
+                            </div>
+                          </div>
                         </Fragment>
                       ) : (
                         <Fragment>

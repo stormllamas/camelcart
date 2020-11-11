@@ -9,7 +9,6 @@ import { logout } from '../../actions/auth';
 
 const Topbar = ({
   auth: { isAuthenticated, userLoading, user },
-  // siteConfig: { maintenanceMode, betaMode },
   logout
 }) => {
   const history = useHistory()
@@ -47,40 +46,55 @@ const Topbar = ({
   return (
     <Fragment>
       <ul id="mobile-nav" className="sidenav admin-sidenav">
-        <li>
-          <div className="user-view">
-            <div className="background white flex center start">
-              <img src="/static/frontend/img/camel-cart-banner-1.png" alt="came cart logo" className="responsive-img"/>
-            </div>
-          </div>
-        </li>
+        {user && (
+          user.groups.includes('rider') || user.groups.includes('admin') ? (
+            <li>
+              <div className="user-view">
+                <div className="background orange darken-1 p-0">
+                  {/* <img src="https://source.unsplash.com/random/800x600/?wave" className="responsive-img" alt=""/> */}
+                </div>
+                <Link to="/profile">
+                  {user.picture ? (
+                    <img src={user.picture} alt="" className="sidenav-close circle"/>
+                  ) : (
+                    <img src="/static/frontend/img/user.jpg" alt="" className="sidenav-close circle"/>
+                  )}
+                </Link>
+                <span className="name white-text">{user ? (user.first_name + ' ' + user.last_name) : ''}</span>
+                <span className="email white-text">{user ? (user.email) : ''}</span>
+              </div>
+            </li>
+          ) : undefined
+        )}
         <li className={history.location.pathname === "/" ? "active" : ""}>
           <Link to="/" className="sidenav-close waves-effect"><i className="material-icons">home</i>Return to Home Page</Link>
         </li>
-        <li className={history.location.pathname === "/admin/dashboard" ? "active" : ""}>
-          <Link to="dashboard" className="sidenav-close waves-effect"><i className="material-icons">home</i>Dashboard</Link>
-        </li>
         {!userLoading && isAuthenticated ? (
           <Fragment>
+            {user.groups.includes('admin') && (
+              <li className={history.location.pathname === "/admin/dashboard" ? "active" : ""}>
+                <Link to="/admin/dashboard" className="sidenav-close waves-effect"><i className="material-icons">dashboard</i>Dashboard</Link>
+              </li>
+            )}
             <li>
               <div className="divider"></div>
             </li>
             <li>
               <a className="subheader">Order Manager Pages</a>
             </li>
-            <li>
+            <li className={history.location.pathname === "/order_manager/unclaimed" ? "active" : ""}>
               <Link to="/order_manager/unclaimed" className="sidenav-close waves-effect" ><i className="material-icons">pending</i>Unclaimed Orders</Link>
             </li>
-            <li>
+            <li className={history.location.pathname === "/order_manager/claimed" ? "active" : ""}>
               <Link to="/order_manager/claimed" className="sidenav-close waves-effect" ><i className="material-icons">pending_actions</i>Claimed Orders</Link>
             </li>
-            <li>
+            <li className={history.location.pathname === "/order_manager/undelivered" ? "active" : ""}>
               <Link to="/order_manager/undelivered" className="sidenav-close waves-effect" ><i className="material-icons">local_shipping</i>Undelivered Orders</Link>
             </li>
-            <li>
+            <li className={history.location.pathname === "/order_manager/delivered" ? "active" : ""}>
               <Link to="/order_manager/delivered" className="sidenav-close waves-effect" ><i className="material-icons">check_box</i>Delivered Orders</Link>
             </li>
-            <li>
+            {/* <li>
               <div className="divider"></div>
             </li>
             <li>
@@ -94,7 +108,7 @@ const Topbar = ({
             </li>
             <li>
               <Link to="#" className="sidenav-close waves-effect" ><i className="material-icons">check_box</i>Resolved Refunds</Link>
-            </li>
+            </li> */}
             <li>
               <div className="divider"></div>
             </li>

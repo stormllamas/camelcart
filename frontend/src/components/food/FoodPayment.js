@@ -54,7 +54,7 @@ const FoodPayment = ({
           purchase_units: [
             {
               invoice_id: currentOrder.ref_code,
-              description: "Camel Cart food order on "+ getDateNow(),
+              description: "Trike food order on "+ getDateNow(),
               amount: {
                 currency_code: "PHP",
                 value: currentOrder.total,
@@ -66,7 +66,7 @@ const FoodPayment = ({
                 },
               },
               payee: {
-                email: 'support@camelcart.com',
+                email: 'support@trike.com.ph',
                 account_id: '72BMFG9YMYA2A'
               },
               shipping: {
