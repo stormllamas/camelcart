@@ -1,10 +1,10 @@
 {% autoescape off %}
-  An inquiry has been made from the Trike website:
+  A rider inquiry has been made from the Trike website:
   name: {{ name }}
   email: {{ email }}
   phone: {{ phone }}
   at: {{ timestamp | date:'F d, Y' }}
 
   Subject: {{ subject }}
-  Message: {{ message }}
+  City: {{ city }}
 {% endautoescape %}

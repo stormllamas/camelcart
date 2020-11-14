@@ -26,6 +26,8 @@ import Undelivered from './manager/Undelivered'
 import Delivered from './manager/Delivered'
 
 import Home from './pages/Home'
+import Contact from './pages/Contact'
+import RiderInquiry from './pages/RiderInquiry'
 
 import Bookings from './accounts/Bookings'
 import Profile from './accounts/Profile'
@@ -71,6 +73,8 @@ const App = () => {
           <PrivateRoute exact path="/bookings" component={Bookings} />
 
           <PublicRoute exact path="/" component={Home} />
+          <PublicRoute exact path="/contact" component={Contact} />
+          <PublicRoute exact path="/rider_inquiry" component={RiderInquiry} />
 
           <PublicRoute exact path="/food" component={Restaurants} />
           <PublicRoute exact path="/food/restaurant" component={RestaurantDetail} />

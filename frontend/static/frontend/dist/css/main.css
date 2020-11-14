@@ -1801,7 +1801,8 @@ a {
   min-height: 438px; }
 
 .sidenav li.active {
-  background-color: #FAA634; }
+  background-color: #FAA634;
+  color: #fff; }
   .sidenav li.active a {
     color: #fff; }
     .sidenav li.active a i {
@@ -1858,6 +1859,11 @@ a {
     .product-quantity .quantity::-webkit-outer-spin-button, .product-quantity .quantity::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0; }
+
+.section-rider-inquiry .rider-inquiry-form {
+  position: relative;
+  margin-top: -150px;
+  z-index: 1; }
 
 @media (max-width: 1150px) {
   .section-restaurants .restaurant-item {

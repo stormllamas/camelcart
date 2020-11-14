@@ -40,7 +40,7 @@ const AdminDashboard = ({
 
   const createChartData = (orders, range) => {
     const rangedList = []
-    for (let i = 0; i < range; i++) {
+    for (let i = 0; i < range+1; i++) {
       rangedList.unshift (
         { x: new Date(moment(toDate).subtract(i ,'days').format("YYYY-MM-DD")), y: 0},
       )
@@ -99,7 +99,7 @@ const AdminDashboard = ({
   useEffect(() => {
     getDashboardData({
       fromDate: moment(fromDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
-      toDate: moment(toDate, "YYYY-MM-DD").format("YYYY-MM-DD")
+      toDate: moment(toDate, "YYYY-MM-DD").add(1, 'days').format("YYYY-MM-DD")
     })
   }, [fromDate, toDate]);
 

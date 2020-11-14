@@ -44,7 +44,7 @@ const Home = ({
             <div className="col s4">
               <Link to="/food" className="card-panel left-align">
                 <div className="center">
-                  <img src="static/frontend/img/camel-express_food-logo.png" className="scale-pop" alt=""/>
+                  <img src="static/frontend/img/Trike_food_logo.png" className="scale-pop" alt=""/>
                 </div>
                 <h5>Food</h5>
                 <p className="hide-on-med-and-down">Order your favorite local food and have it delivered to you</p>
@@ -54,7 +54,7 @@ const Home = ({
               <div className="card-panel left-align disabled">
                 <div className="primary-overlay above"></div>
                 <div className="center">
-                  <img src="static/frontend/img/camel-express_grocery-logo.png" className="scale-pop" alt=""/>
+                  <img src="static/frontend/img/Trike_grocery_logo.png" className="scale-pop" alt=""/>
                 </div>
                 <h5>Grocery</h5>
                 <p className="hide-on-med-and-down">One of our riders will shop for you and deliver your grocery needs to your home</p>
@@ -63,7 +63,7 @@ const Home = ({
             <div className="col s4">
               <Link to="/delivery" className="card-panel left-align">
                 <div className="center">
-                  <img src="static/frontend/img/camel-express_motor-logo.png" className="scale-pop" alt=""/>
+                  <img src="static/frontend/img/Trike_motor_logo.png" className="scale-pop" alt=""/>
                 </div>
                 <h5>Delivery</h5>
                 <p className="hide-on-med-and-down">Schedule an item for pickup and delivery by our trusted riders</p>

@@ -464,6 +464,7 @@ a {
 .sidenav {
   li.active {
     background-color: $orange;
+    color: #fff;
 
     a {
       color: #fff;
@@ -550,7 +551,14 @@ a {
       margin: 0;
     }
   }
-  
+}
+
+.section-rider-inquiry {
+  .rider-inquiry-form {
+    position: relative;
+    margin-top: -150px;
+    z-index: 1;
+  }
 }
 
 @import 'media';

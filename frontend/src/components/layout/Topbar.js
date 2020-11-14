@@ -49,16 +49,16 @@ const Topbar = ({
         <nav id="topbar" className="white">
           <div className="container">
             <div className="nav-wrapper">
-              <Link to="/" className="brand-logo"><img src="/static/frontend/img/Trike_logo-whole.png" alt="trike logo" className="responsive-img mr-1"/></Link>
+              <div className="brand-logo"><Link to="/" className="valign-wrapper"><img src="/static/frontend/img/Trike_logo-whole.png" alt="trike logo" className="responsive-img"/></Link></div>
               <a href="#" data-target="mobile-nav" className="sidenav-trigger show-on-large grey-text text-darken-2 show-on-small-and-up">
                 <i className="material-icons">menu</i>
               </a>
               {!userLoading && isAuthenticated ? authLinks : guestLinks}
               <ul className="dropdown-content" id="partner-dropdown">
-                <li><a href="" className="grey-text text-darken-1">Food Delivery Rider</a></li>
-                <li><a href="" className="grey-text text-darken-1">Personal Shopper</a></li>
-                <li><a href="" className="grey-text text-darken-1">Delivery Partner</a></li>
-                <li><a href="" className="grey-text text-darken-1">Purchase Merchant</a></li>
+                <li><Link to="/rider_inquiry" className="sidenav-close grey-text text-darken-1">Rider</Link></li>
+                <li><Link to="#!" className="sidenav-close grey-text text-darken-1">Food Merchant</Link></li>
+                {/* <li><a href="" className="grey-text text-darken-1">Delivery Partner</a></li>
+                <li><a href="" className="grey-text text-darken-1">Purchase Merchant</a></li> */}
               </ul>
             </div>
           </div>
@@ -69,7 +69,7 @@ const Topbar = ({
           user.groups.includes('rider') || user.groups.includes('admin') ? (
             <li>
               <div className="user-view">
-                <div className="background orange p-0">
+                <div className="background green darken-2 p-0">
                   {/* <img src="https://source.unsplash.com/random/800x600/?wave" className="responsive-img" alt=""/> */}
                 </div>
                 <Link to="/profile">
@@ -136,17 +136,17 @@ const Topbar = ({
                 </div>
                 <div className="collapsible-body">
                   <ul>
-                    <li><a href="#!" className="sidenav-close grey-text text-darken-1">Food Delivery Rider</a></li>
-                    <li><a href="#!" className="sidenav-close grey-text text-darken-1">Personal Shopper</a></li>
-                    <li><a href="#!" className="sidenav-close grey-text text-darken-1">Delivery Partner</a></li>
-                    <li><a href="#!" className="sidenav-close grey-text text-darken-1">Purchase Merchant</a></li>
+                    <li><Link to="/rider_inquiry" className="sidenav-close grey-text text-darken-1">Rider</Link></li>
+                    <li><Link to="#!" className="sidenav-close grey-text text-darken-1">Food Merchant</Link></li>
+                    {/* <li><a href="#!" className="sidenav-close grey-text text-darken-1">Personal Shopper</a></li>
+                    <li><a href="#!" className="sidenav-close grey-text text-darken-1">Delivery Partner</a></li> */}
                   </ul>
                 </div>
               </li>
             </ul>
           </li>
           <li>
-            <a className="sidenav-close waves-effect" ><i className="material-icons">help</i>Help Center</a>
+            <Link to="/contact" className="sidenav-close waves-effect" ><i className="material-icons">help</i>Ask a question</Link>
           </li>
         </div>
         {!userLoading && isAuthenticated ? (

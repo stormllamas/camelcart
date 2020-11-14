@@ -36,7 +36,8 @@ INSTALLED_APPS = [
   'logistics',
   'accounts',
   'configuration',
-  'manager'
+  'manager',
+  'pages'
 ]
 
 MIDDLEWARE = [
