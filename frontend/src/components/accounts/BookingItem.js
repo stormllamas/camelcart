@@ -3,6 +3,7 @@ import { HashLink as Link } from 'react-router-hash-link';
 
 import { connect } from 'react-redux';
 import { getOrders } from '../../actions/logistics';
+import moment from 'moment'
 
 const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder }) => {
   const observer = useRef();
@@ -24,12 +25,13 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder 
       <li className="card mb-2" ref={orders.results.length === index + 1 ? lastProductElement : undefined }>
         <ul className="collection no-shadow">
           <li className="row collection-item">
-            <div className="col s9 p-0">
-              <p className="fw-6 fs-18 mb-0 mt-1 grey-text text-darken-2">Order #{order.ref_code}</p>
+            <div className="col s9 p-0 flex-row">
+              <p className="fw-6 fs-17 mb-0 mt-0 grey-text text-darken-2 grey lighten-3 rad-4 pt-1 pb-1 pl-3 pr-3">Order <span className="ml-1 light-blue-text fs-16">#{order.ref_code}</span></p>
+              {/* <p className="grey-text text-lighten-1 ml-2">Date Ordered: {moment(order.date_ordered).format('ll')}</p> */}
             </div>
             <div className="col s3 flex-col end p-0">
               {!order.is_delivered ? (
-                <button data-target="ordermodal" className="modal-trigger btn fw-6 light-green pulse" onClick={() => setOrder(order)}>Status</button>
+                <button data-target="ordermodal" className="modal-trigger btn fw-6 rad-4 orange pulse flex-row middle" onClick={() => setOrder(order)}>Status</button>
                 ) : (
                   !order.is_reviewed ? (
                     <Fragment>
@@ -87,7 +89,7 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder 
               </div>
             </div>
           )}
-          <li className="collection-item grey lighten-4">
+          <li className="collection-item">
               <Fragment>
                 <div className="row m-0">
                   <div className="col s12 p-0">
@@ -101,7 +103,7 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder 
                 </div>
               </Fragment>
           </li>
-          <li className="collection-item grey lighten-4">
+          <li className="collection-item">
             {order.order_type === 'food' && (
               <Fragment>
                 <div className="row m-0">
@@ -131,6 +133,13 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder 
               </div>
             </div>
           </li>
+          {!order.is_claimed && (
+            <li className="collection-item">
+              <div class="col s12 waves-effect">
+                <p className="flex-row m-0"><i className="material-icons fs-18">close</i><span className="ml-1 cancel-order">CANCEL ORDER</span></p>
+              </div>
+            </li>
+          )}
         </ul>
       </li>
     </Fragment>

@@ -25,7 +25,6 @@ class ContactViewSet(GenericAPIView):
       
   def post(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)
-    print(serializer.is_valid())
     serializer.is_valid(raise_exception=True)
 
     if request.user.is_authenticated:
@@ -39,72 +38,64 @@ class ContactViewSet(GenericAPIView):
     name = request.data['name']
     email = request.data['email']
     phone = request.data['phone']
+    age = request.data['age']
     subject = request.data['subject']
     message = request.data.get('message', None)
     service_type = request.data.get('service_type', None)
     city = request.data.get('city', None)
 
     timestamp = timezone.now()
-    mail_subject = 'OPA Inquiry'
 
     # Success Message to Inquirer
     success_message = render_to_string(
-      'inquiry_success.html',
+      'inquiry_success.html' if contact_type == 'question' else 'inquiry_success_rider.html',
       {
         'name': name,
       }
     )
     
+    # Get support email instead of default
     connection = get_connection(
       # host=my_host, 
       # port=my_port, 
       username=config('SUPPORT_USER'), 
       password=config('SUPPORT_PASSWORD'), 
       # use_tls=my_use_tls
-    ) 
-    print('success_message', success_message)
-    # send_mail(
-    #   mail_subject,
-    #   success_message,
-    #   'Trike Support',
-    #   [email],
-    #   connection=connection,
-    #   fail_silently=False
-    # )
+    )
+    
+    send_mail(
+      subject,
+      success_message,
+      'Trike <info@trike.com.ph>',
+      [email],
+      # connection=connection,
+      fail_silently=False
+    )
 
     # Message Notification
-    if contact_type == 'question':
-      message_notification = render_to_string(
-        'inquiry_notification.html',
-        {
-          'name': name,
-          'email': email,
-          'phone': phone,
-          'subject': subject,
-          'message': message,
-          'timestamp': timestamp,
-        }
-      )
-    elif contact_type == 'rider_inquiry':
-      message_notification = render_to_string(
-        'inquiry_notification_rider.html',
-        {
-          'name': name,
-          'email': email,
-          'phone': phone,
-          'subject': subject,
-          'city': city,
-          'timestamp': timestamp,
-        }
-      )
-    print('message_notification', message_notification)
-    # send_mail(
-    #   mail_subject,
-    #   message_notification,
-    #   'Trike Support',
-    #   ['support@quezonagrimart.com.ph'],
-    #   connection=connection,
-    #   fail_silently=False
-    # )
+    message_notification = render_to_string(
+      'inquiry_notification.html' if contact_type == 'question' else 'inquiry_notification_rider.html',
+      {
+        'name': name,
+        'email': email,
+        'phone': phone,
+
+        'message': message if contact_type == 'question' else None,
+
+        'age': age if contact_type == 'rider_inquiry' else None,
+        'service_type': service_type if contact_type == 'rider_inquiry' else None,
+        'city': city if contact_type == 'rider_inquiry' else None,
+        'timestamp': timestamp,
+      }
+    )
+
+    send_mail(
+      subject,
+      message_notification,
+      'Trike <info@trike.com.ph>',
+      ['info@trike.com.ph'],
+      # connection=connection,
+      fail_silently=False
+    )
 
     return Response({'status': 'okay'})

@@ -1865,6 +1865,9 @@ a {
   margin-top: -150px;
   z-index: 1; }
 
+.section-orders .cancel-order {
+  line-height: 1.35rem; }
+
 @media (max-width: 1150px) {
   .section-restaurants .restaurant-item {
     width: calc(50% - 24px);

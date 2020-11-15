@@ -138,13 +138,13 @@ class SocialAuthAPI(GenericAPIView):
             'domain': current_site.domain,
           }
         )
-        # send_mail(
-        #   mail_subject,
-        #   message,
-        #   'Trike',
-        #   [user.email],
-        #   fail_silently=False
-        # )
+        send_mail(
+          mail_subject,
+          message,
+          'Trike <info@trike.com.ph>',
+          [user.email],
+          fail_silently=False
+        )
 
         _, token = AuthToken.objects.create(user)
         response = Response({
@@ -188,7 +188,7 @@ class SingupAPI(GenericAPIView):
     send_mail(
       mail_subject,
       message,
-      'Trike',
+      'Trike <info@trike.com.ph>',
       [email],
       fail_silently=False
     )
@@ -219,7 +219,7 @@ class ActivateAPI(GenericAPIView):
       send_mail(
         mail_subject,
         message,
-        'Trike',
+        'Trike <info@trike.com.ph>',
         [user.email],
         fail_silently=False
       )
@@ -227,7 +227,7 @@ class ActivateAPI(GenericAPIView):
       _, token = AuthToken.objects.create(user)
       response = Response({
         'status': 'okay',
-        'user': UserSerializer(user, context=self.get_serializer_context()).data,
+        'user': get_user_data(user),
         'token': token
       })
 
@@ -339,14 +339,13 @@ class PasswordResetAPI(GenericAPIView):
           'token':account_activation_token.make_token(user),
         }
       )
-      print(message)
-      # send_mail(
-      #   mail_subject,
-      #   message,
-      #   'Trike',
-      #   [email],
-      #   fail_silently=False
-      # )
+      send_mail(
+        mail_subject,
+        message,
+        'Trike <info@trike.com.ph>',
+        [email],
+        fail_silently=False
+      )
       
       return Response({
         'status': 'okay',

@@ -17,11 +17,26 @@ const RiderInquiry = ({
   const [name, setName] = useState(user? user.first_name+' '+user.last_name : '');
   const [email, setEmail] = useState(user? user.email : '');
   const [phone, setPhone] = useState(user? user.contact ? user.contact : '' : '');
+  const [age, setAge] = useState('');
   const [serviceType, setServiceType] = useState('');
   const [city, setCity] = useState('');
   const [license, setLicense] = useState('');
   const [riderAcknowledgent, setRiderAcknowledgent] = useState(false);
   const [captchaValid, setCaptchaValid] = useState(false);
+
+  const setControlledAge = (num) => {
+    if (num.length > 1) {
+      if (parseInt(num) >= 18 && parseInt(num) <= 50) {
+        setAge(num)
+      } else if (parseInt(num) < 18) {
+        setAge(18)
+      } else if (parseInt(num) > 50) {
+        setAge(50)
+      }
+    } else {
+      setAge(num)
+    }
+  }
 
   useEffect(() => {
     if (!userLoading) {
@@ -61,20 +76,22 @@ const RiderInquiry = ({
       body.append('name', name);
       body.append('email', email);
       body.append('phone', phone);
+      body.append('age', age);
       body.append('service_type', serviceType);
       body.append('city', city);
       body.append('subject', serviceType+' - '+city);
       body.append('contact_type', 'rider_inquiry');
 
-      console.log(body)
-
       addInquiry(body);
       setName('')
-      setPhone('')
       setEmail('')
+      setPhone('')
+      setAge('')
       setServiceType('')
+      setCity('')
       setRiderAcknowledgent(false)
       setCaptchaValid(false)
+      M.updateTextFields();
       // history.push('/')
     }
   }
@@ -132,6 +149,12 @@ const RiderInquiry = ({
                 </div>
                 <div className="col s12">
                   <div className="input-field">
+                    <label htmlFor="age" className="grey-text">Age (18-50)</label>
+                    <input type="number" name="age" value={age} max="50" className="form-control" id="id_age" onChange={e => setControlledAge(e.target.value)} required/>
+                  </div>
+                </div>
+                <div className="col s12">
+                  <div className="input-field">
                     <select id="service_type" className="text-grey validate grey-text text-darken-2" value={serviceType} onChange={e => setServiceType(e.target.value)} required>
                       <option value=""  className="grey-text text-darken-2" disabled>Select Service Type</option>
                       <option value="Delivery Rider - Motorcycle" className="grey-text text-darken-2">Delivery Rider - Motorcycle</option>
@@ -157,7 +180,7 @@ const RiderInquiry = ({
                       <input type="file" accept="image/png, image/jpeg" onChange={e => setLicense(e.target.files[0])}/>
                     </div>
                     <div className="file-path-wrapper">
-                      <input className="file-path validate" type="text" placeholder="Upload you driver's license card"/>
+                      <input className="file-path validate" type="text" placeholder="Upload your driver's license card"/>
                     </div>
                   </div>
                 </div>
