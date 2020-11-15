@@ -50,8 +50,6 @@ import { loadSite } from '../actions/siteConfig'
 
 const App = () => {
 
-  console.log(process.env.NODE_ENV)
-
   useEffect(() => {
     $('#middle-content').hide();
     $('.loader').show();

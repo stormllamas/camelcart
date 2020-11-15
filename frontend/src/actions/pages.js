@@ -18,6 +18,9 @@ export const addInquiry = inquiry => async (dispatch, getState) => {
       displayLength: 3500,
       classes: 'green',
     });
+    return {
+      status: 'okay'
+    }
   } catch (err) {
     console.log(err)
     M.toast({
@@ -27,5 +30,8 @@ export const addInquiry = inquiry => async (dispatch, getState) => {
     });
     dispatch({type: CONTACTED})
     dispatch({type: AUTH_ERROR});
+    return {
+      status: 'error'
+    }
   }
 }

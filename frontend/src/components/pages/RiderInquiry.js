@@ -64,6 +64,12 @@ const RiderInquiry = ({
         displayLength: 5000,
         classes: 'red'
       });
+    } else if(license.size > 5000000) {
+      M.toast({
+        html: 'Maximum file size is 5MB',
+        displayLength: 5000,
+        classes: 'red'
+      });
     } else if(!captchaValid) {
       M.toast({
         html: 'Please check captcha box',
@@ -82,17 +88,17 @@ const RiderInquiry = ({
       body.append('subject', serviceType+' - '+city);
       body.append('contact_type', 'rider_inquiry');
 
-      // addInquiry(body);
-      setName('')
-      setEmail('')
-      setPhone('')
-      setAge('')
-      setServiceType('')
-      setCity('')
-      setRiderAcknowledgent(false)
-      setCaptchaValid(false)
-      M.updateTextFields();
-      // history.push('/')
+      const inquiry = await addInquiry(body);
+      if (inquiry.status === 'okay') {
+        setName('')
+        setEmail('')
+        setPhone('')
+        setAge('')
+        setServiceType('')
+        setCity('')
+        setRiderAcknowledgent(false)
+        setCaptchaValid(false)
+      }
     }
   }
 
