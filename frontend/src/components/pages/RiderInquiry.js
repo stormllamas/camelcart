@@ -63,7 +63,12 @@ const RiderInquiry = ({
     M.toast({
       html: license.type,
       displayLength: 5000,
-      classes: 'red'
+      classes: 'blue'
+    });
+    M.toast({
+      html: license.name,
+      displayLength: 5000,
+      classes: 'blue'
     });
 
     if (!name || !email || !phone || !serviceType || !city || !riderAcknowledgent) {
