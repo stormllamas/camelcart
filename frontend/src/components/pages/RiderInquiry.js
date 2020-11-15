@@ -66,7 +66,7 @@ const RiderInquiry = ({
       });
     } else if(!license) {
       M.toast({
-        html: 'Lisence photo required',
+        html: 'License photo required',
         displayLength: 5000,
         classes: 'red'
       });
@@ -189,12 +189,7 @@ const RiderInquiry = ({
                   <div className="file-field input-field">
                     <div className="btn light-green">
                       <span><i className="material-icons">upload</i></span>
-                      <input type="file" accept="image/*" className="validate" onChange={e => {setLicense(e.target.files[0]), 
-                      M.toast({
-                        html: e.target.files.length,
-                        displayLength: 5000,
-                        classes: 'red'
-                      });}}/>
+                      <input type="file" accept="image/*" capture="camera" className="validate" onChange={e => setLicense(e.target.files[0])}/>
                     </div>
                     <div className="file-path-wrapper">
                       <input className="file-path validate" type="text" placeholder="Take a photo of your license"/>
