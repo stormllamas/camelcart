@@ -188,7 +188,7 @@ const RiderInquiry = ({
                 <div className="col s12">
                   <div className="file-field input-field">
                     <div className="btn light-green">
-                      <span><i className="material-icons">upload</i></span>
+                      <span><i className="material-icons">camera_alt</i></span>
                       <input type="file" accept="image/*" capture="camera" className="validate" onChange={e => setLicense(e.target.files[0])}/>
                     </div>
                     <div className="file-path-wrapper">
