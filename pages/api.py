@@ -34,11 +34,13 @@ class ContactViewSet(GenericAPIView):
 
     contact.save()
     
+    current_site = get_current_site(self.request)
     contact_type = request.data['contact_type']
     name = request.data['name']
     email = request.data['email']
     phone = request.data['phone']
     age = request.data['age']
+    drivers_license = request.data['drivers_license']
     subject = request.data['subject']
     message = request.data.get('message', None)
     service_type = request.data.get('service_type', None)
@@ -76,6 +78,8 @@ class ContactViewSet(GenericAPIView):
     message_notification = render_to_string(
       'inquiry_notification.html' if contact_type == 'question' else 'inquiry_notification_rider.html',
       {
+        'domain': current_site.domain,
+
         'name': name,
         'email': email,
         'phone': phone,
@@ -85,6 +89,7 @@ class ContactViewSet(GenericAPIView):
         'age': age if contact_type == 'rider_inquiry' else None,
         'service_type': service_type if contact_type == 'rider_inquiry' else None,
         'city': city if contact_type == 'rider_inquiry' else None,
+        'drivers_license': drivers_license if contact_type == 'rider_inquiry' else None,
         'timestamp': timestamp,
       }
     )

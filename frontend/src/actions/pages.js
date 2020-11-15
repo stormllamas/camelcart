@@ -22,7 +22,6 @@ export const addInquiry = inquiry => async (dispatch, getState) => {
       status: 'okay'
     }
   } catch (err) {
-    console.log(err)
     M.toast({
       html: 'Oops! something went wrong. Try again later.',
       displayLength: 3500,
