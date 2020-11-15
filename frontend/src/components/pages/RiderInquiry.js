@@ -58,6 +58,14 @@ const RiderInquiry = ({
   const onSubmit = async e => {
     e.preventDefault();
 
+    console.log(license)
+
+    M.toast({
+      html: license.type,
+      displayLength: 5000,
+      classes: 'red'
+    });
+
     if (!name || !email || !phone || !serviceType || !city || !riderAcknowledgent) {
       M.toast({
         html: 'Please fill in required fields',
