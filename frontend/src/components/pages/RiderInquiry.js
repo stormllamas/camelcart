@@ -58,18 +58,18 @@ const RiderInquiry = ({
   const onSubmit = async e => {
     e.preventDefault();
 
-    console.log(license)
+    // console.log(license.files)
 
-    M.toast({
-      html: license.type,
-      displayLength: 5000,
-      classes: 'blue'
-    });
-    M.toast({
-      html: license.name,
-      displayLength: 5000,
-      classes: 'blue'
-    });
+    // M.toast({
+    //   html: license.type,
+    //   displayLength: 5000,
+    //   classes: 'blue'
+    // });
+    // M.toast({
+    //   html: license.name,
+    //   displayLength: 5000,
+    //   classes: 'blue'
+    // });
 
     if (!name || !email || !phone || !serviceType || !city || !riderAcknowledgent) {
       M.toast({
@@ -202,7 +202,12 @@ const RiderInquiry = ({
                   <div className="file-field input-field">
                     <div className="btn light-green">
                       <span><i className="material-icons">upload</i></span>
-                      <input type="file" accept="image/*" className="validate" onChange={e => setLicense(e.target.files[0])}/>
+                      <input type="file" accept="image/*" className="validate" onChange={e => {setLicense(e.target.files[0]), 
+                      M.toast({
+                        html: e.target.files.length,
+                        displayLength: 5000,
+                        classes: 'red'
+                      });}}/>
                     </div>
                     <div className="file-path-wrapper">
                       <input className="file-path validate" type="text" placeholder="Take a photo of your license"/>
