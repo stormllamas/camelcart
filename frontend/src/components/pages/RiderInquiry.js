@@ -189,7 +189,7 @@ const RiderInquiry = ({
                   <div className="file-field input-field">
                     <div className="btn light-green">
                       <span><i className="material-icons">upload</i></span>
-                      <input type="file" accept="image/png, image/jpeg" accept="image/*" className="validate" onChange={e => setLicense(e.target.files[0])}/>
+                      <input type="file" accept="image/png, image/jpeg" accept="image/*" capture="camera" className="validate" onChange={e => setLicense(e.target.files[0])}/>
                     </div>
                     <div className="file-path-wrapper">
                       <input className="file-path validate" type="text" placeholder="Upload your driver's license"/>
