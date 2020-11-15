@@ -58,19 +58,6 @@ const RiderInquiry = ({
   const onSubmit = async e => {
     e.preventDefault();
 
-    // console.log(license.files)
-
-    // M.toast({
-    //   html: license.type,
-    //   displayLength: 5000,
-    //   classes: 'blue'
-    // });
-    // M.toast({
-    //   html: license.name,
-    //   displayLength: 5000,
-    //   classes: 'blue'
-    // });
-
     if (!name || !email || !phone || !serviceType || !city || !riderAcknowledgent) {
       M.toast({
         html: 'Please fill in required fields',
@@ -79,7 +66,7 @@ const RiderInquiry = ({
       });
     } else if(!license) {
       M.toast({
-        html: 'Please upload a file (try taking a photo)',
+        html: 'Lisence photo required',
         displayLength: 5000,
         classes: 'red'
       });
