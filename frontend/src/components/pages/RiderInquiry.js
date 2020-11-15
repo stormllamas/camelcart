@@ -40,9 +40,9 @@ const RiderInquiry = ({
 
   useEffect(() => {
     if (!userLoading) {
-      M.updateTextFields();
       $('#id_message').characterCounter();
       $('select').formSelect();
+      M.updateTextFields();
     }
   }, [userLoading]);
 
@@ -58,9 +58,15 @@ const RiderInquiry = ({
   const onSubmit = async e => {
     e.preventDefault();
 
-    if (!name || !email || !phone || !serviceType || !city || !license || !riderAcknowledgent) {
+    if (!name || !email || !phone || !serviceType || !city || !riderAcknowledgent) {
       M.toast({
         html: 'Please fill in required fields',
+        displayLength: 5000,
+        classes: 'red'
+      });
+    } else if(!license) {
+      M.toast({
+        html: 'Please upload a file (try taking a photo)',
         displayLength: 5000,
         classes: 'red'
       });
@@ -138,36 +144,36 @@ const RiderInquiry = ({
                 <div className="col s12">
                   <div className="input-field">
                     <label htmlFor="id_name">Name</label>
-                    <input type="text" name="name" rows="1" value={name} maxLength="50" className="form-control" id="id_name" onChange={e => setName(e.target.value)} required/>
+                    <input type="text" name="name" rows="1" value={name} maxLength="50" className="validate" id="id_name" onChange={e => setName(e.target.value)} required/>
                   </div>
                 </div>
                 <div className="col s12">
                   <div className="input-field">
                     <label htmlFor="id_email">Email</label>
-                    <input type="text" name="email" rows="1" value={email} maxLength="50" className="form-control" id="id_email" onChange={e => setEmail(e.target.value)} required/>
+                    <input type="text" name="email" rows="1" value={email} maxLength="50" className="validate" id="id_email" onChange={e => setEmail(e.target.value)} required/>
                   </div>
                 </div>
                 <div className="col s12">
                   <div className="input-field">
                     <label htmlFor="id_phone">Phone</label>
-                    <input type="text" name="phone" rows="1" value={phone} maxLength="50" className="form-control" id="id_phone" onChange={e => setPhone(e.target.value)} required/>
+                    <input type="text" name="phone" rows="1" value={phone} maxLength="50" className="validate" id="id_phone" onChange={e => setPhone(e.target.value)} required/>
                   </div>
                 </div>
                 <div className="col s12">
                   <div className="input-field">
                     <label htmlFor="age" className="grey-text">Age (18-50)</label>
-                    <input type="number" name="age" value={age} max="50" className="form-control" id="id_age" onChange={e => setControlledAge(e.target.value)} required/>
+                    <input type="number" name="age" value={age} max="50" className="validate" id="id_age" onChange={e => setControlledAge(e.target.value)} required/>
                   </div>
                 </div>
                 <div className="col s12">
                   <div className="input-field">
                     <select id="service_type" className="text-grey validate grey-text text-darken-2" value={serviceType} onChange={e => setServiceType(e.target.value)} required>
-                      <option value=""  className="grey-text text-darken-2" disabled>Select Service Type</option>
+                      <option value="" className="grey-text text-darken-2" disabled>Select Service Type</option>
                       <option value="Delivery Rider - Motorcycle" className="grey-text text-darken-2">Delivery Rider - Motorcycle</option>
                       <option value="Delivery Rider - Tricycle" className="grey-text text-darken-2">Delivery Rider - Tricycle</option>
                       <option value="Delivery Rider - Bicycle" className="grey-text text-darken-2">Delivery Rider - Bicycle</option>
                     </select>
-                    <label htmlFor="service_type" className="grey-text text-darken-2">Service Type</label>
+                    <label htmlFor="service_type" data-error="This field is required" className="grey-text text-darken-2">Service Type</label>
                   </div>
                 </div>
                 <div className="col s12">
@@ -183,10 +189,10 @@ const RiderInquiry = ({
                   <div className="file-field input-field">
                     <div className="btn light-green">
                       <span><i className="material-icons">upload</i></span>
-                      <input type="file" accept="image/png, image/jpeg" onChange={e => setLicense(e.target.files[0])}/>
+                      <input type="file" accept="image/png, image/jpeg" accept="image/*" capture="camera" className="validate" onChange={e => setLicense(e.target.files[0])}/>
                     </div>
                     <div className="file-path-wrapper">
-                      <input className="file-path validate" type="text" placeholder="Upload your driver's license card"/>
+                      <input className="file-path validate" type="text" placeholder="Upload your driver's license"/>
                     </div>
                   </div>
                 </div>
