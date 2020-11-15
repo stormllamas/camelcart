@@ -130,7 +130,7 @@ const RiderInquiry = ({
               <img src="/static/frontend/img/Trike_score.gif" alt="" className="responsive-img"/>
             </div>
             <div className="col s12 m12 l6">
-              <form method="POST" onSubmit={onSubmit} className="card-panel rider-inquiry-form rad-3" noValidate>
+              <form method="POST" onSubmit={!contacting ? onSubmit : ''} className="card-panel rider-inquiry-form rad-3" noValidate>
                 <div className="col s12">
                   <h5 className="mb-1">Application Form</h5>
                   <p className="mt-0 grey-text">Fill out the form below and we'll setup a schedule and reach out to you as soon as we can</p>
