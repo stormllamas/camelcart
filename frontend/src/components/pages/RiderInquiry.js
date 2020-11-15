@@ -82,7 +82,7 @@ const RiderInquiry = ({
       body.append('subject', serviceType+' - '+city);
       body.append('contact_type', 'rider_inquiry');
 
-      addInquiry(body);
+      // addInquiry(body);
       setName('')
       setEmail('')
       setPhone('')
