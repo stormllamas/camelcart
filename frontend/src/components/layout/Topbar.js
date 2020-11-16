@@ -69,7 +69,7 @@ const Topbar = ({
           user.groups.includes('rider') || user.groups.includes('admin') ? (
             <li>
               <div className="user-view">
-                <div className="background green darken-2 p-0">
+                <div className="background orange darken-1 p-0">
                   {/* <img src="https://source.unsplash.com/random/800x600/?wave" className="responsive-img" alt=""/> */}
                 </div>
                 <Link to="/profile">

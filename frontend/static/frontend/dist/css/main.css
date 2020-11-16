@@ -1275,6 +1275,17 @@ tr {
   .primary-overlay.above {
     background: rgba(0, 0, 0, 0.2);
     z-index: 10; }
+    .primary-overlay.above:after {
+      content: 'COMING SOON';
+      display: flex;
+      font-size: 34px;
+      font-weight: 600;
+      height: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      transform: rotate(-45deg); }
 
 .site-message .alert-body .alert-choice .yes, .site-message .alert-body .alert-choice .no {
   font-family: 'Nunito', sans-serif;

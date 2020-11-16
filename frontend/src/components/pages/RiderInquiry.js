@@ -132,7 +132,7 @@ const RiderInquiry = ({
           <div className="row">
             <div className="col l6 hide-on-med-and-down">
               <h4>Earn more with Trike</h4>
-              <p className="fs-17">Become one of our riders and create a livelihood part-time or full-time. It's your decision!</p>
+              <p className="fs-17">Become one of our riders and create a livelihood part-time or full-time. It's up to you!</p>
               <img src="/static/frontend/img/Trike_score.gif" alt="" className="responsive-img"/>
             </div>
             <div className="col s12 m12 l6">
