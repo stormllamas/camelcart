@@ -117,7 +117,7 @@ class SocialAuthAPI(GenericAPIView):
           if not user.facebook_id:
             user.facebook_id = request.data['facebook_id']
             user.save()
-            
+
           response = Response({
             'user': get_user_data(user),
             'token': token
