@@ -26,12 +26,12 @@ const RiderInquiry = ({
 
   const setControlledAge = (num) => {
     if (num.length > 1) {
-      if (parseInt(num) >= 18 && parseInt(num) <= 50) {
+      if (parseInt(num) >= 18 && parseInt(num) <= 55) {
         setAge(num)
       } else if (parseInt(num) < 18) {
         setAge(18)
-      } else if (parseInt(num) > 50) {
-        setAge(50)
+      } else if (parseInt(num) > 55) {
+        setAge(55)
       }
     } else {
       setAge(num)
@@ -161,8 +161,8 @@ const RiderInquiry = ({
                 </div>
                 <div className="col s12">
                   <div className="input-field">
-                    <label htmlFor="age" className="grey-text">Age (18-50)</label>
-                    <input type="number" name="age" value={age} max="50" className="validate" id="id_age" onChange={e => setControlledAge(e.target.value)} required/>
+                    <label htmlFor="age" className="grey-text">Age (18-55)</label>
+                    <input type="number" name="age" value={age} max="55" className="validate" id="id_age" onChange={e => setControlledAge(e.target.value)} required/>
                   </div>
                 </div>
                 <div className="col s12">
