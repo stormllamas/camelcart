@@ -34,7 +34,6 @@ const Login = ({
         first_name: response.name,
         last_name: '',
         email: response.email,
-        picture: response.picture.data.url,
         facebook_id: response.userID,
       }
       socialSignin(body, history)

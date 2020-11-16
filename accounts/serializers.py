@@ -102,7 +102,7 @@ class SocialAuthSerializer(serializers.ModelSerializer):
       user_exists = User.objects.get(email=validated_data['email'], is_active=True)
     except:
       user_exists = None
-    
+
     if not user_exists:
       n = validated_data['first_name'].split()
       name = ((n[0]+(n[1] if n[1] else '')).lower())+makeID(4)
@@ -110,7 +110,6 @@ class SocialAuthSerializer(serializers.ModelSerializer):
       user = User.objects.create_user(
         username=name,
         email=validated_data['email'],
-        picture=validated_data['picture'],
         first_name=validated_data['first_name'],
         last_name=validated_data['last_name'],
         facebook_id=validated_data['facebook_id'],

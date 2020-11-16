@@ -22,6 +22,7 @@ class MyUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ('Contact Info', {'fields': ['contact']}),
         ('Rider Info', {'fields': ['plate_number', 'picture']}),
+        ('Socail Auth', {'fields': ['facebook_id']}),
     )
     list_display = ('email', 'first_name', 'last_name', 'username', 'contact')
     list_display_links = ('email',)

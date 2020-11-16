@@ -108,6 +108,7 @@ class SocialAuthAPI(GenericAPIView):
         except:
           user = None
 
+
         if user:
           _, token = AuthToken.objects.create(user)
           response = Response({
@@ -122,6 +123,7 @@ class SocialAuthAPI(GenericAPIView):
 
       else:
         raise ValidationError('Invalid email') 
+
 
       if serializer.is_valid(raise_exception=True):
         user = serializer.save()
@@ -156,10 +158,6 @@ class SocialAuthAPI(GenericAPIView):
         request.session.set_expiry(60*60)
 
         return response
-    else:
-      return Response({
-        'status': ''
-      })
       
 class SingupAPI(GenericAPIView):
   serializer_class = RegisterSerializer
