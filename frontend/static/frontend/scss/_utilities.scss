@@ -644,6 +644,18 @@ tr {
     }
   }
 }
+@media (max-width: 800px) {
+  .primary-overlay {
+  
+    &.above {
+  
+      &:after {
+        font-size: 20px;
+        font-weight: 500;
+      }
+    }
+  }
+}
 
 
 %btn-shared {
