@@ -16,7 +16,7 @@ class Contact(models.Model):
   subject = models.CharField(max_length=200)
   message = models.TextField(blank=True)
   
-  age = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(18), MaxValueValidator(50)])
+  age = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(18), MaxValueValidator(55)])
 
   service_type = models.CharField(max_length=50, blank=True, null=True)
   city = models.CharField(max_length=50, blank=True, null=True)
