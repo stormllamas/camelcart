@@ -28,20 +28,6 @@ const Topbar = ({
       $('.topbar-links').fadeIn()
     }
   }, [userLoading])
-
-  const authLinks = (
-    <ul className="right hide-on-med-and-down topbar-links">
-      <li className="waves-effect"><a className="grey-text text-darken-2 dropdown-trigger" data-target="partner-dropdown">Be Our Partner<i className="material-icons">keyboard_arrow_down</i></a></li>
-      <li className="waves-effect"><a className="grey-text text-darken-2">Help Center</a></li>
-    </ul>
-  )
-
-  const guestLinks = (
-    <ul className="right topbar-links">
-      <li className={history.location.pathname.includes('login') ? "active" : ''}><Link to="/login" className="grey-text text-darken-2">Login</Link></li>
-      <li className={history.location.pathname.includes('signup') ? "active" : ''}><Link to="/signup" className="grey-text text-darken-2 hide-on-med-and-down">Signup</Link></li>
-    </ul>
-  )
   
   return (
     <Fragment>
@@ -53,7 +39,18 @@ const Topbar = ({
               <a href="#" data-target="mobile-nav" className="sidenav-trigger show-on-large grey-text text-darken-2 show-on-small-and-up">
                 <i className="material-icons">menu</i>
               </a>
-              {!userLoading && isAuthenticated ? authLinks : guestLinks}
+              {!userLoading && isAuthenticated ? (
+                <ul className="right topbar-links">
+                  <li className="waves-effect hide-on-med-and-down"><a className="grey-text text-darken-2">Help Center</a></li>
+                  <li className="waves-effect hide-on-med-and-down"><a className="grey-text text-darken-2 dropdown-trigger" data-target="partner-dropdown">Be Our Partner<i className="material-icons">keyboard_arrow_down</i></a></li>
+                  {/* <li className="waves-effect"><Link to="/profile" className="grey-text text-darken-2">{user.first_name} {user.last_name}</Link></li> */}
+                </ul>
+              ) : (
+                <ul className="right topbar-links">
+                  <li className={history.location.pathname.includes('login') ? "active" : ''}><Link to="/login" className="grey-text text-darken-2">Login</Link></li>
+                  <li className={history.location.pathname.includes('signup') ? "active" : ''}><Link to="/signup" className="grey-text text-darken-2 hide-on-med-and-down">Signup</Link></li>
+                </ul>
+              )}
               <ul className="dropdown-content" id="partner-dropdown">
                 <li><Link to="/rider_inquiry" className="sidenav-close grey-text text-darken-1">Rider</Link></li>
                 <li><Link to="#!" className="sidenav-close grey-text text-darken-1">Food Merchant</Link></li>

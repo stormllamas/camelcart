@@ -279,9 +279,9 @@ const Profile = ({
             <div className="row mb-5">
               <div className="col s12 flex-row center">
                 <button className="btn light-blue lighten-2 modal-trigger uppercase rad-4" data-target="profilemodal">Edit profile</button>
-                {user.groups.includes('rider') || user.groups.includes('admin') ? (
+                {/* {user.groups.includes('rider') || user.groups.includes('admin') ? (
                   <button className="btn white grey-text text-darken-2 modal-trigger uppercase rad-4 ml-2" data-target="profilemodal">Make payment</button>
-                ) : undefined}
+                ) : undefined} */}
               </div>
             </div>
           </div>

@@ -297,7 +297,7 @@ class OrdersAPI(GenericAPIView):
     if delivered == 'true':
       delivered_query.add(Q(is_delivered=True), Q.AND)
     elif delivered == 'false':
-      delivered_query.add(Q(is_delivered=False), Q.AND)
+      delivered_query.add(Q(is_delivered=False, is_canceled=False), Q.AND)
 
     queryset = Order.objects.filter(Q(user=request.user, is_ordered=True) & delivered_query)
     queryset_full_length = queryset.count()

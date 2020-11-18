@@ -43,7 +43,7 @@ const Home = ({
           <div className="row mt-1 mb-1">
             <div className="col s4">
               <div className="card-panel left-align disabled">
-                <div className="primary-overlay above"></div>
+                <div className="primary-overlay above center"></div>
                 <div className="center">
                   <img src="static/frontend/img/Trike_food_logo.png" className="scale-pop" alt=""/>
                 </div>
@@ -53,7 +53,7 @@ const Home = ({
             </div>
             <div className="col s4">
               <div className="card-panel left-align disabled">
-                <div className="primary-overlay above"></div>
+                <div className="primary-overlay above center"></div>
                 <div className="center">
                   <img src="static/frontend/img/Trike_grocery_logo.png" className="scale-pop" alt=""/>
                 </div>
@@ -112,10 +112,10 @@ const Home = ({
             <div className="col s12 m4">
               <div className="card">
                 <div className="card-content">
-                  <Link to="#" className="card-title">Ask us a Question</Link>
-                  <p>Want to ask our team a question? Send us a message here</p>
+                  <Link to="/contact" className="card-title">Ask us a Question</Link>
+                  <p>Want to ask our team a question? Send us a message <Link to="/contact" className="blue-text">here</Link></p>
                 </div>
-                <Link to="#" className="card-image">
+                <Link to="/contact" className="card-image">
                   <img src="static/frontend/img/personal-shopper.jpg" className="responsive-img"/>
                 </Link>
               </div>
