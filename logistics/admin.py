@@ -27,10 +27,10 @@ class OrderAdmin(admin.ModelAdmin):
     ('Delivery Details', {'fields': ['unit', 'weight', 'height', 'width', 'length', 'description']}),
     ('Delivery Points', {'fields': ['seller', 'loc1_latitude', 'loc1_longitude', 'loc1_address', 'loc2_latitude', 'loc2_longitude', 'loc2_address', 'distance_value', 'distance_text', 'duration_value', 'duration_text']}),
     ('Payments', {'fields': ['payment_type', 'auth_id', 'capture_id']}),
-    ('Status', {'fields': ['is_ordered', 'date_ordered', 'is_paid', 'date_paid', 'rider', 'date_claimed', 'is_pickedup', 'date_pickedup', 'is_delivered', 'date_delivered']}),
+    ('Status', {'fields': ['is_ordered', 'date_ordered', 'is_paid', 'date_paid', 'rider', 'date_claimed', 'is_canceled', 'date_canceled', 'is_pickedup', 'date_pickedup', 'is_delivered', 'date_delivered']}),
   ]
   inlines = [OrderItemInLine]
-  list_display = ('ref_code', 'user', 'order_type', 'is_ordered', 'rider', 'is_delivered', 'payment_type', 'is_paid')
+  list_display = ('ref_code', 'user', 'order_type', 'is_ordered', 'date_ordered', 'rider', 'is_delivered', 'payment_type', 'is_paid')
   list_display_links = ('ref_code',)
   list_filter = ('payment_type', 'is_ordered', 'is_delivered', 'is_paid')
   list_per_page = 50

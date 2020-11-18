@@ -28,7 +28,6 @@ import datetime
 
 # Exceptions
 from django.core.exceptions import FieldError
-    
 
 class DashboardAPI(GenericAPIView):
   permission_classes = [IsAuthenticated, IsAdminUser]
@@ -79,7 +78,7 @@ class DashboardAPI(GenericAPIView):
     })
 
 class OrdersAPI(GenericAPIView):
-  permission_classes = [IsAuthenticated, SiteEnabled, IsAdminUser, HasGroupPermission]
+  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -122,8 +121,9 @@ class OrdersAPI(GenericAPIView):
     keywords = self.request.query_params.get('keywords', None)
     if keywords:
       keywords_query.add(Q(ref_code__icontains=keywords), Q.AND)
-    
-    results_full_length = Order.objects.filter(Q(is_ordered=True) & delivered_query & claimed_query & pickedup_query & keywords_query).count()
+
+    queryset = Order.objects.filter(Q(is_ordered=True, is_canceled=False) & delivered_query & claimed_query & pickedup_query & keywords_query)
+    results_full_length = queryset.count()
 
     range_query = self.request.query_params.get('range', None)
     if range_query == None:
@@ -167,7 +167,7 @@ class OrdersAPI(GenericAPIView):
       'count': order.count,
       'subtotal': sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]),
       'date_ordered': order.date_ordered,
-    } for order in Order.objects.filter(Q(is_ordered=True) & delivered_query & claimed_query & pickedup_query & keywords_query).order_by('-date_delivered','-date_claimed','-date_ordered')[from_item:to_item]]
+    } for order in queryset.order_by('-date_delivered','-date_claimed','-date_ordered')[from_item:to_item]]
 
     return Response({
       'count': len(orders),
@@ -178,7 +178,12 @@ class OrdersAPI(GenericAPIView):
 
 class OrderAPI(RetrieveAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, IsAdminUser]
+  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]
+  required_groups = {
+    'GET': ['rider'],
+    'POST': ['rider'],
+    'PUT': ['rider'],
+  }
 
   def get_object(self):
     return get_object_or_404(Order, id=self.kwargs['pk'])
@@ -232,7 +237,12 @@ class OrderAPI(RetrieveAPIView):
     })
 
 class OrderItemsAPI(GenericAPIView):
-  permission_classes = [IsAuthenticated, SiteEnabled, IsAdminUser]
+  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]
+  required_groups = {
+    'GET': ['rider'],
+    'POST': ['rider'],
+    'PUT': ['rider'],
+  }
 
   def get(self, request):
     if self.request.query_params.get('delivered') == 'true':
@@ -245,7 +255,8 @@ class OrderItemsAPI(GenericAPIView):
     if keywords:
       keywords_query.add(Q(order__ref_code__icontains=keywords), Q.OR)
     
-    results_full_length = OrderItem.objects.filter(Q(is_delivered=delivered_query) & keywords_query).count()
+    queryset = OrderItem.objects.filter(Q(is_delivered=delivered_query) & keywords_query)
+    results_full_length = queryset.count()
 
     range_query = self.request.query_params.get('range', None)
     if range_query == None:
@@ -296,7 +307,7 @@ class OrderItemsAPI(GenericAPIView):
       'ordered_price': order_item.ordered_price,
       'date_ordered': order_item.date_ordered,
       'date_delivered': order_item.date_delivered,
-    } for order_item in OrderItem.objects.filter(Q(is_delivered=delivered_query) & keywords_query).order_by('-date_delivered','-date_ordered')[from_item:to_item]]
+    } for order_item in queryset.order_by('-date_delivered','-date_ordered')[from_item:to_item]]
 
     return Response({
       'count': len(order_items),
@@ -307,7 +318,7 @@ class OrderItemsAPI(GenericAPIView):
 
 class ClaimOrderAPI(UpdateAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, IsAdminUser, HasGroupPermission]
+  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -332,9 +343,36 @@ class ClaimOrderAPI(UpdateAPIView):
 
       return Response(OrderSerializer(order, context=self.get_serializer_context()).data)
 
+class CancelOrderAPI(UpdateAPIView):
+  serializer_class = OrderSerializer
+  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]
+  required_groups = {
+    'GET': ['rider'],
+    'POST': ['rider'],
+    'PUT': ['rider'],
+  }
+
+  def get_object(self):
+    return get_object_or_404(Order, id=self.kwargs['order_id'])
+
+  def update(self, request, order_id=None):
+    order = self.get_object()
+    if order.is_canceled:
+      return Response({
+        'status': 'error',
+        'msg': 'Order already canceled'
+      })
+
+    else:
+      order.is_canceled = True
+      order.date_canceled = timezone.now()
+      order.save()
+
+      return Response(OrderSerializer(order, context=self.get_serializer_context()).data)
+
 class PickupOrderItemAPI(UpdateAPIView):
   serializer_class = AdminOrderItemSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, IsAdminUser, HasGroupPermission, IsOrderItemRider]
+  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission, IsOrderItemRider]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -379,7 +417,7 @@ class PickupOrderItemAPI(UpdateAPIView):
 
 class PickupOrderAPI(UpdateAPIView):
   serializer_class = AdminOrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, IsAdminUser, HasGroupPermission, IsOrderRider]
+  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission, IsOrderRider]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -412,14 +450,14 @@ class PickupOrderAPI(UpdateAPIView):
 
     else:
       order.is_pickedup = True
-      order.date_delivered = timezone.now()
+      order.date_pickedup = timezone.now()
       order.save()
 
       return Response(AdminOrderSerializer(order, context=self.get_serializer_context()).data)
 
 class DeliverOrderItemAPI(UpdateAPIView):
   serializer_class = AdminOrderItemSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, IsAdminUser, HasGroupPermission, IsOrderItemRider]
+  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission, IsOrderItemRider]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -472,7 +510,7 @@ class DeliverOrderItemAPI(UpdateAPIView):
 
 class DeliverOrderAPI(UpdateAPIView):
   serializer_class = AdminOrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, IsAdminUser, HasGroupPermission, IsOrderRider]
+  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission, IsOrderRider]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],

@@ -9,7 +9,7 @@ import Preloader from '../common/Preloader'
 import Pagination from '../common/Pagination'
 import ManagerBreadcrumbs from './ManagerBreadcrumbs'
 
-import { pickupOrderItem, pickupOrder, getOrders, getOrder } from '../../actions/manager'
+import { pickupOrderItem, pickupOrder, cancelOrder, getOrders, getOrder } from '../../actions/manager'
 
 const Claimed = ({
   manager: {
@@ -21,6 +21,7 @@ const Claimed = ({
   getOrders,
   getOrder,
   pickupOrderItem, pickupOrder,
+  cancelOrder,
   setCurLocation
 }) => {
   const history = useHistory()
@@ -34,6 +35,8 @@ const Claimed = ({
   const [deliveryMarker, setDeliveryMarker] = useState('');
 
   const [addressFocus, setAddressFocus] = useState('');
+
+  const [orderToDelete, setOrderToDelete] = useState('');
 
   const onSubmit = async () => {
     if (order.order_type === 'food') {
@@ -264,6 +267,7 @@ const Claimed = ({
                           <th>Order Total</th>
                           <th>Subtotal</th>
                           <th>Shipping</th>
+                          <th className="pl-2 pr-2">Cancel</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -271,7 +275,7 @@ const Claimed = ({
                           orders.results.map(order => (
                             <tr key={order.id}>
                               <td className="mw-medium">{moment(order.date_ordered).format('lll')}</td>
-                              <td><a href="" data-target="ordermodal" className="mw-small modal-trigger fw-6 blue-text text-lighten-2" onClick={() => getOrder({ id:order.id })}>{order.ref_code}</a></td>
+                              <td><a href="" data-target="order-modal" className="mw-small modal-trigger fw-6 blue-text text-lighten-2" onClick={() => getOrder({ id:order.id })}>{order.ref_code}</a></td>
                               <td className="mw-small">{order.order_type}</td>
                               <td className={`fw-6 ${order.payment_type === 1 ? 'orange-text' : 'green-text'}`}>{order.payment_type === 1 ? 'COD' : 'Card'}</td>
                               <td className="mw-large"><p className="m-0">{order.order_type === 'food' && order.seller.name}</p><a href="" data-target="addressmodal" className="mw-small modal-trigger fw-6 green-text text-lighten-1" onClick={() => {getOrder({ id:order.id }), setAddressFocus('pickup')}}>{order.loc1_address}</a></td>
@@ -280,6 +284,11 @@ const Claimed = ({
                               <td className="mw-medium">₱ {order.total.toFixed(2)}</td>
                               <td className="mw-medium">₱ {order.subtotal.toFixed(2)}</td>
                               <td className="mw-medium">₱ {order.shipping.toFixed(2)}</td>
+                              <td className="center">
+                                <a href="#" className="modal-trigger" data-target="confirmation-modal" onClick={() => setOrderToDelete(order.id)}>
+                                  <i className="material-icons red-text">delete_forever</i>
+                                </a>
+                              </td>
                             </tr>
                           ))
                         ) : (
@@ -293,108 +302,115 @@ const Claimed = ({
                 </div>
               </div>
             </div>
-            <div id="ordermodal" className="modal modal-fixed-footer supermodal">
-              {orderLoading ? (
-                <div className="flex-col full-height middle center relative preloader-wrapper pb-5">
-                  <Preloader color="green" size="big" adds="visible"/>
-                </div>
-              ) : (
-                <Fragment>
-                  <div className="modal-content">
-                    <div className="row m-0">
-                      <div className="col s12 m6 l6">
-                        <h5 className="mt-0 mb-2">Order Summary <small>({order.ref_code})</small></h5>
-                      </div>
-                      <div className="col s12 m6 l6 flex-row right-middle">
-                        <button className={`btn green right ${order.order_type === 'delivery' ? 'modal-close' : (order.order_items.filter(orderItem => orderItem.is_pickedup === false).length < 2 ? 'modal-close' : '')}`} onClick={() => onSubmit()}>Mark as Picked Up</button>
-                      </div>
+          </div>
+          <div id="order-modal" className="modal modal-fixed-footer supermodal">
+            {orderLoading ? (
+              <div className="flex-col full-height middle center relative preloader-wrapper pb-5">
+                <Preloader color="green" size="big" adds="visible"/>
+              </div>
+            ) : (
+              <Fragment>
+                <div className="modal-content">
+                  <div className="row m-0">
+                    <div className="col s12 m6 l6">
+                      <h5 className="mt-0 mb-2">Order Summary <small>({order.ref_code})</small></h5>
                     </div>
-                    {order.order_type === 'food' ? (
-                      <Fragment>
-                        <ul className="collection transparent no-shadow rad-3">
-                          {order.order_items.map(orderItem => (
-                            <li key={orderItem.id} className="collection-item flex-row middle">
-                              <div className="mw-small manager-checklist flex-col middle center pr-2">
-                                <div className="checklist-item flex-col middle center">
-                                  <input id={`${order.ref_code}-${orderItem.id}`} type="checkbox" className="check" name={`${order.ref_code}-${orderItem.id}`} value={orderItem.id} defaultChecked={orderItem.is_pickedup === true ? true : false} disabled={orderItem.is_pickedup === true ? true : false}/>
-                                  <label className="btn-check text-center" htmlFor={`${order.ref_code}-${orderItem.id}`}><i className="fas fa-check"></i></label>
-                                </div>
-                              </div>
-                              <div className="collection-item avatar transparent">
-                                <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}>contacts</div>
-                                <p className="title">{orderItem.product.name} - {orderItem.product_variant.name}</p>
-                                <p className="grey-text">{orderItem.quantity} x ₱ {orderItem.ordered_price.toFixed(2)}</p>
-                                <p className="title">₱ {(orderItem.quantity*orderItem.ordered_price).toFixed(2)}</p>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                        <p className="fs-16 m-0 ml-2">Subtotal: <span className="fw-4 fs-16 ml-2">₱ {order.subtotal.toFixed(2)}</span></p>
-                        <p className="fs-16 m-0 ml-2">Delivery: <span className="fw-4 fs-16 ml-2">₱ {order.shipping.toFixed(2)}</span></p>
-                        <p className="fw-6 fs-22 m-0 ml-2">Total: <span className="fw-4 fs-18 ml-2">₱ {order.total.toFixed(2)}</span></p>
-                      </Fragment>
-                    ) : (
-                      <Fragment>
-                        <div className="row">
-                          <div className="col s12 m6 mb-1">
-                            <small>First Name</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2">{order.first_name}</p>
-                          </div>
-                          <div className="col s12 m6 mb-1">
-                            <small>Last Name</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2">{order.last_name}</p>
-                          </div>
-                          <div className="col s12 mb-1">
-                            <small>Contact</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2">{order.contact}</p>
-                          </div>
-                          <div className="col s12 mb-1">
-                            <small>Email</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2">{order.email}</p>
-                          </div>
-                          <div className="col s12 mb-1">
-                            <small>Gender</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2">{order.gender}</p>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="divider"></div>
-                        </div>
-                        <div className="row">
-                          <div className="col s12 m6 mb-1">
-                            <small>Item Height</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2">{order.height}</p>
-                          </div>
-                          <div className="col s12 m6 mb-1">
-                            <small>Item Width</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2">{order.width}</p>
-                          </div>
-                          <div className="col s12 mb-1">
-                            <small>Item Length</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2">{order.length}</p>
-                          </div>
-                          <div className="col s12 mb-1">
-                            <small>Description</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2">{order.description}</p>
-                          </div>
-                        </div>
-                        <p className="fw-6 fs-22 m-0 ml-2">Delivery Total: <span className="fw-4 fs-18 ml-2">₱ {order.shipping.toFixed(2)}</span></p>
-                      </Fragment>
-                    )}
+                    <div className="col s12 m6 l6 flex-row right-middle">
+                      <button className={`btn green right ${order.order_type === 'delivery' ? 'modal-close' : (order.order_items.filter(orderItem => orderItem.is_pickedup === false).length < 2 ? 'modal-close' : '')}`} onClick={() => onSubmit()}>Mark as Picked Up</button>
+                    </div>
                   </div>
-                </Fragment>
-              )}
+                  {order.order_type === 'food' ? (
+                    <Fragment>
+                      <ul className="collection transparent no-shadow rad-3">
+                        {order.order_items.map(orderItem => (
+                          <li key={orderItem.id} className="collection-item flex-row middle">
+                            <div className="mw-small manager-checklist flex-col middle center pr-2">
+                              <div className="checklist-item flex-col middle center">
+                                <input id={`${order.ref_code}-${orderItem.id}`} type="checkbox" className="check" name={`${order.ref_code}-${orderItem.id}`} value={orderItem.id} defaultChecked={orderItem.is_pickedup === true ? true : false} disabled={orderItem.is_pickedup === true ? true : false}/>
+                                <label className="btn-check text-center" htmlFor={`${order.ref_code}-${orderItem.id}`}><i className="fas fa-check"></i></label>
+                              </div>
+                            </div>
+                            <div className="collection-item avatar transparent">
+                              <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}>contacts</div>
+                              <p className="title">{orderItem.product.name} - {orderItem.product_variant.name}</p>
+                              <p className="grey-text">{orderItem.quantity} x ₱ {orderItem.ordered_price.toFixed(2)}</p>
+                              <p className="title">₱ {(orderItem.quantity*orderItem.ordered_price).toFixed(2)}</p>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="fs-16 m-0 ml-2">Subtotal: <span className="fw-4 fs-16 ml-2">₱ {order.subtotal.toFixed(2)}</span></p>
+                      <p className="fs-16 m-0 ml-2">Delivery: <span className="fw-4 fs-16 ml-2">₱ {order.shipping.toFixed(2)}</span></p>
+                      <p className="fw-6 fs-22 m-0 ml-2">Total: <span className="fw-4 fs-18 ml-2">₱ {order.total.toFixed(2)}</span></p>
+                    </Fragment>
+                  ) : (
+                    <Fragment>
+                      <div className="row">
+                        <div className="col s12 m6 mb-1">
+                          <small>First Name</small>
+                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.first_name}</p>
+                        </div>
+                        <div className="col s12 m6 mb-1">
+                          <small>Last Name</small>
+                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.last_name}</p>
+                        </div>
+                        <div className="col s12 mb-1">
+                          <small>Contact</small>
+                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.contact}</p>
+                        </div>
+                        <div className="col s12 mb-1">
+                          <small>Email</small>
+                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.email}</p>
+                        </div>
+                        <div className="col s12 mb-1">
+                          <small>Gender</small>
+                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.gender}</p>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="divider"></div>
+                      </div>
+                      <div className="row">
+                        <div className="col s12 m6 mb-1">
+                          <small>Item Height</small>
+                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.height}</p>
+                        </div>
+                        <div className="col s12 m6 mb-1">
+                          <small>Item Width</small>
+                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.width}</p>
+                        </div>
+                        <div className="col s12 mb-1">
+                          <small>Item Length</small>
+                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.length}</p>
+                        </div>
+                        <div className="col s12 mb-1">
+                          <small>Description</small>
+                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.description}</p>
+                        </div>
+                      </div>
+                      <p className="fw-6 fs-22 m-0 ml-2">Delivery Total: <span className="fw-4 fs-18 ml-2">₱ {order.shipping.toFixed(2)}</span></p>
+                    </Fragment>
+                  )}
+                </div>
+              </Fragment>
+            )}
             <div className="modal-footer">
               <a className="modal-close cancel-fixed"><i className="material-icons grey-text">close</i></a>
             </div>
+          </div>
+          <div id="addressmodal" className="modal supermodal">
+            <div id="googlemap"></div>
+            <div className="modal-footer">
+              <a className="modal-action modal-close cancel-fixed"><i className="material-icons grey-text">close</i></a>
             </div>
           </div>
-            <div id="addressmodal" className="modal supermodal">
-              <div id="googlemap"></div>
-              <div className="modal-footer">
-                <a className="modal-action modal-close cancel-fixed"><i className="material-icons grey-text">close</i></a>
-              </div>
+          <div id="confirmation-modal" className="modal">
+            <div className="modal-content center">
+              <h4>Are you sure?</h4>
+              <a className="modal-action modal-close btn btn-large btn-extended red" onClick={() => cancelOrder({ id: orderToDelete })}>Cancel Order</a>
+              <a className="modal-action modal-close cancel"><i className="material-icons grey-text">close</i></a>
             </div>
+          </div>
         </section>
       </Fragment>
     )
@@ -406,10 +422,11 @@ Claimed.propTypes = {
   getOrder: PropTypes.func.isRequired,
   pickupOrderItem: PropTypes.func.isRequired,
   pickupOrder: PropTypes.func.isRequired,
+  cancelOrder: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
   manager: state.manager,
 });
 
-export default connect(mapStateToProps, { getOrders, getOrder, pickupOrderItem, pickupOrder })(Claimed);
+export default connect(mapStateToProps, { getOrders, getOrder, pickupOrderItem, pickupOrder, cancelOrder })(Claimed);

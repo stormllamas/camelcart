@@ -217,6 +217,9 @@ class Order(models.Model):
   rider = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='claimed_orders', on_delete=models.SET_NULL, blank=True, null=True)
   date_claimed = models.DateTimeField(null=True, blank=True)
 
+  is_canceled = models.BooleanField(default=False)
+  date_canceled = models.DateTimeField(null=True, blank=True)
+
   is_paid = models.BooleanField(default=False)
   date_paid = models.DateTimeField(null=True, blank=True)
   payment_type = models.PositiveIntegerField(default=1) # (1) for COD (2) for Card or Detail
@@ -257,8 +260,8 @@ class Order(models.Model):
   @property
   def shipping(self):
     total = round((self.distance_value/1000), 0)*site_config.per_km_price
-    if total < 25:
-      total = 25
+    if total < 35:
+      total = 35
     return total
 
   @property

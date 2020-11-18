@@ -9,6 +9,7 @@ import AccountsRoute from './common/AccountsRoute';
 import PublicRoute from './common/PublicRoute';
 import PrivateRoute from './common/PrivateRoute';
 import AdminRoute from './common/AdminRoute';
+import RiderRoute from './common/RiderRoute';
 
 import Preloader from './common/Preloader';
 
@@ -88,10 +89,10 @@ const App = () => {
           <PrivateRoute exact path="/delivery/payments" component={DeliveryPayments} />
 
           <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
-          <AdminRoute exact path="/order_manager/unclaimed" component={Unclaimed} />
-          <AdminRoute exact path="/order_manager/claimed" component={Claimed} />
-          <AdminRoute exact path="/order_manager/undelivered" component={Undelivered} />
-          <AdminRoute exact path="/order_manager/delivered" component={Delivered} />
+          <RiderRoute exact path="/order_manager/unclaimed" component={Unclaimed} />
+          <RiderRoute exact path="/order_manager/claimed" component={Claimed} />
+          <RiderRoute exact path="/order_manager/undelivered" component={Undelivered} />
+          <RiderRoute exact path="/order_manager/delivered" component={Delivered} />
 
           {/* <Route component={Page404} /> */}
         </Switch>

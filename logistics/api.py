@@ -299,7 +299,8 @@ class OrdersAPI(GenericAPIView):
     elif delivered == 'false':
       delivered_query.add(Q(is_delivered=False), Q.AND)
 
-    queryset_full_length = Order.objects.filter(Q(user=request.user, is_ordered=True) & delivered_query).count()
+    queryset = Order.objects.filter(Q(user=request.user, is_ordered=True) & delivered_query)
+    queryset_full_length = queryset.count()
 
     page_query = int(self.request.query_params.get('page', 1))
     from_item = 0
@@ -347,6 +348,7 @@ class OrdersAPI(GenericAPIView):
       } if order.rider != None else None,
       
       'is_claimed': True if order.rider != None else False, 'date_claimed': order.date_claimed,
+      'is_canceled': order.is_canceled, 'date_canceled': order.date_canceled,
       'is_pickedup': order.is_pickedup, 'date_pickedup': order.date_pickedup,
       'is_delivered': order.is_delivered, 'date_delivered': order.date_delivered,
       
@@ -372,7 +374,7 @@ class OrdersAPI(GenericAPIView):
         },
       } for order_item in order.order_items.all()]
 
-    } for order in Order.objects.filter(Q(user=request.user, is_ordered=True) & delivered_query).order_by('-date_ordered')[from_item:to_item]]
+    } for order in queryset.order_by('-date_ordered')[from_item:to_item]]
 
     return Response({
       'count': len(orders),
@@ -687,7 +689,6 @@ class CompleteOrderAPI(UpdateAPIView):
 
   def update(self, request, paid=None, order_type=None):
     order = self.get_object()
-    print(order)
     order_valid = False
     carried_order_items = []
 
