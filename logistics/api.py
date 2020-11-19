@@ -193,7 +193,7 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
     order_seller = self.request.query_params.get('order_seller', None)
     order_seller_name = self.request.query_params.get('order_seller_name', None)
 
-    if 'rider' in request.user.groups.all():
+    if 'rider' in self.request.user.groups.all():
       return PermissionDenied('Not Authorized')
 
     if order_seller or order_seller_name:

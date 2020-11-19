@@ -240,212 +240,208 @@ const Profile = ({
   }, [gender]);
 
   return (
-    isAuthenticated ? (
-      <Fragment>
-        <section className="section section-profile mt-3">
-          <div className="container">
-            {user.groups.includes('rider') || user.groups.includes('admin') ? (
-              <div className="row">
-                <div className="col mb-2">
-                  {user.picture ? (
-                    <div className="bg-cover circle" style={{ backgroundImage: `url(${user.picture}`, height: '100px', width: '100px'}}></div>
-                  ) : (
-                    <div className="bg-cover circle" style={{ backgroundImage: `url(/static/frontend/img/user.jpg)`, height: '100px', width: '100px'}}></div>
-                  )}
-                </div>
-                <div className="col pl-2">
-                  <div className="row mb-0">
-                    <div className="col mb-2">
-                      <p className="m-0 light-blue-text fw-5 fs-18">{user.first_name} {user.last_name}</p>
-                      <small className="grey-text uppercase">{user.groups.includes('admin') ? 'Administrator' : `Rider ${user.rider_info.plate_number ? `(${user.rider_info.plate_number})` : ''}`}</small>
-                      <div className="row mt-3 mb-0">
-                        <div className="col">
-                          {[...Array(parseInt(user.rider_info.review_total)).keys()].map(star => <i key={star} className="material-icons yellow-text text-darken-2">star</i>)}
-                          {[...Array(Math.max(5-parseInt(user.rider_info.review_total), 0)).keys()].map(star => <i key={star} className="material-icons grey-text text-lighten-2">star</i>)}
-                        </div>
+    <Fragment>
+      <section className="section section-profile mt-3">
+        <div className="container">
+          {user.groups.includes('rider') || user.groups.includes('admin') ? (
+            <div className="row">
+              <div className="col mb-2">
+                {user.picture ? (
+                  <div className="bg-cover circle" style={{ backgroundImage: `url(${user.picture}`, height: '100px', width: '100px'}}></div>
+                ) : (
+                  <div className="bg-cover circle" style={{ backgroundImage: `url(/static/frontend/img/user.jpg)`, height: '100px', width: '100px'}}></div>
+                )}
+              </div>
+              <div className="col pl-2">
+                <div className="row mb-0">
+                  <div className="col mb-2">
+                    <p className="m-0 light-blue-text fw-5 fs-18">{user.first_name} {user.last_name}</p>
+                    <small className="grey-text uppercase">{user.groups.includes('admin') ? 'Administrator' : `Rider ${user.rider_info.plate_number ? `(${user.rider_info.plate_number})` : ''}`}</small>
+                    <div className="row mt-3 mb-0">
+                      <div className="col">
+                        {[...Array(parseInt(user.rider_info.review_total)).keys()].map(star => <i key={star} className="material-icons yellow-text text-darken-2">star</i>)}
+                        {[...Array(Math.max(5-parseInt(user.rider_info.review_total), 0)).keys()].map(star => <i key={star} className="material-icons grey-text text-lighten-2">star</i>)}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            ) : (
-              <div className="row flex-col center">
-                <div className="col pl-2">
-                  <p className="m-0 light-blue-text fw-5 center fs-28 full-width">{user.first_name} {user.last_name}</p>
-                </div>
+            </div>
+          ) : (
+            <div className="row flex-col center">
+              <div className="col pl-2">
+                <p className="m-0 light-blue-text fw-5 center fs-28 full-width">{user.first_name} {user.last_name}</p>
               </div>
+            </div>
 
-            )}
-            <div className="row mb-5">
-              <div className="col s12 flex-row center">
-                <button className="btn light-blue lighten-2 modal-trigger uppercase rad-4" data-target="profilemodal">Edit profile</button>
-                {/* {user.groups.includes('rider') || user.groups.includes('admin') ? (
-                  <button className="btn white grey-text text-darken-2 modal-trigger uppercase rad-4 ml-2" data-target="profilemodal">Make payment</button>
-                ) : undefined} */}
-              </div>
-            </div>
-          </div>
-          {user.groups.includes('rider') || user.groups.includes('admin') ? (
-            <Fragment>
-              <div className="divider"></div>
-              <div className="container">
-                <div className="row mt-2">
-                  <div className="col s12">
-                    <div className="grey-text">
-                      <p className="fw-6">Amount Due</p>
-                      <p className="valign-wrapper mt-1 mb-0 fs-18 fw-6"><i className="material-icons prefix light-blue-text fs-24 mr-2">payments</i>₱ {user.rider_info.accounts_payable.toFixed(2)}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Fragment>
-          ) : undefined}
-          <div className="divider"></div>
-          <div className="container">
-            <div className="row mt-2">
-              <div className="col s12">
-                <div className="grey-text">
-                  <small>Email</small>
-                  <i className="valign-wrapper mt-1 mb-0"><i className="material-icons prefix light-blue-text fs-24 mr-2">email</i>{user.email}</i>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="divider"></div>
-          <div className="container">
-            <div className="row mt-2">
-              <div className="col s12">
-                <div className="grey-text">
-                  <small>Phone</small>
-                  <p className="valign-wrapper mt-1 mb-0"><i className="material-icons prefix light-blue-text fs-24 mr-2">phone</i>{contact}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="divider"></div>
-          <div className="container">
-            <div className="row mt-2">
-              <div className="col s12">
-                <div className="grey-text">
-                  <small>Gender</small>
-                  <p className="valign-wrapper mt-1 mb-0"><i className="fas fa-venus-mars prefix light-blue-text fs-24 mr-2"></i>{gender}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          {user.groups.includes('rider') || user.groups.includes('admin') ? (
-            <Fragment>
-              <div className="divider"></div>
-              <div className="container">
-                <div className="row mt-2">
-                  <div className="col s12">
-                    <div className="grey-text">
-                      <small>Date Joined</small>
-                      <p className="valign-wrapper mt-1 mb-0"><i className="material-icons prefix light-blue-text fs-24 mr-2">calendar_today</i>{moment(user.date_joined).format('ll')}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Fragment>
-          ) : undefined}
-          <div className="divider"></div>
-          <div className="container">
-            <div className="row mt-2">
-              <div className="col s12">
-                <div className="grey-text">
-                  <p>Saved Addresses</p>
-                  {user.addresses.length > 0 ? (
-                    <ul className="collection">
-                      {user.addresses.map(address => (
-                        <li key={address.id} className="collection-item pr-5 relative">
-                          {/* <div>Address 1</div> */}
-                          <div>{address.address}</div>
-                          <Link to="" className="secondary-content top-right" onClick={e => {e.preventDefault(), deleteAddress(address.id)}}>
-                            <i className="material-icons red-text">delete_forever</i>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <div className="row mt-3">
-                      <div className="col s12 center">
-                        <h5 className="grey-text text-lighten-1">No address saved</h5>
-                      </div>
-                    </div>
-                  )}
-                  <div className="row mt-4">
-                    <div className="col s12 flex-col center middle">
-                      <button className="green lighten-1 white-text btn flex-row center middle modal-trigger waves-effect m-0" data-target="addressmodal"><i className="material-icons">add</i>Add new address</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        <div id="addressmodal" className="modal supermodal">
-          <div id="googlemap"></div>
-          <input id="profile_address" type="text" placeholder="Enter a Location" className="addressmodal-input open"
-            value={latitude && longitude ? (address ? address : `(${latitude}), (${longitude})`) : address}
-            onChange={e => {
-              setAddress(e.target.value);
-              setLatitude('');
-              setLongitude('');
-            }}
-          />
-          <div className="modal-footer">
-            <a className="modal-action modal-close cancel-fixed"><i className="material-icons grey-text">close</i></a>
-            <a className="modal-action modal-close waves-effect waves-blue btn center blue btn-large btn-extended" onClick={() => addNewAddress()} disabled={!latitude || !longitude || !address ? true : false}>Add New Address</a>
-          </div>
-        </div>
-
-        <div id="profilemodal" className="modal supermodal">
-          <div className="modal-content relative">
-            <h5>Edit Your Profile</h5>
-            <a className="modal-action modal-close cancel"><i className="material-icons grey-text">close</i></a>
-            <div className="row mt-3">
-              <form>
-                <div className="col s12 m6">
-                  <div className="input-field relative">
-                    <input type="text" id="first_name" className="validate grey-text text-darken-2" value={firstName} onChange={e => setFirstName(e.target.value)} required/>
-                    <label htmlFor="first_name" className="grey-text text-darken-2">First Name</label>
-                    <span className="helper-text" data-error="This field is required"></span>
-                  </div>
-                </div>
-                <div className="col s12 m6">
-                  <div className="input-field relative">
-                    <input type="text" id="last_name" className="validate grey-text text-darken-2" value={lastName} onChange={e => setLastName(e.target.value)} required/>
-                    <label htmlFor="last_name" className="grey-text text-darken-2">Last Name</label>
-                    <span className="helper-text" data-error="This field is required"></span>
-                  </div>
-                </div>
-                <div className="col s12 m6">
-                  <div className="input-field relative">
-                    <input type="text" id="contact" className="validate grey-text text-darken-2" value={contact} onChange={e => setContact(e.target.value)} required/>
-                    <label htmlFor="contact" className="grey-text text-darken-2">Contact</label>
-                    <span className="helper-text" data-error="This field is required"></span>
-                  </div>
-                </div>
-                <div className="col s12 m6">
-                  <div className="input-field">
-                    <select id="gender" className="text-grey validate grey-text text-darken-2" value={gender} onChange={e => setGender(e.target.value)} required>
-                      <option value="" disabled>Select a Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                    </select>
-                    <label htmlFor="gender" className="grey-text text-darken-2">Gender</label>
-                  </div>
-                </div>
-                <a className="modal-action modal-close waves-effect waves-blue btn center blue btn-large btn-extended" onClick={() => saveUserChanges()}>Save Changes</a>
-              </form>
+          )}
+          <div className="row mb-5">
+            <div className="col s12 flex-row center">
+              <button className="btn light-blue lighten-2 modal-trigger uppercase rad-4" data-target="profilemodal">Edit profile</button>
+              {/* {user.groups.includes('rider') || user.groups.includes('admin') ? (
+                <button className="btn white grey-text text-darken-2 modal-trigger uppercase rad-4 ml-2" data-target="profilemodal">Make payment</button>
+              ) : undefined} */}
             </div>
           </div>
         </div>
-      </Fragment>
-    ) : (
-      <Redirect to="/login"/>
-    )
+        {user.groups.includes('rider') || user.groups.includes('admin') ? (
+          <Fragment>
+            <div className="divider"></div>
+            <div className="container">
+              <div className="row mt-2">
+                <div className="col s12">
+                  <div className="grey-text">
+                    <p className="fw-6">Amount Due</p>
+                    <p className="valign-wrapper mt-1 mb-0 fs-18 fw-6"><i className="material-icons prefix light-blue-text fs-24 mr-2">payments</i>₱ {user.rider_info.accounts_payable.toFixed(2)}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Fragment>
+        ) : undefined}
+        <div className="divider"></div>
+        <div className="container">
+          <div className="row mt-2">
+            <div className="col s12">
+              <div className="grey-text">
+                <small>Email</small>
+                <i className="valign-wrapper mt-1 mb-0"><i className="material-icons prefix light-blue-text fs-24 mr-2">email</i>{user.email}</i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="divider"></div>
+        <div className="container">
+          <div className="row mt-2">
+            <div className="col s12">
+              <div className="grey-text">
+                <small>Phone</small>
+                <p className="valign-wrapper mt-1 mb-0"><i className="material-icons prefix light-blue-text fs-24 mr-2">phone</i>{contact}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="divider"></div>
+        <div className="container">
+          <div className="row mt-2">
+            <div className="col s12">
+              <div className="grey-text">
+                <small>Gender</small>
+                <p className="valign-wrapper mt-1 mb-0"><i className="fas fa-venus-mars prefix light-blue-text fs-24 mr-2"></i>{gender}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {user.groups.includes('rider') || user.groups.includes('admin') ? (
+          <Fragment>
+            <div className="divider"></div>
+            <div className="container">
+              <div className="row mt-2">
+                <div className="col s12">
+                  <div className="grey-text">
+                    <small>Date Joined</small>
+                    <p className="valign-wrapper mt-1 mb-0"><i className="material-icons prefix light-blue-text fs-24 mr-2">calendar_today</i>{moment(user.date_joined).format('ll')}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Fragment>
+        ) : undefined}
+        <div className="divider"></div>
+        <div className="container">
+          <div className="row mt-2">
+            <div className="col s12">
+              <div className="grey-text">
+                <p>Saved Addresses</p>
+                {user.addresses.length > 0 ? (
+                  <ul className="collection">
+                    {user.addresses.map(address => (
+                      <li key={address.id} className="collection-item pr-5 relative">
+                        {/* <div>Address 1</div> */}
+                        <div>{address.address}</div>
+                        <Link to="" className="secondary-content top-right" onClick={e => {e.preventDefault(), deleteAddress(address.id)}}>
+                          <i className="material-icons red-text">delete_forever</i>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="row mt-3">
+                    <div className="col s12 center">
+                      <h5 className="grey-text text-lighten-1">No address saved</h5>
+                    </div>
+                  </div>
+                )}
+                <div className="row mt-4">
+                  <div className="col s12 flex-col center middle">
+                    <button className="green lighten-1 white-text btn flex-row center middle modal-trigger waves-effect m-0" data-target="addressmodal"><i className="material-icons">add</i>Add new address</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <div id="addressmodal" className="modal supermodal">
+        <div id="googlemap"></div>
+        <input id="profile_address" type="text" placeholder="Enter a Location" className="addressmodal-input open"
+          value={latitude && longitude ? (address ? address : `(${latitude}), (${longitude})`) : address}
+          onChange={e => {
+            setAddress(e.target.value);
+            setLatitude('');
+            setLongitude('');
+          }}
+        />
+        <div className="modal-footer">
+          <a className="modal-action modal-close cancel-fixed"><i className="material-icons grey-text">close</i></a>
+          <a className="modal-action modal-close waves-effect waves-blue btn center blue btn-large btn-extended" onClick={() => addNewAddress()} disabled={!latitude || !longitude || !address ? true : false}>Add New Address</a>
+        </div>
+      </div>
+
+      <div id="profilemodal" className="modal supermodal">
+        <div className="modal-content relative">
+          <h5>Edit Your Profile</h5>
+          <a className="modal-action modal-close cancel"><i className="material-icons grey-text">close</i></a>
+          <div className="row mt-3">
+            <form>
+              <div className="col s12 m6">
+                <div className="input-field relative">
+                  <input type="text" id="first_name" className="validate grey-text text-darken-2" value={firstName} onChange={e => setFirstName(e.target.value)} required/>
+                  <label htmlFor="first_name" className="grey-text text-darken-2">First Name</label>
+                  <span className="helper-text" data-error="This field is required"></span>
+                </div>
+              </div>
+              <div className="col s12 m6">
+                <div className="input-field relative">
+                  <input type="text" id="last_name" className="validate grey-text text-darken-2" value={lastName} onChange={e => setLastName(e.target.value)} required/>
+                  <label htmlFor="last_name" className="grey-text text-darken-2">Last Name</label>
+                  <span className="helper-text" data-error="This field is required"></span>
+                </div>
+              </div>
+              <div className="col s12 m6">
+                <div className="input-field relative">
+                  <input type="text" id="contact" className="validate grey-text text-darken-2" value={contact} onChange={e => setContact(e.target.value)} required/>
+                  <label htmlFor="contact" className="grey-text text-darken-2">Contact</label>
+                  <span className="helper-text" data-error="This field is required"></span>
+                </div>
+              </div>
+              <div className="col s12 m6">
+                <div className="input-field">
+                  <select id="gender" className="text-grey validate grey-text text-darken-2" value={gender} onChange={e => setGender(e.target.value)} required>
+                    <option value="" disabled>Select a Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                  <label htmlFor="gender" className="grey-text text-darken-2">Gender</label>
+                </div>
+              </div>
+              <a className="modal-action modal-close waves-effect waves-blue btn center blue btn-large btn-extended" onClick={() => saveUserChanges()}>Save Changes</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </Fragment>
   )
 }
 

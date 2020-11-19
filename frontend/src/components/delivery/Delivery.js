@@ -296,7 +296,7 @@ const Delivery = ({
   }
   
   useEffect(() => {
-    if (!userLoading && isAuthenticated) {
+    if (!userLoading && isAuthenticated && !user.groups.includes('rider') === true) {
       getCurrentOrder({
         type: 'delivery'
       })
@@ -338,7 +338,7 @@ const Delivery = ({
   }, [gender, unit]);
 
   return (
-    isAuthenticated && !user.groups.includes('rider') ? (
+    isAuthenticated && !user.groups.includes('rider') === true ? (
       <section className="section section-delivery grey lighten-5">
         <div className="container">
           <h4>Delivery Form</h4>

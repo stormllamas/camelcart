@@ -35,21 +35,17 @@ const PrivateRoute = ({
           if (siteInfo.maintenance_mode) {
             return <Redirect to='/site?0' />
           } else {
-            if (isAuthenticated) {
-              return (
-                <Fragment>
-                  <Topbar curLocation={curLocation}/>
-                  <div className="middle-wrapper">
-                    <div className="middle-content">
-                      <Component {...props} setCurLocation={setCurLocation} />
-                    </div>
+            return (
+              <Fragment>
+                <Topbar curLocation={curLocation}/>
+                <div className="middle-wrapper">
+                  <div className="middle-content">
+                    <Component {...props} setCurLocation={setCurLocation} />
                   </div>
-                  <Footer/>
-                </Fragment>
-              )
-            } else {
-              return <Redirect to='/' />
-            }
+                </div>
+                {isAuthenticated && <Footer/>}
+              </Fragment>
+            )
           }
         }
       }}

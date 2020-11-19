@@ -8,6 +8,7 @@ import store from '../store';
 import AccountsRoute from './common/AccountsRoute';
 import PublicRoute from './common/PublicRoute';
 import PrivateRoute from './common/PrivateRoute';
+import SemiPrivateRoute from './common/SemiPrivateRoute';
 import AdminRoute from './common/AdminRoute';
 import RiderRoute from './common/RiderRoute';
 
@@ -85,7 +86,7 @@ const App = () => {
           <PrivateRoute exact path="/product_review/:order_item_id" component={ProductReview} />
           <PrivateRoute exact path="/order_review/:order_id" component={OrderReview} />
 
-          <PrivateRoute exact path="/delivery" component={Delivery} />
+          <SemiPrivateRoute exact path="/delivery" component={Delivery} />
           <PrivateRoute exact path="/delivery/payments" component={DeliveryPayments} />
 
           <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
