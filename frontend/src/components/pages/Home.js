@@ -7,29 +7,23 @@ import { connect } from 'react-redux';
 import Topbar from '../layout/Topbar';
 
 
-const Home = ({
-  auth: {isAuthenticated, userLoading },
-  // siteConfig: { maintenanceMode, betaMode },
-  // profileOpened, logout, setMobileMenu, setFilterToggled
-  location
-}) => {
+const Home = ({}) => {
   const history = useHistory()
 
   useEffect(() => {
-    $('.slider').slider({
+    $('.header-slider .slider').slider({
+      indicators: true,
+      height: 450,
+      transition: 500,
+      interval: 6000
+    });
+    $('.section-instructions .slider').slider({
       indicators: true,
       height: 450,
       transition: 500,
       interval: 6000
     });
   }, [])
-  
-  // useEffect(() => {
-  //   if (!userLoading) {
-  //     $('.loader').fadeOut();
-  //     $('#middle-content').fadeIn();
-  //   }
-  // }, [userLoading])
   
   return (
     <Fragment>
@@ -52,6 +46,15 @@ const Home = ({
               </div>
             </div>
             <div className="col s4">
+              <Link to="/delivery" className="card-panel left-align">
+                <div className="center">
+                  <img src="static/frontend/img/Trike_motor_logo.png" className="scale-pop" alt=""/>
+                </div>
+                <h5>Delivery</h5>
+                <p className="hide-on-med-and-down">Schedule an item for pickup and delivery by our trusted riders</p>
+              </Link>
+            </div>
+            <div className="col s4">
               <div className="card-panel left-align disabled">
                 <div className="primary-overlay above center"></div>
                 <div className="center">
@@ -61,49 +64,42 @@ const Home = ({
                 <p className="hide-on-med-and-down">One of our riders will shop for you and deliver your grocery needs to your home</p>
               </div>
             </div>
-            <div className="col s4">
-              <Link to="/delivery" className="card-panel left-align">
-                <div className="center">
-                  <img src="static/frontend/img/Trike_motor_logo.png" className="scale-pop" alt=""/>
-                </div>
-                <h5>Delivery</h5>
-                <p className="hide-on-med-and-down">Schedule an item for pickup and delivery by our trusted riders</p>
-              </Link>
-            </div>
           </div>
         </div>
       </section>
 
-      <header className="slider header-slider">
-        <ul className="slides">
-          <li>
-            <img src="static/frontend/img/motorcycles.jpg" alt=""/>
-            <div className="primary-overlay"></div>
-            <div className="caption center-align">
-              <h2>How we Help Local Businesses</h2>
-              <h5 className="light grey-text text-lighten-3 hide-on-small-only mb-5">A slurry of riders are ready to serve Lucena City for convenient and fast deliveries</h5>
-              <a href="#" className="btn btn-large green">Learn More</a>
-            </div>
-          </li>
-          <li>
-            <img src="static/frontend/img/personal-shopper.jpg" alt=""/>
-            <div className="primary-overlay"></div>
-            <div className="caption left-align">
-              <h2>Have a Personal Shopper</h2>
-              <h5 className="light grey-text text-lighten-3 hide-on-small-only mb-5">Select your prefered grocery shop or even your favorite personal shopper to get your daily grocery needs.</h5>
-              <a href="#" className="btn btn-large green">Learn More</a>
-            </div>
-          </li>
-          <li>
-            <img src="static/frontend/img/delivery-packages.jpg" alt=""/>
-            <div className="primary-overlay"></div>
-            <div className="caption right-align">
-              <h2>Delivery</h2>
-              <h5 className="light grey-text text-lighten-3 hide-on-small-only mb-5">Learn how we handle your packages and what options you have with us</h5>
-              <a href="#" className="btn btn-large green">Learn More</a>
-            </div>
-          </li>
-        </ul>
+      <header className="header-slider">
+        <div className="slider">
+          <ul className="slides">
+            <li>
+              <img src="static/frontend/img/motorcycles.jpg" alt=""/>
+              <div className="primary-overlay"></div>
+              <div className="caption center-align">
+                <h2>How we Help Local Businesses</h2>
+                <h5 className="light grey-text text-lighten-3 hide-on-small-only mb-5">A slurry of riders are ready to serve Lucena City for convenient and fast deliveries</h5>
+                <a href="#" className="btn btn-large green">Learn More</a>
+              </div>
+            </li>
+            <li>
+              <img src="static/frontend/img/personal-shopper.jpg" alt=""/>
+              <div className="primary-overlay"></div>
+              <div className="caption left-align">
+                <h2>Have a Personal Shopper</h2>
+                <h5 className="light grey-text text-lighten-3 hide-on-small-only mb-5">Select your prefered grocery shop or even your favorite personal shopper to get your daily grocery needs.</h5>
+                <a href="#" className="btn btn-large green">Learn More</a>
+              </div>
+            </li>
+            <li>
+              <img src="static/frontend/img/delivery-packages.jpg" alt=""/>
+              <div className="primary-overlay"></div>
+              <div className="caption right-align">
+                <h2>Delivery</h2>
+                <h5 className="light grey-text text-lighten-3 hide-on-small-only mb-5">Learn </h5>
+                <a href="#" className="btn btn-large green">Learn More</a>
+              </div>
+            </li>
+          </ul>
+        </div>
       </header>
 
       <section className="section section-cards ">
@@ -145,20 +141,47 @@ const Home = ({
           </div>
         </div>
       </section>
+
+      <section className="section-instructions">
+        <div className="container">
+          <div className="slider">
+            <ul className="slides">
+              <li>
+                <img src="static/frontend/img/trike_content_signup_instruction.jpg" alt=""/>
+                <div className="caption center-align">
+                  <h5 className="uppercase">Step 1: Create an account</h5>
+                </div>
+              </li>
+              <li>
+                <img src="static/frontend/img/trike_content_service_instruction.jpg" alt=""/>
+                <div className="caption center-align">
+                  <h5 className="uppercase">Step 2: Choose a service</h5>
+                </div>
+              </li>
+              <li>
+                <img src="static/frontend/img/trike_content_details_instruction.jpg" alt=""/>
+                <div className="caption center-align">
+                  <h5 className="uppercase">Step 3: Finalize Details</h5>
+                </div>
+              </li>
+              <li>
+                <img src="static/frontend/img/trike_content_payments_instruction.jpg" alt=""/>
+                <div className="caption center-align">
+                  <h5 className="uppercase">Step 4: Finalize Transaction</h5>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
     </Fragment>
   )
 }
 
 Home.propTypes = {
-  // logout: PropTypes.func.isRequired,
-  // setFilterToggled: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth,
-  // filterOpened: state.products.filterOpened,
-  // profileOpened: state.layout.profileOpened,
-  // siteConfig: state.siteConfig
 });
 
 export default connect(mapStateToProps, { })(Home);

@@ -106,7 +106,6 @@ const DeliveryPayments = ({
     } else {
       return false
     }
-
   }
 
   useEffect(() => {
@@ -125,7 +124,7 @@ const DeliveryPayments = ({
         $('.collapsible').collapsible({
           accordion: false
         });
-        renderPaypalButtons()
+        // renderPaypalButtons()
       }
     }
   }, [currentOrderLoading])
@@ -222,18 +221,18 @@ const DeliveryPayments = ({
                         <i className="material-icons m-0">keyboard_arrow_down</i>
                       </div>
                       <div className="collapsible-body no-padding no-shadow full-width pt-3">
-                        <div className="row">
+                        {/* <div className="row">
                           <div className="col s12">
                             <div id="paypal-button-container" className="center"></div>
                           </div>
-                        </div>
-                        <div className="row valign-wrapper">
+                        </div> */}
+                        {/* <div className="row valign-wrapper">
                           <div className="or-divider">
                             <hr/>
                             <p>OR</p>
                             <hr/>
                           </div>
-                        </div>
+                        </div> */}
                         <div className="row">
                           <div className="col s12 center">
                             <button className="btn btn-large full-width darken-1 green bold mt-1 mxw-750" onClick={() => {
