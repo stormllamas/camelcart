@@ -18,7 +18,7 @@ const ItemDetail = ({
     product
   },
   auth: {
-    isAuthenticated,
+    isAuthenticated, user
   },
   getProduct,
   addOrderItem
@@ -128,9 +128,11 @@ const ItemDetail = ({
                               <span className="grey-text text-darken-2 right">₱ {variant.price}</span>
                             </p>
                           ))}
-                          <button className="btn btn-full btn-large green mt-5" onClick={e => addToOrder(e)}>
-                            Add To Order
-                          </button>
+                          {!user.groups.includes('rider') && (
+                            <button className="btn btn-full btn-large green mt-5" onClick={e => addToOrder(e)}>
+                              Add To Order
+                            </button>
+                          )}
                         </form>
                       )
                     ) : (

@@ -338,7 +338,7 @@ const Delivery = ({
   }, [gender, unit]);
 
   return (
-    isAuthenticated ? (
+    isAuthenticated && !user.groups.includes('rider') ? (
       <section className="section section-delivery grey lighten-5">
         <div className="container">
           <h4>Delivery Form</h4>

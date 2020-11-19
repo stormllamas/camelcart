@@ -167,7 +167,7 @@ const FoodCart = ({
   }, [quantityLoading]);
   
   return (
-    isAuthenticated && (
+    isAuthenticated && !user.groups.includes('rider') && (
       !currentOrderLoading && currentOrder !== null && (
         currentOrder.order_type === 'food' && (
           currentOrder.order_items.length > 0 && (

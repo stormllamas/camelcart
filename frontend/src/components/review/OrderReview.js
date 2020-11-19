@@ -89,7 +89,7 @@ const OrderReview = ({
   return (
     isAuthenticated ? (
       !orderLoading && (
-        order.is_delivered && order.user.id === user.id ? (
+        order.is_delivered && order.user.id === user.id && !user.groups.includes('rider') ? (
           <section className="section section-product-review">
               <div className="container">
               <div className="flex-row middle mb-3 mt-2">

@@ -531,11 +531,13 @@ export const reviewProduct = ({ order_item, product_variant, userID, rating, com
         payload: res.data
       })
     } else if (res.data.status === "error") {
-      M.toast({
-        html: 'You already reviewed that',
-        displayLength: 5000,
-        classes: 'red'
-      });
+      if (res.data.msg === "Product already reviewed") {
+        M.toast({
+          html: 'You already reviewed that',
+          displayLength: 5000,
+          classes: 'red'
+        });
+      }
       history.push('/bookings')
     }
   } catch (err) {

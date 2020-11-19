@@ -193,6 +193,9 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
     order_seller = self.request.query_params.get('order_seller', None)
     order_seller_name = self.request.query_params.get('order_seller_name', None)
 
+    if 'rider' in request.user.groups.all():
+      return PermissionDenied('Not Authorized')
+
     if order_seller or order_seller_name:
       try:
         if order_seller:
@@ -391,7 +394,7 @@ class OrderAPI(RetrieveAPIView):
       if request.user.is_superuser:
         return True
       else:
-        if obj.user == request.user and obj.is_ordered == True:
+        if obj.user == request.user and obj.is_ordered == True and 'rider' not in request.user.groups.all():
           return True
         else:
           raise PermissionDenied
@@ -438,7 +441,7 @@ class OrderItemAPI(DestroyAPIView, CreateAPIView):
       if request.user.is_superuser:
         return True
       else:
-        if obj.order.user == request.user and obj.order.is_ordered == False:
+        if obj.order.user == request.user and obj.order.is_ordered == False and 'rider' not in request.user.groups.all():
           return True
         else:
           raise PermissionDenied
@@ -741,7 +744,7 @@ class ProductReviewAPI(CreateAPIView):
           'message': 'Product already reviewed'
         })
       else:
-        if serializer.validated_data.get("user") == request.user:
+        if serializer.validated_data.get("user") == request.user and serializer.validated_data.get("order_item").order.user == request.user and 'rider' not in request.user.groups.all():
           serializer.save()
           return Response({
             'status': 'okay',
@@ -750,7 +753,7 @@ class ProductReviewAPI(CreateAPIView):
         else:
           return Response({
             'status': 'error',
-            'message': 'Product already reviewed'
+            'message': 'Not Authorized'
           })
 
     else:
@@ -781,7 +784,7 @@ class OrderReviewAPI(CreateAPIView):
           'message': 'Order already reviewed'
         })
       else:
-        if serializer.validated_data.get("user") == request.user:
+        if serializer.validated_data.get("user") == request.user and serializer.validated_data.get("order").user == request.user and 'rider' not in request.user.groups.all():
           serializer.save()
           return Response({
             'status': 'okay',
