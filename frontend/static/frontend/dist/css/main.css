@@ -1448,7 +1448,7 @@ tr {
   .loader.fixed {
     position: fixed;
     top: 40%;
-    left: 47%; }
+    left: calc(50% - 32px); }
 
 #toast-container {
   max-height: 48px; }
