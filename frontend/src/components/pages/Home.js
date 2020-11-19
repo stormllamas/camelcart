@@ -19,19 +19,22 @@ const Home = ({}) => {
     });
     $('.section-instructions .slider').slider({
       indicators: true,
-      height: 450,
+      height: 350,
       transition: 500,
       interval: 6000
+    });
+    $('.scrollspy').scrollSpy({
+      scrollOffset: '100'
     });
   }, [])
   
   return (
     <Fragment>
-      <section className="section section-icons center">
+      <section id="section-icons" className="section section-icons center scrollspy">
         <div className="container">
           <div className="row mb-2">
             <div className="col s12">
-              <h5>Our Service</h5>
+              <h5 className="fw-6">Our Services</h5>
             </div>
           </div>
           <div className="row mt-1 mb-1">
@@ -72,6 +75,15 @@ const Home = ({}) => {
         <div className="slider">
           <ul className="slides">
             <li>
+              <img src="static/frontend/img/trike_content_slider_instruction.jpg" alt=""/>
+              <div className="primary-overlay"></div>
+              <div className="caption right-align">
+                <h2>New to Trike?</h2>
+                <h5 className="light grey-text text-lighten-3 hide-on-small-only mb-5">Checkout our easy guide on how to book with Trike?</h5>
+                <a href="#instructions" className="btn btn-large green">Go to Guide</a>
+              </div>
+            </li>
+            <li>
               <img src="static/frontend/img/motorcycles.jpg" alt=""/>
               <div className="primary-overlay"></div>
               <div className="caption center-align">
@@ -89,20 +101,11 @@ const Home = ({}) => {
                 <a href="#" className="btn btn-large green">Learn More</a>
               </div>
             </li>
-            <li>
-              <img src="static/frontend/img/delivery-packages.jpg" alt=""/>
-              <div className="primary-overlay"></div>
-              <div className="caption right-align">
-                <h2>Delivery</h2>
-                <h5 className="light grey-text text-lighten-3 hide-on-small-only mb-5">Learn </h5>
-                <a href="#" className="btn btn-large green">Learn More</a>
-              </div>
-            </li>
           </ul>
         </div>
       </header>
 
-      <section className="section section-cards ">
+      <section className="section section-cards">
         <div className="container">
           <div className="row">
             <div className="col s12 m4">
@@ -120,7 +123,7 @@ const Home = ({}) => {
               <div className="card">
                 <div className="card-content">
                   <Link to="#" className="card-title">Haven’t Shipped with Us?</Link>
-                  <p>Learn more about how to send with Camel Cart</p>
+                  <p>Learn more about how to send with Trike</p>
                 </div>
                 <Link to="#" className="card-image">
                   <img src="static/frontend/img/parcel-delivery.jpg" className="responsive-img"/>
@@ -142,35 +145,62 @@ const Home = ({}) => {
         </div>
       </section>
 
-      <section className="section-instructions">
-        <div className="container">
-          <div className="slider">
-            <ul className="slides">
-              <li>
-                <img src="static/frontend/img/trike_content_signup_instruction.jpg" alt=""/>
-                <div className="caption center-align">
-                  <h5 className="uppercase">Step 1: Create an account</h5>
-                </div>
-              </li>
-              <li>
-                <img src="static/frontend/img/trike_content_service_instruction.jpg" alt=""/>
-                <div className="caption center-align">
-                  <h5 className="uppercase">Step 2: Choose a service</h5>
-                </div>
-              </li>
-              <li>
-                <img src="static/frontend/img/trike_content_details_instruction.jpg" alt=""/>
-                <div className="caption center-align">
-                  <h5 className="uppercase">Step 3: Finalize Details</h5>
-                </div>
-              </li>
-              <li>
-                <img src="static/frontend/img/trike_content_payments_instruction.jpg" alt=""/>
-                <div className="caption center-align">
-                  <h5 className="uppercase">Step 4: Finalize Transaction</h5>
-                </div>
-              </li>
-            </ul>
+      <section className="section section-about-trike white-text relative mb-5">
+        <div className="primary-overlay branded valign-wrapper">
+          <div className="container">
+            <div className="row flex middle">
+              <div className="col s12 m8">
+                <h4>What is Trike all about?</h4>
+                <p>Trike is an online courier, ride hailing, and food delivery platform based in Lucena City designed for convenient user booking.</p>
+              </div>
+              <div className="col s12 m4 flex-col center middle">
+                <a href="#section-icons" className="btn orange btn-large uppercase no-white-space">
+                  <i className="fas fa-motorcycle mr-1 fs-18"></i>Book Now
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="instructions" className="section-instructions scrollspy">
+        <div className="container center">
+          <div className="row mb-2">
+            <div className="col s12">
+              <h5 className="fw-6">How to Book with Trike?</h5>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col s12">
+              <div className="slider">
+                <ul className="slides">
+                  <li>
+                    <img src="static/frontend/img/trike_content_signup_instruction.jpg" alt=""/>
+                    <div className="caption center-align">
+                      <h5 className="uppercase">Step 1: Create an account</h5>
+                    </div>
+                  </li>
+                  <li>
+                    <img src="static/frontend/img/trike_content_service_instruction.jpg" alt=""/>
+                    <div className="caption center-align">
+                      <h5 className="uppercase">Step 2: Choose a service</h5>
+                    </div>
+                  </li>
+                  <li>
+                    <img src="static/frontend/img/trike_content_details_instruction.jpg" alt=""/>
+                    <div className="caption center-align">
+                      <h5 className="uppercase">Step 3: Finalize Details</h5>
+                    </div>
+                  </li>
+                  <li>
+                    <img src="static/frontend/img/trike_content_payments_instruction.jpg" alt=""/>
+                    <div className="caption center-align">
+                      <h5 className="uppercase">Step 4: Finalize Transaction</h5>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </section>

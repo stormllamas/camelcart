@@ -34,7 +34,7 @@ const Footer = ({
                   <Link to="" className="white-text">Help and support</Link>
                 </li>
                 <li>
-                  <Link to="" className="white-text">Get Started with Camel Cart</Link>
+                  <Link to="" className="white-text">Get Started with Trike</Link>
                 </li>
               </ul>
             </div>
@@ -60,7 +60,7 @@ const Footer = ({
               <h5 className="grey-text text-lighten-3">Information</h5>
               <ul>
                 <li>
-                  <Link to="" className="white-text">About Camel Cart</Link>
+                  <Link to="" className="white-text">About Trike</Link>
                 </li>
               </ul>
             </div>

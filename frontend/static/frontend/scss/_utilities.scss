@@ -614,6 +614,10 @@ tr {
   height: 100%;
   overflow: hidden;
 
+  &.branded {
+    background: rgba(155, 102, 37, 0.82);
+  }
+
   &.dim-1 {
     background: rgba(2, 44, 29, 0.4);
   }

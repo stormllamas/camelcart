@@ -22,7 +22,7 @@ const AuthPrompt = () => {
           <p className="mt-5 grey-text">Terms and Conditions</p>
         </Fragment>
       )}
-      <Link to='/login' className="btn btn-large green lighten-1 bold mt-5 mb-2 mobile-btn" >Log in with Camel Cart</Link>
+      <Link to='/login' className="btn btn-large green lighten-1 bold mt-5 mb-2 mobile-btn" >Log in with Trike</Link>
     </section>
   )
 }

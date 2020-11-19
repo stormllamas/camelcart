@@ -206,10 +206,6 @@ a {
       }
     }
   }
-
-  h5 {
-    font-weight: 600;
-  }
   
   p {
     font-size: 1.25rem;
@@ -238,9 +234,41 @@ a {
   }
 }
 
+.section-about-trike {
+  background: url(../../img/motorcycles.jpg);
+  background-size: cover;
+  background-position: center;
+  min-height: 220px;
+}
+@media (max-width: 600px) {
+  .section-about-trike {
+    min-height: 340px;
+
+    .row>.col {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+  }
+}
+
 .section-instructions {
   .slider .slides li .caption {
     top: 5%;
+  }
+}
+@media (min-width: 1110px) {
+  .section-instructions {
+    .slider {
+      height: 640px !important;
+      .slides {
+        height: 600px !important;
+        li {
+          .caption {
+            top: 5%;
+          }
+        }
+      }
+    }
   }
 }
 

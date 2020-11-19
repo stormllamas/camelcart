@@ -1266,6 +1266,8 @@ tr {
   width: 100%;
   height: 100%;
   overflow: hidden; }
+  .primary-overlay.branded {
+    background: rgba(155, 102, 37, 0.82); }
   .primary-overlay.dim-1 {
     background: rgba(2, 44, 29, 0.4); }
   .primary-overlay.dim-2 {
@@ -1658,9 +1660,6 @@ a {
       transition: unset;
       transform: unset; }
 
-.section-icons h5 {
-  font-weight: 600; }
-
 .section-icons p {
   font-size: 1.25rem; }
 
@@ -1678,8 +1677,29 @@ a {
     font-weight: 600;
     margin-right: 1rem; }
 
+.section-about-trike {
+  background: url(../../img/motorcycles.jpg);
+  background-size: cover;
+  background-position: center;
+  min-height: 220px; }
+
+@media (max-width: 600px) {
+  .section-about-trike {
+    min-height: 340px; }
+    .section-about-trike .row > .col {
+      text-align: center;
+      margin-bottom: 2rem; } }
+
 .section-instructions .slider .slides li .caption {
   top: 5%; }
+
+@media (min-width: 1110px) {
+  .section-instructions .slider {
+    height: 640px !important; }
+    .section-instructions .slider .slides {
+      height: 600px !important; }
+      .section-instructions .slider .slides li .caption {
+        top: 5%; } }
 
 #googlemap {
   position: absolute;
