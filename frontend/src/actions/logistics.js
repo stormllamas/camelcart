@@ -27,6 +27,8 @@ import {
   QUANTITY_CHANGED,
   QUANTITY_CHANGE_ERROR,
 
+  CANCEL_ORDER,
+
   FILTER_CUISINE, CLEAR_CUISINE,
   FILTER_COURSE,
 
@@ -311,6 +313,43 @@ export const changeQuantity = ({ orderItemID, sellerID, operation }) => async (d
   } catch (err) {
     dispatch({ type: AUTH_ERROR })
     dispatch({ type: QUANTITY_CHANGE_ERROR })
+  }
+}
+export const cancelOrder = ({ id }) => async (dispatch, getState) => {
+  $('.loader').fadeIn();
+  try {
+    const res = await axios.put(`/api/cancel_order/${id}/`, null, tokenConfig(getState))
+    if (res.data.status) {
+      await dispatch(getOrders({
+        getMore: false,
+      }))
+      if (res.data.status === 'error') {
+        M.toast({
+          html: res.data.msg,
+          displayLength: 5000,
+          classes: 'red'
+        });
+      }
+    } else {
+      dispatch({
+        type: CANCEL_ORDER,
+        payload: res.data.id
+      });
+      M.toast({
+        html: 'Order Canceled',
+        displayLength: 5000,
+        classes: 'orange'
+      });
+    }
+    $('.loader').fadeOut();
+  } catch (err) {
+    await dispatch(getOrders({
+      page: 1,
+      claimed: false,
+      delivered: false,
+      keywords: ''
+    }))
+    $('.loader').fadeOut();
   }
 }
 

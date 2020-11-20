@@ -1,7 +1,7 @@
 # Packages
-from rest_framework import viewsets, renderers
+from rest_framework import viewsets
 from rest_framework.generics import GenericAPIView, RetrieveAPIView, UpdateAPIView, CreateAPIView, DestroyAPIView
-from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin, CreateModelMixin
+from rest_framework.mixins import RetrieveModelMixin, DestroyModelMixin, CreateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer, ResetPasswordSerializer, SocialAuthSerializer, AddressSerializer
 
@@ -12,7 +12,6 @@ from django.core.validators import validate_email
 #Auth
 from rest_framework.response import Response
 from knox.models import AuthToken
-from trike.permissions import IsOwner
 
 # Models
 from .models import Address
@@ -91,7 +90,7 @@ class LoginAPI(GenericAPIView):
     })
 
     request.session['auth_token'] = token
-    request.session.set_expiry(60*60*24*365*100)
+    request.session.set_expiry(60*60*24*365*5)
 
     return response
 

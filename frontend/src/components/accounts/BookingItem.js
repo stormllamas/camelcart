@@ -1,11 +1,12 @@
-import React, { useRef, useCallback, Fragment } from 'react';
+import React, { useRef, useCallback, Fragment, useState } from 'react';
 import { HashLink as Link } from 'react-router-hash-link';
 
 import { connect } from 'react-redux';
 import { getOrders } from '../../actions/logistics';
 import moment from 'moment'
 
-const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder }) => {
+const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder, setOrderToDelete }) => {
+  
   const observer = useRef();
   const lastProductElement = useCallback(el => {
     if (ordersLoading) return
@@ -147,10 +148,10 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder 
               </div>
             </div>
           </li>
-          {!order.is_claimed && (
+          {!order.is_claimed && !order.is_canceled && (
             <li className="collection-item">
               <div className="col s12 waves-effect">
-                <p className="flex-row m-0"><i className="material-icons fs-18">close</i><span className="ml-1 cancel-order">CANCEL ORDER</span></p>
+                <a href="#" className="flex-row m-0 modal-trigger" data-target="confirmation-modal" onClick={() => setOrderToDelete(order.id)}><i className="material-icons fs-18">close</i><span className="ml-1 cancel-order">CANCEL ORDER</span></a>
               </div>
             </li>
           )}

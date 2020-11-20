@@ -103,15 +103,15 @@ const Topbar = ({
         </li>
         {!userLoading && isAuthenticated ? (
           <Fragment>
-            <li className={history.location.pathname.includes('bookings') ? "active" : ''}>
-              <Link to="/bookings" className="sidenav-close waves-effect" ><i className="material-icons">assignment</i>My Bookings</Link>
-            </li>
+            {!user.groups.includes('rider') && (
+              <li className={history.location.pathname.includes('bookings') ? "active" : ''}>
+                <Link to="/bookings" className="sidenav-close waves-effect" ><i className="material-icons">assignment</i>My Bookings</Link>
+              </li>
+            )}
             {user.groups.includes('rider') || user.groups.includes('admin') ? (
-              <Fragment>
-                <li>
-                  <Link to="/order_manager/unclaimed" className="sidenav-close waves-effect" ><i className="material-icons">fact_check</i>Order Manager</Link>
-                </li>
-              </Fragment>
+              <li>
+                <Link to="/order_manager/unclaimed" className="sidenav-close waves-effect" ><i className="material-icons">fact_check</i>Order Manager</Link>
+              </li>
             ) : undefined}
           </Fragment>
         ) : undefined}

@@ -17,7 +17,7 @@ import {
   ORDER_ERROR,
 
   CLAIM_ORDER,
-  CANCEL_ORDER,
+  RIDER_CANCEL_ORDER,
 
   DELIVER_ORDER_ITEM,
   DELIVER_ORDER,
@@ -230,7 +230,7 @@ export const cancelOrder = ({ id }) => async (dispatch, getState) => {
       }
     } else {
       dispatch({
-        type: CANCEL_ORDER,
+        type: RIDER_CANCEL_ORDER,
         payload: res.data
       });
       M.toast({
@@ -241,9 +241,14 @@ export const cancelOrder = ({ id }) => async (dispatch, getState) => {
     }
     $('.loader').fadeOut();
   } catch (err) {
+    M.toast({
+      html: 'Opps something happend. Try again.',
+      displayLength: 5000,
+      classes: 'red'
+    });
     await dispatch(getOrders({
       page: 1,
-      claimed: false,
+      claimed: true,
       delivered: false,
       keywords: ''
     }))

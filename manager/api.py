@@ -5,7 +5,7 @@ from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListMode
 from rest_framework.response import Response
 
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from trike.permissions import SiteEnabled, HasGroupPermission, IsOrderItemRider, IsOrderRider
+from trike.permissions import SiteEnabled, HasGroupPermission, UserNotPartner
 
 # Serializers
 from .serializers import OrderItemSerializer as AdminOrderItemSerializer
@@ -27,7 +27,7 @@ from datetime import timedelta
 import datetime
 
 # Exceptions
-from django.core.exceptions import FieldError
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 class DashboardAPI(GenericAPIView):
   permission_classes = [IsAuthenticated, IsAdminUser]
@@ -342,17 +342,23 @@ class ClaimOrderAPI(UpdateAPIView):
       order.save()
 
       return Response(OrderSerializer(order, context=self.get_serializer_context()).data)
-
-class CancelOrderAPI(UpdateAPIView):
+class RiderCancelOrderAPI(UpdateAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, HasGroupPermission, IsOrderRider]
+  permission_classes = [IsAuthenticated, HasGroupPermission]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
     'PUT': ['rider'],
   }
 
+  def check_object_permissions(self, request, obj):
+    if obj.is_ordered == True and obj.rider == request.user:
+      return True
+    else:
+      raise PermissionDenied
+
   def get_object(self):
+    self.check_object_permissions(self.request, get_object_or_404(Order, id=self.kwargs['order_id']))
     return get_object_or_404(Order, id=self.kwargs['order_id'])
 
   def update(self, request, order_id=None):
@@ -372,7 +378,7 @@ class CancelOrderAPI(UpdateAPIView):
 
 class PickupOrderItemAPI(UpdateAPIView):
   serializer_class = AdminOrderItemSerializer
-  permission_classes = [IsAuthenticated, HasGroupPermission, IsOrderItemRider]
+  permission_classes = [IsAuthenticated, HasGroupPermission]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -380,16 +386,10 @@ class PickupOrderItemAPI(UpdateAPIView):
   }
 
   def check_object_permissions(self, request, obj):
-    if request.user:
-      if request.user.is_superuser:
-        return True
-      else:
-        if obj.order.rider == request.user and obj.order.is_ordered == True:
-          return True
-        else:
-          raise PermissionDenied
+    if obj.order.is_ordered == True and obj.order.rider == request.user:
+      return True
     else:
-      return False
+      raise PermissionDenied
 
   def get_object(self):
     self.check_object_permissions(self.request, get_object_or_404(OrderItem, id=self.kwargs['pk']))
@@ -414,10 +414,9 @@ class PickupOrderItemAPI(UpdateAPIView):
         order_item.order.save()
 
       return Response(AdminOrderItemSerializer(order_item, context=self.get_serializer_context()).data)
-
 class PickupOrderAPI(UpdateAPIView):
   serializer_class = AdminOrderSerializer
-  permission_classes = [IsAuthenticated, HasGroupPermission, IsOrderRider]
+  permission_classes = [IsAuthenticated, HasGroupPermission]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -425,16 +424,10 @@ class PickupOrderAPI(UpdateAPIView):
   }
 
   def check_object_permissions(self, request, obj):
-    if request.user:
-      if request.user.is_superuser:
-        return True
-      else:
-        if obj.rider == request.user and obj.is_ordered == True:
-          return True
-        else:
-          raise PermissionDenied
+    if obj.is_ordered == True and obj.rider == request.user:
+      return True
     else:
-      return False
+      raise PermissionDenied
 
   def get_object(self):
     self.check_object_permissions(self.request, get_object_or_404(Order, id=self.kwargs['pk']))
@@ -457,7 +450,7 @@ class PickupOrderAPI(UpdateAPIView):
 
 class DeliverOrderItemAPI(UpdateAPIView):
   serializer_class = AdminOrderItemSerializer
-  permission_classes = [IsAuthenticated, HasGroupPermission, IsOrderItemRider]
+  permission_classes = [IsAuthenticated, HasGroupPermission]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -465,16 +458,10 @@ class DeliverOrderItemAPI(UpdateAPIView):
   }
 
   def check_object_permissions(self, request, obj):
-    if request.user:
-      if request.user.is_superuser:
-        return True
-      else:
-        if obj.order.rider == request.user and obj.order.is_ordered == True and obj.order.is_pickedup:
-          return True
-        else:
-          raise PermissionDenied
+    if obj.order.is_ordered == True and obj.order.rider == request.user and obj.order.is_pickedup:
+      return True
     else:
-      return False
+      raise PermissionDenied
 
   def get_object(self):
     self.check_object_permissions(self.request, get_object_or_404(OrderItem, id=self.kwargs['pk']))
@@ -507,10 +494,9 @@ class DeliverOrderItemAPI(UpdateAPIView):
         order_item.order.save()
 
       return Response(AdminOrderItemSerializer(order_item, context=self.get_serializer_context()).data)
-
 class DeliverOrderAPI(UpdateAPIView):
   serializer_class = AdminOrderSerializer
-  permission_classes = [IsAuthenticated, HasGroupPermission, IsOrderRider]
+  permission_classes = [IsAuthenticated, HasGroupPermission]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -518,16 +504,10 @@ class DeliverOrderAPI(UpdateAPIView):
   }
 
   def check_object_permissions(self, request, obj):
-    if request.user:
-      if request.user.is_superuser:
-        return True
-      else:
-        if obj.rider == request.user and obj.is_ordered == True and obj.is_pickedup:
-          return True
-        else:
-          raise PermissionDenied
+    if obj.is_ordered == True and obj.rider == request.user and obj.is_pickedup:
+      return True
     else:
-      return False
+      raise PermissionDenied
 
   def get_object(self):
     self.check_object_permissions(self.request, get_object_or_404(Order, id=self.kwargs['pk']))

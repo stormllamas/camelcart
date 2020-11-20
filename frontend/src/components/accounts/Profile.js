@@ -348,39 +348,42 @@ const Profile = ({
           </Fragment>
         ) : undefined}
         <div className="divider"></div>
-        <div className="container">
-          <div className="row mt-2">
-            <div className="col s12">
-              <div className="grey-text">
-                <p>Saved Addresses</p>
-                {user.addresses.length > 0 ? (
-                  <ul className="collection">
-                    {user.addresses.map(address => (
-                      <li key={address.id} className="collection-item pr-5 relative">
-                        {/* <div>Address 1</div> */}
-                        <div>{address.address}</div>
-                        <Link to="" className="secondary-content top-right" onClick={e => {e.preventDefault(), deleteAddress(address.id)}}>
-                          <i className="material-icons red-text">delete_forever</i>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="row mt-3">
-                    <div className="col s12 center">
-                      <h5 className="grey-text text-lighten-1">No address saved</h5>
+        
+        {!user.groups.includes('rider') && (
+          <div className="container">
+            <div className="row mt-2">
+              <div className="col s12">
+                <div className="grey-text">
+                  <p>Saved Addresses</p>
+                  {user.addresses.length > 0 ? (
+                    <ul className="collection">
+                      {user.addresses.map(address => (
+                        <li key={address.id} className="collection-item pr-5 relative">
+                          {/* <div>Address 1</div> */}
+                          <div>{address.address}</div>
+                          <Link to="" className="secondary-content top-right" onClick={e => {e.preventDefault(), deleteAddress(address.id)}}>
+                            <i className="material-icons red-text">delete_forever</i>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="row mt-3">
+                      <div className="col s12 center">
+                        <h5 className="grey-text text-lighten-1">No address saved</h5>
+                      </div>
                     </div>
-                  </div>
-                )}
-                <div className="row mt-4">
-                  <div className="col s12 flex-col center middle">
-                    <button className="green lighten-1 white-text btn flex-row center middle modal-trigger waves-effect m-0" data-target="addressmodal"><i className="material-icons">add</i>Add new address</button>
+                  )}
+                  <div className="row mt-4">
+                    <div className="col s12 flex-col center middle">
+                      <button className="green lighten-1 white-text btn flex-row center middle modal-trigger waves-effect m-0" data-target="addressmodal"><i className="material-icons">add</i>Add new address</button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </section>
       
       <div id="addressmodal" className="modal supermodal">

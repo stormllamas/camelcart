@@ -47,6 +47,8 @@ import {
   QUANTITY_CHANGED,
   QUANTITY_CHANGE_ERROR,
 
+  CANCEL_ORDER
+
 } from '../actions/types'
 
 const initialState = {
@@ -439,6 +441,21 @@ export default (state = initialState, action) => {
       return {
         ...state,
         quantityLoading: false,
+      }
+
+    case CANCEL_ORDER:
+      const canceledOrders = state.orders.results.map(order => {
+        if (order.id === action.payload) {
+          order.is_canceled = true
+        }
+        return order
+      })
+      return {
+        ...state,
+        orders: {
+          ...state.orders,
+          results: canceledOrders,
+        },
       }
     
     default:

@@ -1,11 +1,9 @@
 # Packages
-from rest_framework import viewsets, renderers
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, GenericAPIView
-from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin, DestroyModelMixin, CreateModelMixin
 from rest_framework.response import Response
 
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from trike.permissions import IsOrderOwner, SiteEnabled, IsOrderItemOwner
+from trike.permissions import SiteEnabled, UserNotPartner
 
 # Models
 from .models import Order, OrderItem, Seller, CategoryGroup, Category, Product, ProductReview, OrderReview
@@ -186,15 +184,12 @@ class ProductAPI(GenericAPIView):
 
 class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, IsOrderOwner, SiteEnabled]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def get_object(self):
     order_type = self.kwargs['order_type']
     order_seller = self.request.query_params.get('order_seller', None)
     order_seller_name = self.request.query_params.get('order_seller_name', None)
-
-    if 'rider' in self.request.user.groups.all():
-      return PermissionDenied('Not Authorized')
 
     if order_seller or order_seller_name:
       try:
@@ -291,10 +286,9 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
     })
     
 class OrdersAPI(GenericAPIView):
-  permission_classes = [IsAuthenticated, SiteEnabled]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def get(self, request):
-
     delivered_query = Q()
     delivered = self.request.query_params.get('delivered', None)
     if delivered == 'true':
@@ -387,19 +381,13 @@ class OrdersAPI(GenericAPIView):
     })
 class OrderAPI(RetrieveAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def check_object_permissions(self, request, obj):
-    if request.user:
-      if request.user.is_superuser:
-        return True
-      else:
-        if obj.user == request.user and obj.is_ordered == True and 'rider' not in request.user.groups.all():
-          return True
-        else:
-          raise PermissionDenied
+    if obj.is_ordered == True and obj.user == request.user:
+      return True
     else:
-      return False
+      raise PermissionDenied
 
   def get_object(self):
     self.check_object_permissions(self.request, get_object_or_404(Order, id=self.kwargs['pk']))
@@ -431,22 +419,50 @@ class OrderAPI(RetrieveAPIView):
         'id': order.user.id
       },
     })
+class CancelOrderAPI(UpdateAPIView):
+  serializer_class = OrderSerializer
+  permission_classes = [IsAuthenticated, UserNotPartner]
+
+  def check_object_permissions(self, request, obj):
+    if obj.is_ordered == True and obj.user == request.user:
+      return True
+    else:
+      raise PermissionDenied
+
+  def get_object(self):
+    self.check_object_permissions(self.request, get_object_or_404(Order, id=self.kwargs['order_id']))
+    return get_object_or_404(Order, id=self.kwargs['order_id'])
+
+  def update(self, request, order_id=None):
+    order = self.get_object()
+    if order.is_canceled:
+      return Response({
+        'status': 'error',
+        'msg': 'Order already canceled'
+      })
+    
+    if order.rider != None:
+      return Response({
+        'status': 'error',
+        'msg': 'Order can no longer be canceled'
+      })
+
+    else:
+      order.is_canceled = True
+      order.date_canceled = timezone.now()
+      order.save()
+
+      return Response(OrderSerializer(order, context=self.get_serializer_context()).data)
 
 class OrderItemAPI(DestroyAPIView, CreateAPIView):
   serializer_class = OrderItemSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def check_object_permissions(self, request, obj):
-    if request.user:
-      if request.user.is_superuser:
-        return True
-      else:
-        if obj.order.user == request.user and obj.order.is_ordered == False and 'rider' not in request.user.groups.all():
-          return True
-        else:
-          raise PermissionDenied
+    if obj.order.is_ordered == False and obj.order.user == request.user:
+      return True
     else:
-      return False
+      raise PermissionDenied
 
   def get_object(self):
     self.check_object_permissions(self.request, get_object_or_404(OrderItem, id=self.kwargs['pk']))
@@ -560,19 +576,13 @@ class OrderItemAPI(DestroyAPIView, CreateAPIView):
       })
 class ChangeQuantityAPI(UpdateAPIView):
   serializer_class = OrderItemSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def check_object_permissions(self, request, obj):
-    if request.user:
-      if request.user.is_superuser:
-        return True
-      else:
-        if obj.order.user == request.user and obj.order.is_ordered == False:
-          return True
-        else:
-          raise PermissionDenied
+    if obj.order.is_ordered == False and obj.order.user == request.user:
+      return True
     else:
-      return False
+      raise PermissionDenied
 
   def get_object(self):
     self.check_object_permissions(self.request, get_object_or_404(OrderItem, id=self.kwargs['pk']))
@@ -655,7 +665,7 @@ class ChangeQuantityAPI(UpdateAPIView):
 
 class CompleteOrderAPI(UpdateAPIView):
   serializer_class = OrderItemSerializer
-  permission_classes = [IsAuthenticated, IsOrderOwner, SiteEnabled]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def get_object(self):
     order_type = self.kwargs['order_type']
@@ -687,7 +697,7 @@ class CompleteOrderAPI(UpdateAPIView):
       if len(Orders) < 1:
         Order.objects.create(user=self.request.user, order_type=order_type)
         Orders = Order.objects.filter(user=self.request.user, order_type=order_type, is_ordered=False).order_by('id')
-
+      
       return Orders.first()
 
   def update(self, request, paid=None, order_type=None):
@@ -725,7 +735,7 @@ class CompleteOrderAPI(UpdateAPIView):
 
 class ProductReviewAPI(CreateAPIView):
   serializer_class = ProductReviewSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def create(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)
@@ -745,7 +755,7 @@ class ProductReviewAPI(CreateAPIView):
           'message': 'Product already reviewed'
         })
       else:
-        if serializer.validated_data.get("user") == request.user and serializer.validated_data.get("order_item").order.user == request.user and 'rider' not in request.user.groups.all():
+        if serializer.validated_data.get("user") == request.user and serializer.validated_data.get("order_item").order.user == request.user:
           serializer.save()
           return Response({
             'status': 'okay',
@@ -764,13 +774,11 @@ class ProductReviewAPI(CreateAPIView):
       })
 class OrderReviewAPI(CreateAPIView):
   serializer_class = OrderReviewSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def create(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)
-    print(request.data)
     if serializer.is_valid(raise_exception=True):
-      print('valid')
       user = serializer.validated_data.get("user")
       order = serializer.validated_data.get("order")
       
@@ -785,7 +793,7 @@ class OrderReviewAPI(CreateAPIView):
           'message': 'Order already reviewed'
         })
       else:
-        if serializer.validated_data.get("user") == request.user and serializer.validated_data.get("order").user == request.user and 'rider' not in request.user.groups.all():
+        if serializer.validated_data.get("user") == request.user and serializer.validated_data.get("order").user == request.user:
           serializer.save()
           return Response({
             'status': 'okay',
