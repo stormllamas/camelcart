@@ -13,6 +13,7 @@ import AdminRoute from './common/AdminRoute';
 import RiderRoute from './common/RiderRoute';
 
 import Preloader from './common/Preloader';
+import SiteMessage from './layout/SiteMessage'
 
 import Login from './accounts/Login'
 import Signup from './accounts/Signup'
@@ -62,6 +63,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
+        <SiteMessage/>
         <Switch>
           <AccountsRoute exact path="/login" component={Login} />
           <AccountsRoute exact path="/signup" component={Signup} />
