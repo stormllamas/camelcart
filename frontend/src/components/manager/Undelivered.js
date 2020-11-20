@@ -359,11 +359,15 @@ const Undelivered = ({
                           <div className="divider"></div>
                         </div>
                         <div className="row">
-                          <div className="col s12 m6 mb-1">
+                          <div className="col s12 m4 mb-1">
+                            <small>Item Weight</small>
+                            <p className="grey lighten-4 p-1 rad-2">{order.weight}{order.unit}</p>
+                          </div>
+                          <div className="col s12 m4 mb-1">
                             <small>Item Height</small>
                             <p className="grey lighten-3 p-1 m-0 rad-2">{order.height}</p>
                           </div>
-                          <div className="col s12 m6 mb-1">
+                          <div className="col s12 m4 mb-1">
                             <small>Item Width</small>
                             <p className="grey lighten-3 p-1 m-0 rad-2">{order.width}</p>
                           </div>

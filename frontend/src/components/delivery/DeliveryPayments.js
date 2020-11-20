@@ -196,17 +196,21 @@ const DeliveryPayments = ({
                           <div className="divider"></div>
                         </div>
                         <div className="row">
-                          <div className="col s12 m6 mb-1">
-                            <small>Item Height</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.height}</p>
+                          <div className="col s12 m4 mb-1">
+                            <small>Item Weight</small>
+                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.weight}{currentOrder.unit}</p>
                           </div>
-                          <div className="col s12 m6 mb-1">
+                          <div className="col s12 m4 mb-1">
+                            <small>Item Height</small>
+                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.height} inches</p>
+                          </div>
+                          <div className="col s12 m4 mb-1">
                             <small>Item Width</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.width}</p>
+                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.width} inches</p>
                           </div>
                           <div className="col s12 mb-1">
                             <small>Item Length</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.length}</p>
+                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.length} inches</p>
                           </div>
                           <div className="col s12 mb-1">
                             <small>Description</small>
