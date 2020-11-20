@@ -78,7 +78,7 @@ class DashboardAPI(GenericAPIView):
     })
 
 class OrdersAPI(GenericAPIView):
-  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]
+  permission_classes = [IsAuthenticated, HasGroupPermission]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -178,7 +178,7 @@ class OrdersAPI(GenericAPIView):
 
 class OrderAPI(RetrieveAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]
+  permission_classes = [IsAuthenticated, HasGroupPermission]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -237,7 +237,7 @@ class OrderAPI(RetrieveAPIView):
     })
 
 class OrderItemsAPI(GenericAPIView):
-  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]
+  permission_classes = [IsAuthenticated, IsAdminUser, HasGroupPermission]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -318,7 +318,7 @@ class OrderItemsAPI(GenericAPIView):
 
 class ClaimOrderAPI(UpdateAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]
+  permission_classes = [IsAuthenticated, HasGroupPermission]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -345,7 +345,7 @@ class ClaimOrderAPI(UpdateAPIView):
 
 class CancelOrderAPI(UpdateAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]
+  permission_classes = [IsAuthenticated, HasGroupPermission, IsOrderRider]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -372,7 +372,7 @@ class CancelOrderAPI(UpdateAPIView):
 
 class PickupOrderItemAPI(UpdateAPIView):
   serializer_class = AdminOrderItemSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission, IsOrderItemRider]
+  permission_classes = [IsAuthenticated, HasGroupPermission, IsOrderItemRider]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -417,7 +417,7 @@ class PickupOrderItemAPI(UpdateAPIView):
 
 class PickupOrderAPI(UpdateAPIView):
   serializer_class = AdminOrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission, IsOrderRider]
+  permission_classes = [IsAuthenticated, HasGroupPermission, IsOrderRider]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -457,7 +457,7 @@ class PickupOrderAPI(UpdateAPIView):
 
 class DeliverOrderItemAPI(UpdateAPIView):
   serializer_class = AdminOrderItemSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission, IsOrderItemRider]
+  permission_classes = [IsAuthenticated, HasGroupPermission, IsOrderItemRider]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
@@ -510,7 +510,7 @@ class DeliverOrderItemAPI(UpdateAPIView):
 
 class DeliverOrderAPI(UpdateAPIView):
   serializer_class = AdminOrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission, IsOrderRider]
+  permission_classes = [IsAuthenticated, HasGroupPermission, IsOrderRider]
   required_groups = {
     'GET': ['rider'],
     'POST': ['rider'],
