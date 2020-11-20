@@ -139,10 +139,10 @@ const Bookings = ({
                         ) : (
                           <Fragment>
                             <div className="col s12">
-                              <i className="material-icons">more_vert</i>
+                              <i className="material-icons grey-text">more_vert</i>
                             </div>
                             <div className="col s12 mb-1 flex-col center">
-                              <h6 className="valign-wrapper"><i className="material-icons mr-1">room_service</i>Your food is being prepared</h6>
+                              <h6 className="valign-wrapper grey-text"><i className="material-icons mr-1">room_service</i>Your food is being prepared</h6>
                             </div>
                           </Fragment>
                         )
@@ -154,7 +154,7 @@ const Bookings = ({
                             <i className="material-icons green-text text-lighten-2">more_vert</i>
                           </div>
                           <div className="col s12 mb-1 flex-col center">
-                            <h6 className="valign-wrapper green-text text-lighten-2"><i className="material-icons mr-1">two_wheeler</i>PICKED UP PARCEL</h6>
+                            <h6 className="valign-wrapper green-text text-lighten-2"><i className="fas fa-box mr-1"></i>PARCEL PICKED UP</h6>
                           </div>
                         </Fragment>
                       ) : (
@@ -170,10 +170,10 @@ const Bookings = ({
                         ) : (
                           <Fragment>
                             <div className="col s12">
-                              <i className="material-icons">more_vert</i>
+                              <i className="material-icons grey-text">more_vert</i>
                             </div>
                             <div className="col s12 mb-1 flex-col center">
-                              <h6 className="valign-wrapper"><i className="material-icons mr-1">two_wheeler</i> Rider is heading to pickup location</h6>
+                              <h6 className="valign-wrapper grey-text"><i className="material-icons mr-1">two_wheeler</i> Rider is heading to pickup location</h6>
                             </div>
                           </Fragment>
                         )
@@ -191,10 +191,10 @@ const Bookings = ({
                     ) : (
                       <Fragment>
                         <div className="col s12">
-                          <i className="material-icons">more_vert</i>
+                          <i className="material-icons grey-text">more_vert</i>
                         </div>
                         <div className="col s12 mb-1 flex-col center">
-                          <h6 className="valign-wrapper"><i className="material-icons mr-1">local_shipping</i>Your order is being delivered</h6>
+                          <h6 className="valign-wrapper grey-text"><i className="material-icons mr-1">local_shipping</i>Your order is being delivered</h6>
                         </div>
                       </Fragment>
                     )}

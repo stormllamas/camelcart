@@ -36,7 +36,7 @@ class DashboardAPI(GenericAPIView):
     from_date = self.request.query_params.get('from_date', None).split('-')
     to_date = self.request.query_params.get('to_date', None).split('-')
     
-    shipping_total = sum([order.shipping for order in Order.objects.filter(is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
+    shipping_total = sum([order.ordered_shipping for order in Order.objects.filter(is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
     sales_total = sum([order.subtotal for order in Order.objects.filter(is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
     sold = sum([order_item.quantity for order_item in OrderItem.objects.filter(order__is_paid=True, order__date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), order__date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
     checkouts = Order.objects.filter(is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2])))).count()
@@ -52,7 +52,7 @@ class DashboardAPI(GenericAPIView):
     food_orders = [{
       'id': order.id,
       'ref_code': order.ref_code,
-      'shipping': order.shipping,
+      'ordered_shipping': order.ordered_shipping,
       'sub_total': order.subtotal,
       'date_paid': order.date_paid,
     } for order in Order.objects.filter(order_type='food', is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2])))).order_by('date_paid')]
@@ -60,7 +60,7 @@ class DashboardAPI(GenericAPIView):
     delivery_orders = [{
       'id': order.id,
       'ref_code': order.ref_code,
-      'shipping': order.shipping,
+      'ordered_shipping': order.ordered_shipping,
       'sub_total': order.subtotal,
       'date_paid': order.date_paid,
     } for order in Order.objects.filter(order_type='delivery', is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2])))).order_by('date_paid')]
@@ -162,7 +162,7 @@ class OrdersAPI(GenericAPIView):
       'loc1_address': order.loc1_address,
       'loc2_address': order.loc2_address,
       'payment_type': order.payment_type,
-      'shipping': order.shipping,
+      'ordered_shipping': order.ordered_shipping,
       'total': order.total,
       'count': order.count,
       'subtotal': sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]),
@@ -219,7 +219,7 @@ class OrderAPI(RetrieveAPIView):
       'loc1_address': order.loc1_address, 'loc1_latitude': order.loc1_latitude, 'loc1_longitude': order.loc1_longitude,
       'loc2_address': order.loc2_address, 'loc2_latitude': order.loc2_latitude, 'loc2_longitude': order.loc2_longitude,
       
-      'subtotal': order.subtotal,'shipping': order.shipping, 'total': order.total,
+      'subtotal': order.subtotal,'ordered_shipping': order.ordered_shipping, 'total': order.total,
       'count': order.count,
 
       'is_delivered': order.is_delivered,
@@ -300,7 +300,7 @@ class OrderItemsAPI(GenericAPIView):
         'payment_type': order_item.order.payment_type,
         'loc1_address': order_item.order.loc1_address,
         'loc2_address': order_item.order.loc2_address,
-        'shipping': order_item.order.shipping,
+        'ordered_shipping': order_item.order.ordered_shipping,
         'net_total': order_item.order.net_total
       },
       'quantity': order_item.quantity,

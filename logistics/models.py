@@ -213,6 +213,7 @@ class Order(models.Model):
   # Status
   is_ordered = models.BooleanField(default=False)
   date_ordered = models.DateTimeField(null=True, blank=True)
+  ordered_shipping = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
   rider = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='claimed_orders', on_delete=models.SET_NULL, blank=True, null=True)
   date_claimed = models.DateTimeField(null=True, blank=True)

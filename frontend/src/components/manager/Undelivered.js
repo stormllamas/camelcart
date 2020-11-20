@@ -277,7 +277,7 @@ const Undelivered = ({
                               <td className="mw-medium">{order.count} items</td>
                               <td className="mw-medium">₱ {order.total.toFixed(2)}</td>
                               <td className="mw-medium">₱ {order.subtotal.toFixed(2)}</td>
-                              <td className="mw-medium">₱ {order.shipping.toFixed(2)}</td>
+                              <td className="mw-medium">₱ {order.ordered_shipping.toFixed(2)}</td>
                             </tr>
                           ))
                         ) : (
@@ -328,7 +328,7 @@ const Undelivered = ({
                           ))}
                         </ul>
                         <p className="fs-16 m-0 ml-2">Subtotal: <span className="fw-4 fs-16 ml-2">₱ {order.subtotal.toFixed(2)}</span></p>
-                        <p className="fs-16 m-0 ml-2">Delivery: <span className="fw-4 fs-16 ml-2">₱ {order.shipping.toFixed(2)}</span></p>
+                        <p className="fs-16 m-0 ml-2">Delivery: <span className="fw-4 fs-16 ml-2">₱ {order.ordered_shipping.toFixed(2)}</span></p>
                         <p className="fw-6 fs-22 m-0 ml-2">Total: <span className="fw-4 fs-18 ml-2">₱ {order.total.toFixed(2)}</span></p>
                       </Fragment>
                     ) : (
@@ -380,7 +380,7 @@ const Undelivered = ({
                             <p className="grey lighten-3 p-1 m-0 rad-2">{order.description}</p>
                           </div>
                         </div>
-                        <p className="fw-6 fs-22 m-0 ml-2">Delivery Total: <span className="fw-4 fs-18 ml-2">₱ {order.shipping.toFixed(2)}</span></p>
+                        <p className="fw-6 fs-22 m-0 ml-2">Delivery Total: <span className="fw-4 fs-18 ml-2">₱ {order.ordered_shipping.toFixed(2)}</span></p>
                       </Fragment>
                     )}
                   </div>

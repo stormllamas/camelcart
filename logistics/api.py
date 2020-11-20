@@ -337,7 +337,7 @@ class OrdersAPI(GenericAPIView):
       'loc2_address': order.loc2_address,
 
       'payment_type': order.payment_type,
-      'count': order.count, 'shipping': order.shipping, 'total': order.total,
+      'count': order.count, 'ordered_shipping': order.ordered_shipping, 'total': order.total,
       
       'ordered_subtotal': sum([item.quantity*item.ordered_price if item.is_ordered and item.ordered_price else 0 for item in order.order_items.all()]),
       'date_ordered': order.date_ordered,
@@ -703,6 +703,7 @@ class CompleteOrderAPI(UpdateAPIView):
 
     order.is_ordered = True
     order.date_ordered = timezone.now()
+    order.ordered_shipping = order.shipping
     order.is_paid = True if paid == 2 else False
     order.date_paid = timezone.now() if paid == 2 else None
     order.payment_type = paid

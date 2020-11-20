@@ -133,7 +133,7 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder 
                     <p className="left m-0">Shipping</p>
                   </div>
                   <div className="col s6 flex-col end p-0">
-                    <p className="left m-0">₱ {order.shipping.toFixed(2)}</p>
+                    <p className="left m-0">₱ {order.ordered_shipping.toFixed(2)}</p>
                   </div>
                 </div>
               </Fragment>

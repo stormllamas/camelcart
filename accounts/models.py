@@ -7,6 +7,14 @@ from logistics.models import OrderReview
 # Custom User
 from django.contrib.auth.models import UserManager, AbstractUser
 
+# Tools
+import math
+
+def normal_round(n):
+  if n - math.floor(n) < 0.5:
+    return math.floor(n)
+  return math.ceil(n)
+
 class User(AbstractUser):
   # Additional fields
   facebook_id = models.CharField(max_length=25, blank=True, null=True)
