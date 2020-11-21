@@ -90,7 +90,7 @@ class LoginAPI(GenericAPIView):
     })
 
     request.session['auth_token'] = token
-    request.session.set_expiry(60*60*24*365*5)
+    request.session.set_expiry(60*60*24*365)
 
     return response
 
