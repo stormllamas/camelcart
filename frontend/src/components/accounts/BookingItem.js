@@ -84,23 +84,23 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
             <div className="row mb-0 mt-2">
               <div className="col s4 m3 l3 mb-1">
                 <small>Height</small>
-                <p className="grey lighten-4 p-1 rad-2">{order.height}"</p>
+                <p className="grey lighten-4 p-1 rad-2 summary">{order.height}"</p>
               </div>
               <div className="col s4 m3 l3 mb-1">
                 <small>Width</small>
-                <p className="grey lighten-4 p-1 rad-2">{order.width}"</p>
+                <p className="grey lighten-4 p-1 rad-2 summary">{order.width}"</p>
               </div>
               <div className="col s4 m3 l3 mb-1">
                 <small>Length</small>
-                <p className="grey lighten-4 p-1 rad-2">{order.length}"</p>
+                <p className="grey lighten-4 p-1 rad-2 summary">{order.length}"</p>
               </div>
               <div className="col s12 m3 l3 mb-1">
                 <small>Weight</small>
-                <p className="grey lighten-4 p-1 rad-2">{order.weight}{order.unit}</p>
+                <p className="grey lighten-4 p-1 rad-2 summary">{order.weight}{order.unit}</p>
               </div>
               <div className="col s12 mb-1">
                 <small>Description</small>
-                <p className="grey lighten-4 p-1 rad-2">{order.description}</p>
+                <p className="grey lighten-4 p-1 rad-2 summary">{order.description}</p>
               </div>
             </div>
           )}

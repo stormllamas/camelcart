@@ -137,8 +137,6 @@
   &-4{border-radius: 100px !important}
   &-5{
     border-radius: 50% !important;
-    min-height: 40px;
-    min-width: 40px;
   }
 }
 
@@ -400,6 +398,27 @@
     position: absolute;
     bottom: -10px !important;
     left: calc(-30px) !important;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  &.active {
+    opacity: 1;
+  }
+}
+
+.menu-wrapper {
+  overflow: visible;
+
+  .menu-notification {
+    opacity: 1;
+    position: absolute;
+    bottom: 20% !important;
+    right: -7px !important;
+    height: 14px !important;
+    width: 14px !important;
   }
 }
 
@@ -487,6 +506,10 @@
       }
     }
   }
+}
+
+.summary {
+  min-height: 27.8px;
 }
 
 .mw {

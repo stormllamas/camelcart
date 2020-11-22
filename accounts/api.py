@@ -44,10 +44,6 @@ def get_user_data(user) :
   } for address in user.addresses.all()]
 
   groups = [group.name for group in user.groups.all()]
-  if user.is_staff:
-    groups.append('admin')
-  if user.is_superuser:
-    groups.append('superuser')
 
   return {
     'id': user.id,
@@ -66,6 +62,8 @@ def get_user_data(user) :
 
     'is_staff': user.is_staff,
     'is_superuser': user.is_superuser,
+
+    'menu_notification': Order.objects.filter(is_ordered=True, rider__isnull=True, is_canceled=False, is_pickedup=False, is_delivered=False).count() >= 1 if 'partner' in [group.name for group in user.groups.all()] else False,
 
     'rider_info': {
       'plate_number': user.plate_number,
@@ -90,7 +88,7 @@ class LoginAPI(GenericAPIView):
     })
 
     request.session['auth_token'] = token
-    request.session.set_expiry(60*60*24*365)
+    request.session.set_expiry(60*60*24*29)
 
     return response
 

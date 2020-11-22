@@ -11,6 +11,7 @@ import PrivateRoute from './common/PrivateRoute';
 import SemiPrivateRoute from './common/SemiPrivateRoute';
 import AdminRoute from './common/AdminRoute';
 import RiderRoute from './common/RiderRoute';
+import Page404 from './common/Page404';
 
 import Preloader from './common/Preloader';
 import SiteMessage from './layout/SiteMessage'
@@ -46,7 +47,6 @@ import Restaurants from './food/Restaurants'
 import RestaurantDetail from './food/RestaurantDetail'
 import ItemDetail from './food/ItemDetail'
 import FoodPayments from './food/FoodPayment'
-// import Page404 from './common/Page404';
 
 import { loadUser } from '../actions/auth'
 import { loadSite } from '../actions/siteConfig'
@@ -97,7 +97,7 @@ const App = () => {
           <RiderRoute exact path="/order_manager/undelivered" component={Undelivered} />
           <RiderRoute exact path="/order_manager/delivered" component={Delivered} />
 
-          {/* <Route component={Page404} /> */}
+          <Route component={Page404} />
         </Switch>
       </Router>
       <Preloader color="blue" size="big" adds="fixed"/>

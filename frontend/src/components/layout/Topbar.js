@@ -36,8 +36,15 @@ const Topbar = ({
           <div className="container">
             <div className="nav-wrapper">
               <div className="brand-logo"><Link to="/" className="valign-wrapper"><img src="/static/frontend/img/Trike_logo-whole.png" alt="trike logo" className="responsive-img"/></Link></div>
-              <a href="#" data-target="mobile-nav" className="sidenav-trigger show-on-large grey-text text-darken-2 show-on-small-and-up">
+              <a href="#" data-target="mobile-nav" className="sidenav-trigger waves-effect show-on-large grey-text text-darken-2 show-on-small-and-up menu-wrapper relative">
                 <i className="material-icons">menu</i>
+                {!userLoading && (
+                  user && (
+                    user.menu_notification && (
+                      <div className="menu-notification red rad-5"></div>
+                    )
+                  )
+                )}
               </a>
               {!userLoading && isAuthenticated ? (
                 <ul className="right topbar-links">
@@ -177,9 +184,7 @@ Topbar.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  // filterOpened: state.products.filterOpened,
-  // profileOpened: state.layout.profileOpened,
-  // siteConfig: state.siteConfig
+  siteConfig: state.siteConfig
 });
 
 export default connect(mapStateToProps, { logout })(Topbar);

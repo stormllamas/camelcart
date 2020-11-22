@@ -278,7 +278,6 @@ export const addOrderItem = ({ productId, sellerID }) => async (dispatch, getSta
 }
 export const deleteOrderItem = ({ id, sellerID }) => async (dispatch, getState) => {
   $('.loader').fadeIn();
-
   try {
     const res = await axios.delete(`/api/order_item/${id}/`, tokenConfig(getState))
     await dispatch(getCurrentOrder({
@@ -413,6 +412,7 @@ export const confirmDelivery = ({ formData, history }) => async (dispatch, getSt
         const durationValue = response.rows[0].elements[0].duration.value
         const orderBody = {
           user: getState().auth.user.id,
+          rider_payment_needed: formData.riderPaymentNeeded,
 
           first_name: formData.firstName,
           last_name: formData.lastName,
@@ -420,11 +420,11 @@ export const confirmDelivery = ({ formData, history }) => async (dispatch, getSt
           email: formData.email,
           gender: formData.gender,
 
-          unit: formData.unit,
-          weight: formData.weight,
-          height: formData.height,
-          width: formData.width,
-          length: formData.length,
+          unit: formData.unit ? formData.unit : null,
+          weight: formData.weight ? formData.weight : 0,
+          height: formData.height ? formData.height : 0,
+          width: formData.width ? formData.width : 0,
+          length: formData.length ? formData.length : 0,
           description: formData.description,
 
           loc1_latitude: parseFloat(formData.pickupLat),

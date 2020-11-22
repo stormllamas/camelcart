@@ -24,6 +24,8 @@ const Delivery = ({
 
   const [activeModal, setActiveModal] = useState('');
 
+  const [riderPaymentNeeded, setRiderPaymentNeeded] = useState(false);
+
   const [firstName, setFirstName] = useState(user ? (user.first_name ? user.first_name : '') : '');
   const [lastName, setLastName] = useState(user ? (user.last_name ? user.last_name : '') : '');
   const [contact, setContact] = useState(user ? (user.contact ? user.contact : '') : '');
@@ -65,7 +67,6 @@ const Delivery = ({
   }
 
   const showGoogleMaps = () => {
-
     const centerLatLng = new google.maps.LatLng(13.938080242321387, 121.61336104698454)
 
     // Map options
@@ -274,8 +275,9 @@ const Delivery = ({
   }
 
   const proceedToPayment = async () => {
-    if(pickupLat && pickupLng && pickupAddress && deliveryLat && deliveryLng && deliveryAddress && weight && unit && height && width && length && description && firstName && lastName && contact && email && gender ? true : false) {
+    if(pickupLat && pickupLng && pickupAddress && deliveryLat && deliveryLng && deliveryAddress && firstName && lastName && contact && email && gender ? true : false) {
       const formData = {
+        riderPaymentNeeded,
         firstName, lastName, contact, email, gender,
         pickupLat, pickupLng, pickupAddress,
         deliveryLat, deliveryLng, deliveryAddress,
@@ -311,26 +313,28 @@ const Delivery = ({
       $('.collapsible').collapsible({
         accordion: false
       });
+      $('.tooltipped').tooltip();
     }
   }, [userLoading]);
   
-  // useEffect(() => {
-  //   if (!currentOrderLoading) {
-  //     setGender(currentOrder.gender ? currentOrder.gender : "")
-  //     setPickupLat(currentOrder.loc1_latitude ? currentOrder.loc1_latitude : "")
-  //     setPickupLng(currentOrder.loc1_longitude ? currentOrder.loc1_longitude : "")
-  //     setPickupAddress(currentOrder.loc1_address ? currentOrder.loc1_address : "")
-  //     setDeliveryLat(currentOrder.loc2_latitude ? currentOrder.loc2_latitude : "")
-  //     setDeliveryLng(currentOrder.loc2_longitude ? currentOrder.loc2_longitude : "")
-  //     setDeliveryAddress(currentOrder.loc2_address ? currentOrder.loc2_address : "")
-  //     setUnit(currentOrder.unit ? currentOrder.unit : "")
-  //     setWeight(currentOrder.weight ? currentOrder.weight : "")
-  //     setHeight(currentOrder.height ? currentOrder.height : "")
-  //     setWidth(currentOrder.width ? currentOrder.width : "")
-  //     setLength(currentOrder.length ? currentOrder.length : "")
-  //     setDescription(currentOrder.description ? currentOrder.description : "")
-  //   }
-  // }, [currentOrderLoading]);
+  useEffect(() => {
+    if (!currentOrderLoading) {
+      setGender(currentOrder.gender ? currentOrder.gender : "")
+      setPickupLat(currentOrder.loc1_latitude ? currentOrder.loc1_latitude : "")
+      setPickupLng(currentOrder.loc1_longitude ? currentOrder.loc1_longitude : "")
+      setPickupAddress(currentOrder.loc1_address ? currentOrder.loc1_address : "")
+      setDeliveryLat(currentOrder.loc2_latitude ? currentOrder.loc2_latitude : "")
+      setDeliveryLng(currentOrder.loc2_longitude ? currentOrder.loc2_longitude : "")
+      setDeliveryAddress(currentOrder.loc2_address ? currentOrder.loc2_address : "")
+      setUnit(currentOrder.unit ? currentOrder.unit : "")
+      setWeight(currentOrder.weight ? currentOrder.weight : "")
+      setHeight(currentOrder.height ? currentOrder.height : "")
+      setWidth(currentOrder.width ? currentOrder.width : "")
+      setLength(currentOrder.length ? currentOrder.length : "")
+      setDescription(currentOrder.description ? currentOrder.description : "")
+      setRiderPaymentNeeded(currentOrder.rider_payment_needed)
+    }
+  }, [currentOrderLoading]);
 
   useEffect(() => {
     $('select').formSelect();
@@ -342,6 +346,19 @@ const Delivery = ({
       <section className="section section-delivery grey lighten-5">
         <div className="container">
           <h4>Delivery Form</h4>
+          <div className="row">
+            <div className="col s12">
+              <p className="mb-1 valign-wrapper">
+                <label>
+                  <input type="checkbox" id="rider_acknowledgent" name="rider_acknowledgent" className="filled-in" 
+                    onChange={e => setRiderPaymentNeeded(!riderPaymentNeeded)}
+                    checked={riderPaymentNeeded === true}
+                  />
+                  <span className="tooltipped fs-18" data-position="bottom" data-tooltip="If the item to be pickedup needs to be paid by the rider first, check this box">Rider payment needed?</span>
+                </label>
+              </p>
+            </div>
+          </div>
           <ul className="collapsible">
             <li className="active">
               <div className="collapsible-header relative">
@@ -426,11 +443,11 @@ const Delivery = ({
             <li>
               <div className="collapsible-header relative">
                 <span className="main-title">Shipment Details</span>
-                {!unit || !weight || !height || !width || !length || !description ? (
+                {/* {!unit || !weight || !height || !width || !length || !description ? (
                   <i className="material-icons red-text form-notification">error</i>
                 ) : (
                   <i className="material-icons green-text form-notification">check_circle</i>
-                )}
+                )} */}
                 <i className="material-icons">keyboard_arrow_down</i>
               </div>
               <div className="collapsible-body grey lighten-4">
@@ -447,31 +464,31 @@ const Delivery = ({
                   </div>
                   <div className="col s12 m6">
                     <div className="input-field relative">
-                      <input type="number" id="weight" className="validate grey-text text-darken-2" onChange={e => setWeight(e.target.value)} required disabled={unit ? false : true} value={weight}/>
+                      <input type="number" id="weight" className="validate grey-text text-darken-2" onChange={e => setWeight(e.target.value)} disabled={unit ? false : true} value={weight}/>
                       <label htmlFor="weight" className="grey-text text-darken-2">{unit ? `Weight (in ${unit})` : '(Choose a weight unit first)'}</label>
                     </div>
                   </div>
                   <div className="col s12 m12 l4">
                     <div className="input-field relative">
-                      <input type="number" id="height" className="validate grey-text text-darken-2" value={height} onChange={e => setHeight(e.target.value)} required/>
+                      <input type="number" id="height" className="validate grey-text text-darken-2" value={height} onChange={e => setHeight(e.target.value)}/>
                       <label htmlFor="height" className="grey-text text-darken-2">Height Dimensions (in inches)</label>
                     </div>
                   </div>
                   <div className="col s12 m12 l4">
                     <div className="input-field relative">
-                      <input type="number" id="width" className="validate grey-text text-darken-2" value={width} onChange={e => setWidth(e.target.value)} required/>
+                      <input type="number" id="width" className="validate grey-text text-darken-2" value={width} onChange={e => setWidth(e.target.value)}/>
                       <label htmlFor="width" className="grey-text text-darken-2">Width Dimensions (in inches)</label>
                     </div>
                   </div>
                   <div className="col s12 m12 l4">
                     <div className="input-field relative">
-                      <input type="number" id="length" className="validate grey-text text-darken-2" value={length} onChange={e => setLength(e.target.value)} required/>
+                      <input type="number" id="length" className="validate grey-text text-darken-2" value={length} onChange={e => setLength(e.target.value)}/>
                       <label htmlFor="length" className="grey-text text-darken-2">Length Dimensions (in inches)</label>
                     </div>
                   </div>
                   <div className="col s12">
                     <div className="input-field relative">
-                      <textarea id="item-description" className="materialize-textarea validate grey-text text-darken-2" value={description} onChange={e => setDescription(e.target.value)} required></textarea>
+                      <textarea id="item-description" className="materialize-textarea validate grey-text text-darken-2" value={description} onChange={e => setDescription(e.target.value)}></textarea>
                       <label htmlFor="length" className="grey-text text-darken-2">Item Description</label>
                     </div>
                   </div>

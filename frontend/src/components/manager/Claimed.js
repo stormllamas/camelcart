@@ -259,8 +259,9 @@ const Claimed = ({
                         <tr className="grey lighten-3">
                           <th>Date Ordered</th>
                           <th>Ref Code</th>
-                          <th>Type</th>
-                          <th>Payment</th>
+                          <th className="center">Type</th>
+                          <th className="center">Payment Needed</th>
+                          <th className="center">Payment</th>
                           <th>Pickup Address</th>
                           <th>Delivery Address</th>
                           <th>Items</th>
@@ -276,8 +277,9 @@ const Claimed = ({
                             <tr key={order.id}>
                               <td className="mw-medium">{moment(order.date_ordered).format('lll')}</td>
                               <td><a href="" data-target="order-modal" className="mw-small modal-trigger fw-6 blue-text text-lighten-2" onClick={() => getOrder({ id:order.id })}>{order.ref_code}</a></td>
-                              <td className="mw-small">{order.order_type}</td>
-                              <td className={`fw-6 ${order.payment_type === 1 ? 'orange-text' : 'green-text'}`}>{order.payment_type === 1 ? 'COD' : 'Card'}</td>
+                              <td className="mw-small center">{order.order_type}</td>
+                              <td className={`fw-6 mw-medium center ${order.rider_payment_needed === true ? 'green-text' : ''}`}>{order.rider_payment_needed === true ? 'Yes' : 'No'}</td>
+                              <td className={`fw-6 mw-medium center ${order.payment_type === 1 ? 'orange-text' : 'green-text'}`}>{order.payment_type === 1 ? 'COD' : 'Card'}</td>
                               <td className="mw-large"><p className="m-0">{order.order_type === 'food' && order.seller.name}</p><a href="" data-target="addressmodal" className="mw-small modal-trigger fw-6 green-text text-lighten-1" onClick={() => {getOrder({ id:order.id }), setAddressFocus('pickup')}}>{order.loc1_address}</a></td>
                               <td className="mw-large"><a href="" data-target="addressmodal" className="mw-small modal-trigger fw-6 blue-text text-lighten-1" onClick={() => {getOrder({ id:order.id }), setAddressFocus('delivery')}}>{order.loc2_address}</a></td>
                               <td className="mw-medium">{order.count} items</td>
@@ -348,23 +350,23 @@ const Claimed = ({
                       <div className="row">
                         <div className="col s12 m6 mb-1">
                           <small>First Name</small>
-                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.first_name}</p>
+                          <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.first_name}</p>
                         </div>
                         <div className="col s12 m6 mb-1">
                           <small>Last Name</small>
-                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.last_name}</p>
+                          <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.last_name}</p>
                         </div>
                         <div className="col s12 mb-1">
                           <small>Contact</small>
-                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.contact}</p>
+                          <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.contact}</p>
                         </div>
                         <div className="col s12 mb-1">
                           <small>Email</small>
-                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.email}</p>
+                          <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.email}</p>
                         </div>
                         <div className="col s12 mb-1">
                           <small>Gender</small>
-                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.gender}</p>
+                          <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.gender}</p>
                         </div>
                       </div>
                       <div className="row">
@@ -373,23 +375,23 @@ const Claimed = ({
                       <div className="row">
                         <div className="col s12 m4 mb-1">
                           <small>Item Weight</small>
-                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.weight}{order.unit}</p>
+                          <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.weight}{order.unit}</p>
                         </div>
                         <div className="col s12 m4 mb-1">
                           <small>Item Height</small>
-                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.height}</p>
+                          <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.height}</p>
                         </div>
                         <div className="col s12 m4 mb-1">
                           <small>Item Width</small>
-                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.width}</p>
+                          <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.width}</p>
                         </div>
                         <div className="col s12 mb-1">
                           <small>Item Length</small>
-                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.length}</p>
+                          <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.length}</p>
                         </div>
                         <div className="col s12 mb-1">
                           <small>Description</small>
-                          <p className="grey lighten-3 p-1 m-0 rad-2">{order.description}</p>
+                          <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.description}</p>
                         </div>
                       </div>
                       <p className="fw-6 fs-22 m-0 ml-2">Delivery Total: <span className="fw-4 fs-18 ml-2">₱ {order.ordered_shipping.toFixed(2)}</span></p>

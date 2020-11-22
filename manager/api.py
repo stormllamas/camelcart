@@ -165,6 +165,7 @@ class OrdersAPI(GenericAPIView):
       'ordered_shipping': order.ordered_shipping,
       'total': order.total,
       'count': order.count,
+      'rider_payment_needed': order.rider_payment_needed,
       'subtotal': sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]),
       'date_ordered': order.date_ordered,
     } for order in queryset.order_by('-date_delivered','-date_claimed','-date_ordered')[from_item:to_item]]
@@ -215,6 +216,7 @@ class OrderAPI(RetrieveAPIView):
       'ref_code': order.ref_code,
       'order_type': order.order_type,
       'payment_type': order.payment_type,
+      'rider_payment_needed': order.rider_payment_needed,
 
       'loc1_address': order.loc1_address, 'loc1_latitude': order.loc1_latitude, 'loc1_longitude': order.loc1_longitude,
       'loc2_address': order.loc2_address, 'loc2_latitude': order.loc2_latitude, 'loc2_longitude': order.loc2_longitude,

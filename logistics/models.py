@@ -222,6 +222,7 @@ class Order(models.Model):
   date_canceled = models.DateTimeField(null=True, blank=True)
 
   is_paid = models.BooleanField(default=False)
+  rider_payment_needed = models.BooleanField(default=False)
   date_paid = models.DateTimeField(null=True, blank=True)
   payment_type = models.PositiveIntegerField(default=1) # (1) for COD (2) for Card or Detail
 
@@ -261,8 +262,8 @@ class Order(models.Model):
   @property
   def shipping(self):
     total = round((self.distance_value/1000), 0)*site_config.per_km_price
-    if total < 35:
-      total = 35
+    if total < 50:
+      total = 50
     return total
 
   @property

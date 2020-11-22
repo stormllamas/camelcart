@@ -18,7 +18,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
       'payment_type',
       'auth_id', 'capture_id',
-      'is_ordered', 'date_ordered', 'is_paid', 'date_paid',
+      'is_ordered', 'date_ordered', 'is_paid', 'rider_payment_needed', 'date_paid',
 
       'shipping',
     ]

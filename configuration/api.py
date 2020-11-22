@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 # Models
 from django.conf import settings
 from .models import SiteConfiguration
+from logistics.models import Order
 
 # Serializers
 from rest_framework import viewsets, mixins
@@ -27,7 +28,6 @@ class SiteInformationAPI(GenericAPIView):
       'location': site_config.location,
       'about_text': site_config.about_text,
       'per_km_price': site_config.per_km_price,
-
       'version': settings.APPLICATION_VERSION,
     })
     

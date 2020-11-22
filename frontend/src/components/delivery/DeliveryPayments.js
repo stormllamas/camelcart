@@ -101,7 +101,7 @@ const DeliveryPayments = ({
   }
 
   const checkCurrentOrder = CO => {
-    if (CO.first_name !== null && CO.last_name !== null && CO.contact !== null && CO.email !== null && CO.gender !== null && CO.unit !== null & CO.weight !== null & CO.height !== null && CO.width !== null && CO.length !== null && CO.description !== null && CO.loc1_latitude !== null && CO.loc1_longitude !== null && CO.loc1_address !== null && CO.loc2_latitude !== null && CO.loc2_longitude !== null && CO.loc2_address !== null) {
+    if (CO.first_name !== null && CO.last_name !== null && CO.contact !== null && CO.email !== null && CO.gender !== null && CO.loc1_latitude !== null && CO.loc1_longitude !== null && CO.loc1_address !== null && CO.loc2_latitude !== null && CO.loc2_longitude !== null && CO.loc2_address !== null) {
       return true
     } else {
       return false
@@ -173,23 +173,23 @@ const DeliveryPayments = ({
                         <div className="row">
                           <div className="col s12 m6 mb-1">
                             <small>First Name</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.first_name}</p>
+                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.first_name}</p>
                           </div>
                           <div className="col s12 m6 mb-1">
                             <small>Last Name</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.last_name}</p>
+                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.last_name}</p>
                           </div>
                           <div className="col s12 mb-1">
                             <small>Contact</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.contact}</p>
+                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.contact}</p>
                           </div>
                           <div className="col s12 mb-1">
                             <small>Email</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.email}</p>
+                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.email}</p>
                           </div>
                           <div className="col s12 mb-1">
                             <small>Gender</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.gender}</p>
+                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.gender}</p>
                           </div>
                         </div>
                         <div className="row">
@@ -198,23 +198,23 @@ const DeliveryPayments = ({
                         <div className="row">
                           <div className="col s12 m4 mb-1">
                             <small>Item Weight</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.weight}{currentOrder.unit}</p>
+                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.weight}{currentOrder.unit}</p>
                           </div>
                           <div className="col s12 m4 mb-1">
                             <small>Item Height</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.height} inches</p>
+                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.height} inches</p>
                           </div>
                           <div className="col s12 m4 mb-1">
                             <small>Item Width</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.width} inches</p>
+                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.width} inches</p>
                           </div>
                           <div className="col s12 mb-1">
                             <small>Item Length</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.length} inches</p>
+                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.length} inches</p>
                           </div>
                           <div className="col s12 mb-1">
                             <small>Description</small>
-                            <p className="grey lighten-4 p-1 rad-2">{currentOrder.description}</p>
+                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.description}</p>
                           </div>
                         </div>
                       </div>

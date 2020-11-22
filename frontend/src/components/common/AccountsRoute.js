@@ -31,7 +31,7 @@ const AccountsRoute = ({
           return <Topbar curLocation={curLocation}/>
         } else {
           if (siteInfo.maintenance_mode) {
-            return <Redirect to='/site?0' />
+            return <Redirect to='/page404' />
           } else if (isAuthenticated) {
             return <Redirect to="/"/>
           } else {

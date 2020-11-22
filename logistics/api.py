@@ -267,7 +267,7 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
       'capture_id': order.capture_id,
       
       'is_ordered': order.is_ordered, 'date_ordered': order.date_ordered,
-      'is_paid': order.is_paid, 'date_paid': order.date_paid,
+      'is_paid': order.is_paid, 'rider_payment_needed': order.rider_payment_needed, 'date_paid': order.date_paid,
       
       'loc1_latitude': order.loc1_latitude,
       'loc1_longitude': order.loc1_longitude,
