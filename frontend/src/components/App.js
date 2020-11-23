@@ -11,6 +11,7 @@ import PrivateRoute from './common/PrivateRoute';
 import SemiPrivateRoute from './common/SemiPrivateRoute';
 import AdminRoute from './common/AdminRoute';
 import RiderRoute from './common/RiderRoute';
+import SellerRoute from './common/SellerRoute';
 import Page404 from './common/Page404';
 
 import Preloader from './common/Preloader';
@@ -24,6 +25,8 @@ import PasswordReset from './accounts/passwordReset/PasswordReset';
 import PasswordResetForm from './accounts/passwordReset/PasswordResetForm';
 
 import AdminDashboard from './manager/AdminDashboard'
+import SellerManager from './manager/SellerManager'
+import SellerManagerPrepared from './manager/SellerManagerPrepared'
 import Unclaimed from './manager/Unclaimed'
 import Claimed from './manager/Claimed'
 import Undelivered from './manager/Undelivered'
@@ -92,6 +95,8 @@ const App = () => {
           <PrivateRoute exact path="/delivery/payments" component={DeliveryPayments} />
 
           <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
+          <SellerRoute exact path="/seller_manager/new_orders" component={SellerManager} />
+          <SellerRoute exact path="/seller_manager/prepared_orders" component={SellerManagerPrepared} />
           <RiderRoute exact path="/order_manager/unclaimed" component={Unclaimed} />
           <RiderRoute exact path="/order_manager/claimed" component={Claimed} />
           <RiderRoute exact path="/order_manager/undelivered" component={Undelivered} />

@@ -47,7 +47,7 @@ const Topbar = ({
     <Fragment>
       <ul id="mobile-nav" className="sidenav admin-sidenav">
         {user && (
-          user.groups.includes('rider') || user.groups.includes('admin') ? (
+          user.groups.includes('partner') || user.is_staff ? (
             <li>
               <div className="user-view">
                 <div className="background orange darken-1 p-0">
@@ -71,29 +71,49 @@ const Topbar = ({
         </li>
         {!userLoading && isAuthenticated ? (
           <Fragment>
-            {user.groups.includes('admin') && (
+            {user.is_staff && (
               <li className={history.location.pathname === "/admin/dashboard" ? "active" : ""}>
                 <Link to="/admin/dashboard" className="sidenav-close waves-effect"><i className="material-icons">dashboard</i>Dashboard</Link>
               </li>
             )}
-            <li>
-              <div className="divider"></div>
-            </li>
-            <li>
-              <a className="subheader">Order Manager Pages</a>
-            </li>
-            <li className={history.location.pathname === "/order_manager/unclaimed" ? "active" : ""}>
-              <Link to="/order_manager/unclaimed" className="sidenav-close waves-effect" ><i className="material-icons">pending</i>Unclaimed Orders</Link>
-            </li>
-            <li className={history.location.pathname === "/order_manager/claimed" ? "active" : ""}>
-              <Link to="/order_manager/claimed" className="sidenav-close waves-effect" ><i className="material-icons">pending_actions</i>Claimed Orders</Link>
-            </li>
-            <li className={history.location.pathname === "/order_manager/undelivered" ? "active" : ""}>
-              <Link to="/order_manager/undelivered" className="sidenav-close waves-effect" ><i className="material-icons">local_shipping</i>Undelivered Orders</Link>
-            </li>
-            <li className={history.location.pathname === "/order_manager/delivered" ? "active" : ""}>
-              <Link to="/order_manager/delivered" className="sidenav-close waves-effect" ><i className="material-icons">check_box</i>Delivered Orders</Link>
-            </li>
+            {user.groups.includes('rider') || user.is_staff && (
+              <Fragment>
+                <li>
+                  <div className="divider"></div>
+                </li>
+                <li>
+                  <a className="subheader">Order Manager Pages</a>
+                </li>
+                <li className={history.location.pathname === "/order_manager/unclaimed" ? "active" : ""}>
+                  <Link to="/order_manager/unclaimed" className="sidenav-close waves-effect" ><i className="material-icons">pending</i>Unclaimed Orders</Link>
+                </li>
+                <li className={history.location.pathname === "/order_manager/claimed" ? "active" : ""}>
+                  <Link to="/order_manager/claimed" className="sidenav-close waves-effect" ><i className="material-icons">pending_actions</i>Claimed Orders</Link>
+                </li>
+                <li className={history.location.pathname === "/order_manager/undelivered" ? "active" : ""}>
+                  <Link to="/order_manager/undelivered" className="sidenav-close waves-effect" ><i className="material-icons">local_shipping</i>Undelivered Orders</Link>
+                </li>
+                <li className={history.location.pathname === "/order_manager/delivered" ? "active" : ""}>
+                  <Link to="/order_manager/delivered" className="sidenav-close waves-effect" ><i className="material-icons">check_box</i>Delivered Orders</Link>
+                </li>
+              </Fragment>
+            )}
+            {user.groups.includes('seller') && (
+              <Fragment>
+                <li>
+                  <div className="divider"></div>
+                </li>
+                <li>
+                  <a className="subheader">Seller Manager Pages</a>
+                </li>
+                <li className={history.location.pathname === "/seller_manager/new_orders" ? "active" : ""}>
+                  <Link to="/seller_manager/new_orders" className="sidenav-close waves-effect" ><i className="material-icons">pending</i>New Orders</Link>
+                </li>
+                <li className={history.location.pathname === "/seller_manager/prepared_orders" ? "active" : ""}>
+                  <Link to="/seller_manager/prepared_orders" className="sidenav-close waves-effect" ><i className="material-icons">pending_actions</i>Prepared Orders</Link>
+                </li>
+              </Fragment>
+            )}
             {/* <li>
               <div className="divider"></div>
             </li>

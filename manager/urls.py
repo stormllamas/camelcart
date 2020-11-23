@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .api import DashboardAPI, OrderItemsAPI, DeliverOrderItemAPI, DeliverOrderAPI, PickupOrderItemAPI, PickupOrderAPI, OrdersAPI, OrderAPI, ClaimOrderAPI, RiderCancelOrderAPI #, RefundsAPI
+from .api import DashboardAPI, OrderItemsAPI, DeliverOrderItemAPI, DeliverOrderAPI, PickupOrderItemAPI, PickupOrderAPI, OrdersAPI, OrderAPI, ClaimOrderAPI, PrepareOrderAPI, RiderCancelOrderAPI #, RefundsAPI
 from knox import views as knox_views
 
 urlpatterns = [
@@ -8,6 +8,7 @@ urlpatterns = [
   path('api/manager/orders', OrdersAPI.as_view(), name='orders'),
   path('api/manager/order/<int:pk>/', OrderAPI.as_view(), name='order'),
   path('api/manager/claim_order/<int:order_id>/', ClaimOrderAPI.as_view(), name='claim_order'),
+  path('api/manager/prepare_order/<int:order_id>/', PrepareOrderAPI.as_view(), name='prepare_order'),
   path('api/manager/cancel_order/<int:order_id>/', RiderCancelOrderAPI.as_view(), name='cancel_order'),
   path('api/manager/deliver_order_item/<int:pk>/', DeliverOrderItemAPI.as_view(), name='deliver_order_item'),
   path('api/manager/deliver_order/<int:pk>/', DeliverOrderAPI.as_view(), name='deliver_order'),

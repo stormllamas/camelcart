@@ -70,7 +70,7 @@ const Topbar = ({
       </div>
       <ul id="mobile-nav" className="sidenav">
         {user ? (
-          user.groups.includes('rider') || user.groups.includes('admin') ? (
+          user.groups.includes('partner') || user.is_staff ? (
             <li>
               <div className="user-view">
                 <div className="background orange darken-1 p-0">
@@ -110,14 +110,35 @@ const Topbar = ({
         </li>
         {!userLoading && isAuthenticated ? (
           <Fragment>
-            {!user.groups.includes('rider') && (
+            {!user.groups.includes('partner') && (
               <li className={history.location.pathname.includes('bookings') ? "active" : ''}>
                 <Link to="/bookings" className="sidenav-close waves-effect" ><i className="material-icons">assignment</i>My Bookings</Link>
               </li>
             )}
-            {user.groups.includes('rider') || user.groups.includes('admin') ? (
+            {user.groups.includes('rider') || user.is_staff ? (
               <li>
-                <Link to="/order_manager/unclaimed" className="sidenav-close waves-effect" ><i className="material-icons">fact_check</i>Order Manager</Link>
+                <Link to="/order_manager/unclaimed" className="sidenav-close waves-effect" >
+                  <i className="material-icons menu-wrapper relative">
+                    fact_check
+                    {user.menu_notification && (
+                      <div className="menu-notification red rad-5"></div>
+                    )}
+                  </i>
+                  Order Manager
+                </Link>
+              </li>
+            ) : undefined}
+            {user.groups.includes('seller') ? (
+              <li>
+                <Link to="/seller_manager/new_orders" className="sidenav-close waves-effect" >
+                  <i className="material-icons menu-wrapper relative">
+                    fact_check
+                    {user.menu_notification && (
+                      <div className="menu-notification red rad-5"></div>
+                    )}
+                  </i>
+                  Seller Manager
+                </Link>
               </li>
             ) : undefined}
           </Fragment>

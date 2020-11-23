@@ -45,6 +45,14 @@ def get_user_data(user) :
 
   groups = [group.name for group in user.groups.all()]
 
+  menu_notification = False
+
+  if 'rider' in [group.name for group in user.groups.all()]:
+    menu_notification = Order.objects.filter(is_ordered=True, rider__isnull=True, is_canceled=False, is_pickedup=False, is_delivered=False).count() >= 1
+
+  if 'seller' in [group.name for group in user.groups.all()]:
+    menu_notification = Order.objects.filter(is_ordered=True, rider__isnull=False, is_canceled=False, is_prepared=False, is_pickedup=False, is_delivered=False, seller=user.seller).count() >= 1
+
   return {
     'id': user.id,
     'username': user.username,
@@ -63,13 +71,18 @@ def get_user_data(user) :
     'is_staff': user.is_staff,
     'is_superuser': user.is_superuser,
 
-    'menu_notification': Order.objects.filter(is_ordered=True, rider__isnull=True, is_canceled=False, is_pickedup=False, is_delivered=False).count() >= 1 if 'partner' in [group.name for group in user.groups.all()] else False,
+    'menu_notification': menu_notification,
 
     'rider_info': {
       'plate_number': user.plate_number,
       'accounts_payable': sum([int(sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]))+order.ordered_shipping for order in Order.objects.filter(rider=user, is_delivered=True)]) - sum([int(payment.amount) for payment in CommissionPayment.objects.filter(rider=user)]),
       'review_total': user.rider_rating
-    } if 'rider' in groups or user.is_superuser else None
+    } if 'rider' in groups or user.is_superuser else None,
+
+    'seller': {
+      'id': user.seller.id,
+      'name': user.seller.name
+    } if 'seller' in groups else None,
   }
     
 class LoginAPI(GenericAPIView):

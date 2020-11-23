@@ -80,9 +80,9 @@ class DashboardAPI(GenericAPIView):
 class OrdersAPI(GenericAPIView):
   permission_classes = [IsAuthenticated, HasGroupPermission]
   required_groups = {
-    'GET': ['rider'],
-    'POST': ['rider'],
-    'PUT': ['rider'],
+    'GET': ['partner'],
+    'POST': ['partner'],
+    'PUT': ['partner'],
   }
 
   def get(self, request):
@@ -107,6 +107,13 @@ class OrdersAPI(GenericAPIView):
     elif claimed == 'false':
       claimed_query.add(Q(rider__isnull=True), Q.AND)
 
+    prepared_query = Q()
+    prepared = self.request.query_params.get('prepared', None)
+    if prepared == 'true':
+      prepared_query.add(Q(is_prepared=True, seller__user=request.user, rider__isnull=False), Q.AND)
+    elif prepared == 'false':
+      prepared_query.add(Q(is_prepared=False, seller__user=request.user, rider__isnull=False), Q.AND)
+
     pickedup_query = Q()
     pickedup = self.request.query_params.get('pickedup', None)
     if pickedup == 'true':
@@ -122,7 +129,7 @@ class OrdersAPI(GenericAPIView):
     if keywords:
       keywords_query.add(Q(ref_code__icontains=keywords), Q.AND)
 
-    queryset = Order.objects.filter(Q(is_ordered=True, is_canceled=False) & delivered_query & claimed_query & pickedup_query & keywords_query)
+    queryset = Order.objects.filter(Q(is_ordered=True, is_canceled=False) & delivered_query & claimed_query & prepared_query & pickedup_query & keywords_query)
     results_full_length = queryset.count()
 
     range_query = self.request.query_params.get('range', None)
@@ -181,9 +188,9 @@ class OrderAPI(RetrieveAPIView):
   serializer_class = OrderSerializer
   permission_classes = [IsAuthenticated, HasGroupPermission]
   required_groups = {
-    'GET': ['rider'],
-    'POST': ['rider'],
-    'PUT': ['rider'],
+    'GET': ['partner'],
+    'POST': ['partner'],
+    'PUT': ['partner'],
   }
 
   def get_object(self):
@@ -241,9 +248,9 @@ class OrderAPI(RetrieveAPIView):
 class OrderItemsAPI(GenericAPIView):
   permission_classes = [IsAuthenticated, IsAdminUser, HasGroupPermission]
   required_groups = {
-    'GET': ['rider'],
-    'POST': ['rider'],
-    'PUT': ['rider'],
+    'GET': ['partner'],
+    'POST': ['partner'],
+    'PUT': ['partner'],
   }
 
   def get(self, request):
@@ -374,6 +381,32 @@ class RiderCancelOrderAPI(UpdateAPIView):
     else:
       order.is_canceled = True
       order.date_canceled = timezone.now()
+      order.save()
+
+      return Response(OrderSerializer(order, context=self.get_serializer_context()).data)
+class PrepareOrderAPI(UpdateAPIView):
+  serializer_class = OrderSerializer
+  permission_classes = [IsAuthenticated, HasGroupPermission]
+  required_groups = {
+    'GET': ['seller'],
+    'POST': ['seller'],
+    'PUT': ['seller'],
+  }
+
+  def get_object(self):
+    return get_object_or_404(Order, id=self.kwargs['order_id'])
+
+  def update(self, request, order_id=None):
+    order = self.get_object()
+    if order.is_prepared == True:
+      return Response({
+        'status': 'error',
+        'msg': 'Order already prepared'
+      })
+
+    else:
+      order.is_prepared = True
+      order.date_prepared = timezone.now()
       order.save()
 
       return Response(OrderSerializer(order, context=self.get_serializer_context()).data)

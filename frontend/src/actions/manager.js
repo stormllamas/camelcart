@@ -18,6 +18,7 @@ import {
 
   CLAIM_ORDER,
   RIDER_CANCEL_ORDER,
+  PREPARE_ORDER,
 
   DELIVER_ORDER_ITEM,
   DELIVER_ORDER,
@@ -135,14 +136,14 @@ export const getDashboardData = ({ fromDate, toDate }) => async (dispatch, getSt
   }
 }
 
-export const getOrders = ({ page, claimed, pickedup, delivered, keywords, range }) => async (dispatch, getState) => {
+export const getOrders = ({ page, claimed, prepared, pickedup, delivered, keywords, range }) => async (dispatch, getState) => {
   $('.loader').fadeIn();
   try {
     let res;
     if (range) {
       res = await axios.get(`/api/manager/orders?range=${range}`, tokenConfig(getState))
     } else {
-      res = await axios.get(`/api/manager/orders?page=${page ? page : '0'}${claimed !== undefined ? `&claimed=${claimed}` : ''}${pickedup !== undefined ? `&pickedup=${pickedup}` : ''}${delivered !== undefined ? `&delivered=${delivered}` : ''}${keywords !== undefined ? `&keywords=${keywords}` : ''}`, tokenConfig(getState))
+      res = await axios.get(`/api/manager/orders?page=${page ? page : '0'}${claimed !== undefined ? `&claimed=${claimed}` : ''}${prepared !== undefined ? `&prepared=${prepared}` : ''}${pickedup !== undefined ? `&pickedup=${pickedup}` : ''}${delivered !== undefined ? `&delivered=${delivered}` : ''}${keywords !== undefined ? `&keywords=${keywords}` : ''}`, tokenConfig(getState))
     }
     dispatch({
       type: GET_ORDERS,
@@ -204,6 +205,45 @@ export const claimOrder = ({ id }) => async (dispatch, getState) => {
       page: 1,
       claimed: false,
       delivered: false,
+      keywords: ''
+    }))
+    $('.loader').fadeOut();
+  }
+}
+export const prepareOrder = ({ id }) => async (dispatch, getState) => {
+  $('.loader').fadeIn();
+  try {
+    const res = await axios.put(`/api/manager/prepare_order/${id}/`, null, tokenConfig(getState))
+    console.log(res.data)
+    if (res.data.status) {
+      if (res.data.status === 'error' && res.data.msg === 'Order already prepared') {
+        await dispatch(getOrders({
+          page: 1,
+          prepared: false,
+          keywords: ''
+        }))
+        M.toast({
+          html: res.data.msg,
+          displayLength: 5000,
+          classes: 'red'
+        });
+      }
+    } else {
+      dispatch({
+        type: PREPARE_ORDER,
+        payload: res.data
+      });
+      M.toast({
+        html: 'Orders Prepared',
+        displayLength: 5000,
+        classes: 'orange'
+      });
+    }
+    $('.loader').fadeOut();
+  } catch (err) {
+    await dispatch(getOrders({
+      page: 1,
+      prepared: false,
       keywords: ''
     }))
     $('.loader').fadeOut();

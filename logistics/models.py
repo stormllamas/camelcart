@@ -50,6 +50,7 @@ class Category(models.Model):
     return len(Seller.objects.filter(categories=self.id))
 
 class Seller(models.Model):
+  user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='seller', on_delete=models.CASCADE, null=True)
   name = models.CharField(max_length=50, unique=True)
   contact = models.CharField(max_length=50)
   description = models.TextField(max_length=4000, default='')
@@ -220,6 +221,9 @@ class Order(models.Model):
 
   is_canceled = models.BooleanField(default=False)
   date_canceled = models.DateTimeField(null=True, blank=True)
+  
+  is_prepared = models.BooleanField(default=False)
+  date_prepared = models.DateTimeField(null=True, blank=True)
 
   is_paid = models.BooleanField(default=False)
   rider_payment_needed = models.BooleanField(default=False)

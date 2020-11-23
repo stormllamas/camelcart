@@ -34,6 +34,8 @@ urlpatterns = [
   path('order_review/<int:pk>', views.IndexView.as_view(), name='order_review'),
 
   path('admin/dashboard', views.IndexView.as_view(), name='admin_dashboard'),
+  path('seller_manager/new_orders', views.IndexView.as_view(), name='seller_new_orders'),
+  path('seller_manager/prepared_orders', views.IndexView.as_view(), name='seller_prepared_orders'),
   path('order_manager/unclaimed', views.IndexView.as_view(), name='unclaimed'),
   path('order_manager/claimed', views.IndexView.as_view(), name='claimed'),
   path('order_manager/undelivered', views.IndexView.as_view(), name='undelivered'),

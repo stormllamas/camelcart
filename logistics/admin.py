@@ -27,7 +27,7 @@ class OrderAdmin(admin.ModelAdmin):
     ('Delivery Details', {'fields': ['unit', 'weight', 'height', 'width', 'length', 'description']}),
     ('Delivery Points', {'fields': ['seller', 'loc1_latitude', 'loc1_longitude', 'loc1_address', 'loc2_latitude', 'loc2_longitude', 'loc2_address', 'distance_value', 'distance_text', 'duration_value', 'duration_text']}),
     ('Payments', {'fields': ['payment_type', 'auth_id', 'capture_id']}),
-    ('Status', {'fields': ['rider_payment_needed', 'is_ordered', 'date_ordered', 'is_paid', 'date_paid', 'rider', 'date_claimed', 'is_canceled', 'date_canceled', 'is_pickedup', 'date_pickedup', 'is_delivered', 'date_delivered']}),
+    ('Status', {'fields': ['rider_payment_needed', 'is_ordered', 'date_ordered', 'is_paid', 'date_paid', 'rider', 'date_claimed', 'is_prepared', 'date_prepared', 'is_canceled', 'date_canceled', 'is_pickedup', 'date_pickedup', 'is_delivered', 'date_delivered']}),
   ]
   inlines = [OrderItemInLine]
   list_display = ('ref_code', 'user', 'order_type', 'is_ordered', 'date_ordered', 'rider', 'is_delivered', 'payment_type', 'is_paid')
@@ -40,7 +40,7 @@ admin.site.register(Order, OrderAdmin)
 
 class SellerAdmin(admin.ModelAdmin):
   fieldsets = [
-    (None, {'fields': ['name', 'contact', 'categories']}),
+    (None, {'fields': ['user', 'name', 'contact', 'categories']}),
     ('Location', {'fields': ['latitude', 'longitude', 'address']}),
     ('Display', {'fields': ['thumbnail']}),
   ]

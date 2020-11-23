@@ -15,6 +15,7 @@ import {
 
   CLAIM_ORDER,
   RIDER_CANCEL_ORDER,
+  PREPARE_ORDER,
 
   DELIVER_ORDER_ITEM,
   DELIVER_ORDER,
@@ -104,6 +105,7 @@ export default (state = initialState, action) => {
 
     case CLAIM_ORDER:
     case RIDER_CANCEL_ORDER:
+    case PREPARE_ORDER:
     case DELIVER_ORDER:
     case PICKUP_ORDER:
       return {

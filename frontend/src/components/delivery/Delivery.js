@@ -319,20 +319,22 @@ const Delivery = ({
   
   useEffect(() => {
     if (!currentOrderLoading) {
-      setGender(currentOrder.gender ? currentOrder.gender : "")
-      setPickupLat(currentOrder.loc1_latitude ? currentOrder.loc1_latitude : "")
-      setPickupLng(currentOrder.loc1_longitude ? currentOrder.loc1_longitude : "")
-      setPickupAddress(currentOrder.loc1_address ? currentOrder.loc1_address : "")
-      setDeliveryLat(currentOrder.loc2_latitude ? currentOrder.loc2_latitude : "")
-      setDeliveryLng(currentOrder.loc2_longitude ? currentOrder.loc2_longitude : "")
-      setDeliveryAddress(currentOrder.loc2_address ? currentOrder.loc2_address : "")
-      setUnit(currentOrder.unit ? currentOrder.unit : "")
-      setWeight(currentOrder.weight ? currentOrder.weight : "")
-      setHeight(currentOrder.height ? currentOrder.height : "")
-      setWidth(currentOrder.width ? currentOrder.width : "")
-      setLength(currentOrder.length ? currentOrder.length : "")
-      setDescription(currentOrder.description ? currentOrder.description : "")
-      setRiderPaymentNeeded(currentOrder.rider_payment_needed)
+      if (currentOrder) {
+        setGender(currentOrder.gender ? currentOrder.gender : "")
+        setPickupLat(currentOrder.loc1_latitude ? currentOrder.loc1_latitude : "")
+        setPickupLng(currentOrder.loc1_longitude ? currentOrder.loc1_longitude : "")
+        setPickupAddress(currentOrder.loc1_address ? currentOrder.loc1_address : "")
+        setDeliveryLat(currentOrder.loc2_latitude ? currentOrder.loc2_latitude : "")
+        setDeliveryLng(currentOrder.loc2_longitude ? currentOrder.loc2_longitude : "")
+        setDeliveryAddress(currentOrder.loc2_address ? currentOrder.loc2_address : "")
+        setUnit(currentOrder.unit ? currentOrder.unit : "")
+        setWeight(currentOrder.weight ? currentOrder.weight : "")
+        setHeight(currentOrder.height ? currentOrder.height : "")
+        setWidth(currentOrder.width ? currentOrder.width : "")
+        setLength(currentOrder.length ? currentOrder.length : "")
+        setDescription(currentOrder.description ? currentOrder.description : "")
+        setRiderPaymentNeeded(currentOrder.rider_payment_needed)
+      }
     }
   }, [currentOrderLoading]);
 
