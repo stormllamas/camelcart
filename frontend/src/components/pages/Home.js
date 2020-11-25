@@ -58,14 +58,13 @@ const Home = ({}) => {
               </Link>
             </div>
             <div className="col s4">
-              <div className="card-panel left-align disabled">
-                <div className="primary-overlay above center"></div>
+              <Link to="/ride_hail" className="card-panel left-align">
                 <div className="center">
-                  <img src="static/frontend/img/Trike_grocery_logo.png" className="scale-pop" alt=""/>
+                  <img src="static/frontend/img/Trike_hail_logo.png" className="scale-pop" alt=""/>
                 </div>
-                <h5>Grocery</h5>
-                <p className="hide-on-med-and-down">One of our riders will shop for you and deliver your grocery needs to your home</p>
-              </div>
+                <h5>Ride Hailing</h5>
+                <p className="hide-on-med-and-down">Get a ride from one our our riders</p>
+              </Link>
             </div>
           </div>
         </div>

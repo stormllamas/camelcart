@@ -27,7 +27,7 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
         <ul className="collection no-shadow">
           <li className="row collection-item">
             <div className="col s9 p-0 flex-row">
-              <p className="fw-6 fs-17 mb-0 mt-0 grey-text text-darken-2 grey lighten-3 rad-4 pt-1 pb-1 pl-2 pr-2">Order <span className="ml-1 light-blue-text fs-16">#{order.ref_code}</span></p>
+              <p className="fw-6 fs-17 mb-0 mt-0 grey-text text-darken-2 grey lighten-3 rad-4 pt-1 pb-1 pl-2 pr-2">RN <span className="ml-1 light-blue-text fs-16">#{order.ref_code}</span></p>
               {/* <p className="grey-text text-lighten-1 ml-2">Date Ordered: {moment(order.date_ordered).format('ll')}</p> */}
             </div>
             {!order.is_delivered ? (
@@ -46,7 +46,7 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
                     <div className="col s3 flex-col end p-0">
                       <Link to={`/order_review/${order.id}`} className="chip amber white-text right waves-effect waves-orange">REVIEW</Link>
                     </div>
-                    <div className="col s12 flex-col end p-0">
+                    <div className="col s12 flex-col end">
                       <small>delivered by {order.rider.name}</small>
                     </div>
                   </Fragment>
@@ -55,14 +55,14 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
                     <div className="col s3 flex-col end p-0">
                       <div className="chip grey lighten-2 white-text right"><i>Reviewed</i></div>
                     </div>
-                    <div className="col s12 flex-col end p-0">
+                    <div className="col s12 flex-col end">
                       <small>delivered by {order.rider.name}</small>
                     </div>
                   </Fragment>
                 )
             )}
           </li>
-          {order.order_type === 'food' ? (
+          {order.order_type === 'food' && (
             order.order_items && (
               order.order_items.map(orderItem => (
                 <li key={orderItem.id} className="collection-item avatar">
@@ -80,7 +80,8 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
                 </li>
               ))
             )
-          ) : (
+          )}
+          {order.order_type === 'delivery' && (
             <div className="row mb-0 mt-2">
               <div className="col s4 m3 l3 mb-1">
                 <small>Height</small>
@@ -114,6 +115,11 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
                 <div className="row m-0">
                   <div className="col s12 p-0">
                     <p className="left m-0 fw-6">Delivery Address: <i className="fw-5 fs-14">{order.loc2_address}</i></p>
+                  </div>
+                </div>
+                <div className="row m-0">
+                  <div className="col s12 p-0">
+                    <p className="left m-0 fw-6">Booking: <span className={`fw-6 fs-16 uppercase ${order.order_type === 'ride_hail' && 'blue-text'} ${order.order_type === 'delivery' && 'green-text'} ${order.order_type === 'food' && 'orange-text'}`}>{ order.order_type.replace('_', ' ') }</span></p>
                   </div>
                 </div>
               </Fragment>
@@ -151,7 +157,7 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
           {!order.is_claimed && !order.is_canceled && (
             <li className="collection-item">
               <div className="col s12 waves-effect">
-                <a href="#" className="flex-row m-0 modal-trigger" data-target="confirmation-modal" onClick={() => setOrderToDelete(order.id)}><i className="material-icons fs-18">close</i><span className="ml-1 cancel-order">CANCEL ORDER</span></a>
+                <a href="#" className="flex-row m-0 modal-trigger" data-target="confirmation-modal" onClick={() => setOrderToDelete(order.id)}><i className="material-icons fs-18">close</i><span className="ml-1 cancel-order uppercase">Cancel Booking</span></a>
               </div>
             </li>
           )}

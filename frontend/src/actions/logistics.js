@@ -446,6 +446,52 @@ export const confirmDelivery = ({ formData, history }) => async (dispatch, getSt
     console.log('error', err.data)
   }
 }
+export const confirmRideHail = ({ formData, history }) => async (dispatch, getState) => {
+  dispatch({ type: CURRENT_ORDER_LOADING });
+
+  const origin = new google.maps.LatLng(formData.pickupLat, formData.pickupLng);
+  const destination =  new google.maps.LatLng(formData.deliveryLat, formData.deliveryLng);
+
+  try {
+    const distanceService = new google.maps.DistanceMatrixService();
+    distanceService.getDistanceMatrix({
+      origins: [origin],
+      destinations: [destination],
+      travelMode: 'DRIVING',
+    }, async (response, status) => {
+      if (status === 'OK') {
+        const distanceString = response.rows[0].elements[0].distance.text
+        const distanceValue = response.rows[0].elements[0].distance.value
+        const durationString = response.rows[0].elements[0].duration.text
+        const durationValue = response.rows[0].elements[0].duration.value
+        const orderBody = {
+          user: getState().auth.user.id,
+
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          contact: formData.contact,
+          email: formData.email,
+          gender: formData.gender,
+
+          loc1_latitude: parseFloat(formData.pickupLat),
+          loc1_longitude: parseFloat(formData.pickupLng),
+          loc1_address: formData.pickupAddress,
+          loc2_latitude: parseFloat(formData.deliveryLat),
+          loc2_longitude: parseFloat(formData.deliveryLng),
+          loc2_address: formData.deliveryAddress,
+          distance_text: distanceString,
+          distance_value: distanceValue,
+          duration_text: durationString,
+          duration_value: durationValue,
+        }
+        const currentOrder = await axios.put(`/api/current_order/ride_hail/`, orderBody, tokenConfig(getState))
+        history.push('/ride_hail/payments')
+      }
+    });
+  } catch (err) {
+    console.log('error', err.data)
+  }
+}
 export const finalizeTransaction = ({ authID, currentOrder, history, type, query }) => async (dispatch, getState) => {
   dispatch({ type: COMPLETE_ORDER_LOADING });
 

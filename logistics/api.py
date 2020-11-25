@@ -722,11 +722,12 @@ class CompleteOrderAPI(UpdateAPIView):
     order.save()
     
     # Carry invalid order items to new order
-    new_order = Order.objects.create(user=self.request.user)
+    if order.order_type == 'food':
+      new_order = Order.objects.create(user=self.request.user, order_type='food')
       
-    for order_item in order.order_items.filter(is_ordered=False):
-      order_item.order = new_order
-      order_item.save()
+      for order_item in order.order_items.filter(is_ordered=False):
+        order_item.order = new_order
+        order_item.save()
 
     return Response({
       'status': 'success',

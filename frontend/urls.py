@@ -22,6 +22,9 @@ urlpatterns = [
   path('delivery', views.IndexView.as_view(), name='delivery'),
   path('delivery/payments', views.IndexView.as_view(), name='delivery_payments'),
 
+  path('ride_hail', views.IndexView.as_view(), name='ride_hail'),
+  path('ride_hail/payments', views.IndexView.as_view(), name='ride_hail_payments'),
+
   path('food', views.IndexView.as_view(), name='food'),
   path('food/restaurant', views.IndexView.as_view(), name='restaurant'),
   path('food/restaurant/product', views.IndexView.as_view(), name='item'),

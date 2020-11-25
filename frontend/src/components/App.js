@@ -43,6 +43,9 @@ import Security from './accounts/Security'
 import Delivery from './delivery/Delivery'
 import DeliveryPayments from './delivery/DeliveryPayments'
 
+import RideHail from './ride_hail/RideHail'
+import RideHailPayments from './ride_hail/RideHailPayments'
+
 import ProductReview from './review/ProductReview'
 import OrderReview from './review/OrderReview'
 
@@ -93,6 +96,9 @@ const App = () => {
 
           <SemiPrivateRoute exact path="/delivery" component={Delivery} />
           <PrivateRoute exact path="/delivery/payments" component={DeliveryPayments} />
+
+          <SemiPrivateRoute exact path="/ride_hail" component={RideHail} />
+          <PrivateRoute exact path="/ride_hail/payments" component={RideHailPayments} />
 
           <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
           <SellerRoute exact path="/seller_manager/new_orders" component={SellerManager} />

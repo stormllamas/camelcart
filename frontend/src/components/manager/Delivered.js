@@ -134,7 +134,7 @@ const Delivered = ({
                               <td className="mw-medium">{moment(order.date_ordered).format('lll')}</td>
                               <td className="mw-medium">{moment(order.date_delivered).format('lll')}</td>
                               <td><a href="" data-target="ordermodal" className="mw-small modal-trigger fw-6 blue-text text-lighten-2" onClick={() => getOrder({ id:order.id })}>{order.ref_code}</a></td>
-                              <td className="mw-small center">{order.order_type}</td>
+                              <td className="mw-small center">{order.order_type.replace('_', ' ')}</td>
                               <td className={`fw-6 mw-medium center ${order.rider_payment_needed === true ? 'green-text' : ''}`}>{order.rider_payment_needed === true ? 'Yes' : 'No'}</td>
                               <td className={`fw-6 mw-medium center ${order.payment_type === 1 ? 'orange-text' : 'green-text'}`}>{order.payment_type === 1 ? 'COD' : 'Card'}</td>
                               <td className="mw-large pr-2">{order.loc1_address}</td>
@@ -169,8 +169,33 @@ const Delivered = ({
                         <h5 className="mt-0 mb-2">Order Summary <small>({order.ref_code})</small></h5>
                       </div>
                     </div>
-                    {order.order_type === 'food' ? (
+                    <div className="row">
+                      <div className="col s12 m6 mb-1">
+                        <small>First Name</small>
+                        <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.first_name}</p>
+                      </div>
+                      <div className="col s12 m6 mb-1">
+                        <small>Last Name</small>
+                        <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.last_name}</p>
+                      </div>
+                      <div className="col s12 mb-1">
+                        <small>Contact</small>
+                        <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.contact}</p>
+                      </div>
+                      <div className="col s12 mb-1">
+                        <small>Email</small>
+                        <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.email}</p>
+                      </div>
+                      <div className="col s12 mb-1">
+                        <small>Gender</small>
+                        <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.gender}</p>
+                      </div>
+                    </div>
+                    {order.order_type === 'food' && (
                       <Fragment>
+                        <div className="row">
+                          <div className="divider"></div>
+                        </div>
                         <ul className="collection transparent no-shadow rad-3">
                           {order.order_items.map(orderItem => (
                             <li key={orderItem.id} className="collection-item flex-row middle">
@@ -181,7 +206,7 @@ const Delivered = ({
                                 </div>
                               </div>
                               <div className="collection-item avatar transparent">
-                                <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}>contacts</div>
+                                <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}></div>
                                 <p className="title">{orderItem.product.name} - {orderItem.product_variant.name}</p>
                                 <p className="grey-text">{orderItem.quantity} x ₱ {orderItem.ordered_price.toFixed(2)}</p>
                                 <p className="title">₱ {(orderItem.quantity*orderItem.ordered_price).toFixed(2)}</p>
@@ -193,30 +218,9 @@ const Delivered = ({
                         <p className="fs-16 m-0 ml-2">Delivery: <span className="fw-4 fs-16 ml-2">₱ {order.ordered_shipping.toFixed(2)}</span></p>
                         <p className="fw-6 fs-22 m-0 ml-2">Total: <span className="fw-4 fs-18 ml-2">₱ {order.total.toFixed(2)}</span></p>
                       </Fragment>
-                    ) : (
+                    )}
+                    {order.order_type === 'delivery' && (
                       <Fragment>
-                        <div className="row">
-                          <div className="col s12 m6 mb-1">
-                            <small>First Name</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.first_name}</p>
-                          </div>
-                          <div className="col s12 m6 mb-1">
-                            <small>Last Name</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.last_name}</p>
-                          </div>
-                          <div className="col s12 mb-1">
-                            <small>Contact</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.contact}</p>
-                          </div>
-                          <div className="col s12 mb-1">
-                            <small>Email</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.email}</p>
-                          </div>
-                          <div className="col s12 mb-1">
-                            <small>Gender</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.gender}</p>
-                          </div>
-                        </div>
                         <div className="row">
                           <div className="divider"></div>
                         </div>

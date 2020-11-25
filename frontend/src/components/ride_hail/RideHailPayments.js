@@ -11,7 +11,7 @@ import { getDistance } from '../../actions/google';
 
 
 
-const DeliveryPayments = ({
+const RideHailPayments = ({
   auth: { userLoading, isAuthenticated },
   logistics: { currentOrder, currentOrderLoading, completeOrderLoading },
   getCurrentOrder,
@@ -111,7 +111,7 @@ const DeliveryPayments = ({
   useEffect(() => {
     isAuthenticated && (
       getCurrentOrder({
-        type: 'delivery'
+        type: 'ride_hail'
       })
     )
   }, [])
@@ -166,7 +166,7 @@ const DeliveryPayments = ({
                   <ul className="collapsible no-shadow">
                     <li className="flex-col start">
                       <div className="collapsible-header relative no-padding no-shadow grey-text text-darken-2">
-                        <span className="main-title">Show Other Details</span>
+                        <span className="main-title">Personal Details</span>
                         <i className="material-icons m-0">keyboard_arrow_down</i>
                       </div>
                       <div className="collapsible-body no-padding no-shadow full-width">
@@ -190,31 +190,6 @@ const DeliveryPayments = ({
                           <div className="col s12 mb-1">
                             <small>Gender</small>
                             <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.gender}</p>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="divider"></div>
-                        </div>
-                        <div className="row">
-                          <div className="col s12 m4 mb-1">
-                            <small>Item Weight</small>
-                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.weight}{currentOrder.unit}</p>
-                          </div>
-                          <div className="col s12 m4 mb-1">
-                            <small>Item Height</small>
-                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.height} inches</p>
-                          </div>
-                          <div className="col s12 m4 mb-1">
-                            <small>Item Width</small>
-                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.width} inches</p>
-                          </div>
-                          <div className="col s12 mb-1">
-                            <small>Item Length</small>
-                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.length} inches</p>
-                          </div>
-                          <div className="col s12 mb-1">
-                            <small>Description</small>
-                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.description}</p>
                           </div>
                         </div>
                       </div>
@@ -242,7 +217,7 @@ const DeliveryPayments = ({
                             <button className="btn btn-large full-width darken-1 green bold mt-1 mxw-750" onClick={() => {
                               proceedWithCOD({
                                 history,
-                                type: 'delivery',
+                                type: 'ride_hail',
                               })
                             }}>Proceed with COD</button>
                           </div>
@@ -255,7 +230,7 @@ const DeliveryPayments = ({
             </div>
           </section>
         ) : (
-          <Redirect to='/delivery'/>
+          <Redirect to='/ride_hail'/>
         )
       )
     ) : (
@@ -264,7 +239,7 @@ const DeliveryPayments = ({
   )
 }
 
-DeliveryPayments.propTypes = {
+RideHailPayments.propTypes = {
   getDistance: PropTypes.func.isRequired,
   finalizeTransaction: PropTypes.func.isRequired,
   proceedWithCOD: PropTypes.func.isRequired,
@@ -276,4 +251,4 @@ const mapStateToProps = state => ({
   logistics: state.logistics
 });
 
-export default connect(mapStateToProps, { getDistance, getCurrentOrder, finalizeTransaction, proceedWithCOD })(DeliveryPayments);
+export default connect(mapStateToProps, { getDistance, getCurrentOrder, finalizeTransaction, proceedWithCOD })(RideHailPayments);
