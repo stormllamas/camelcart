@@ -34,7 +34,7 @@ class OrderAdmin(admin.ModelAdmin):
   list_display_links = ('ref_code',)
   list_filter = ('payment_type', 'is_ordered', 'is_delivered', 'is_paid')
   list_per_page = 50
-  search_fields = ('user', 'ref_code')
+  search_fields = ('ref_code', )
 
 admin.site.register(Order, OrderAdmin)
 
