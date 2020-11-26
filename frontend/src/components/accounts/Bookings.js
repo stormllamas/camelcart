@@ -163,7 +163,7 @@ const Bookings = ({
                           </div>
                         ) : (
                           <div className="col s12 mb-1 flex-col center">
-                            <h6 className="valign-wrapper green-text text-lighten-2"><i className="fas fa-person mr-1"></i>PASSENGER PICKED UP</h6>
+                            <h6 className="valign-wrapper green-text text-lighten-2"><i className="fas fa-male mr-1"></i>PASSENGER PICKED UP</h6>
                           </div>
                         )}
                       </Fragment>
