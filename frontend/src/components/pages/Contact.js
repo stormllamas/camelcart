@@ -1,5 +1,4 @@
-import React, { useState, Fragment, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 
 import ReCAPTCHA from "react-google-recaptcha";
@@ -12,7 +11,6 @@ const Contact = ({
   pages: { contacting },
   addInquiry
 }) => {
-  const history = useHistory()
 
   const [name, setName] = useState(user? user.first_name+' '+user.last_name : '');
   const [email, setEmail] = useState(user? user.email : '');
@@ -27,7 +25,14 @@ const Contact = ({
       $('#id_message').characterCounter();
     }
   }, [userLoading]);
-  M.updateTextFields();
+
+  useEffect(() => {
+    if (!contacting) { 
+      $('.loader').fadeOut()
+    } else {
+      $('.loader').show()
+    }
+  }, [contacting]);
 
   const onSubmit = async e => {
     e.preventDefault();

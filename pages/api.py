@@ -39,10 +39,10 @@ class ContactViewSet(GenericAPIView):
     name = request.data['name']
     email = request.data['email']
     phone = request.data['phone']
-    age = request.data['age']
-    drivers_license = request.data['drivers_license']
     subject = request.data['subject']
     message = request.data.get('message', None)
+    age = request.data.get('age', None)
+    drivers_license = request.data.get('drivers_license', None)
     service_type = request.data.get('service_type', None)
     city = request.data.get('city', None)
 
