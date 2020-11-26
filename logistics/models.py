@@ -274,6 +274,10 @@ class Order(models.Model):
   def total(self):
     return float(self.subtotal)+float(self.shipping)
 
+  @property
+  def ordered_total(self):
+    return float(self.ordered_subtotal)+float(self.ordered_shipping)
+
 class OrderItem(models.Model):
   order = models.ForeignKey(Order, related_name='order_items', on_delete=models.CASCADE)
   product_variant = models.ForeignKey(ProductVariant, related_name='order_items', on_delete=models.CASCADE)
