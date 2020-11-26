@@ -163,7 +163,7 @@ const Bookings = ({
                           </div>
                         ) : (
                           <div className="col s12 mb-1 flex-col center">
-                            <h6 className="valign-wrapper green-text text-lighten-2"><i className="fas fa-box mr-1"></i>PASSENGER PICKED UP</h6>
+                            <h6 className="valign-wrapper green-text text-lighten-2"><i className="fas fa-person mr-1"></i>PASSENGER PICKED UP</h6>
                           </div>
                         )}
                       </Fragment>
@@ -196,7 +196,7 @@ const Bookings = ({
                           <i className="material-icons blue-text">more_vert</i>
                         </div>
                         <div className="col s12 mb-1 flex-col center">
-                          <h6 className="valign-wrapper blue-text"><i className="material-icons mr-1">local_shipping</i>Escorting Passenger</h6>
+                          <h6 className="valign-wrapper blue-text"><i className="material-icons mr-1">two_wheeler</i>Escorting Passenger</h6>
                         </div>
                       </Fragment>
                     ) : (
@@ -205,7 +205,7 @@ const Bookings = ({
                           <i className="material-icons grey-text">more_vert</i>
                         </div>
                         <div className="col s12 mb-1 flex-col center">
-                          <h6 className="valign-wrapper grey-text"><i className="material-icons mr-1">local_shipping</i>Escorting Passenger</h6>
+                          <h6 className="valign-wrapper grey-text"><i className="material-icons mr-1">two_wheeler</i>Escorting Passenger</h6>
                         </div>
                       </Fragment>
                     )
