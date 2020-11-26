@@ -157,9 +157,15 @@ const Bookings = ({
                         <div className="col s12">
                           <i className="material-icons green-text text-lighten-2">more_vert</i>
                         </div>
-                        <div className="col s12 mb-1 flex-col center">
-                          <h6 className="valign-wrapper green-text text-lighten-2"><i className="fas fa-box mr-1"></i>PARCEL PICKED UP</h6>
-                        </div>
+                        {order.order_type === 'delivery' ? (
+                          <div className="col s12 mb-1 flex-col center">
+                            <h6 className="valign-wrapper green-text text-lighten-2"><i className="fas fa-box mr-1"></i>PARCEL PICKED UP</h6>
+                          </div>
+                        ) : (
+                          <div className="col s12 mb-1 flex-col center">
+                            <h6 className="valign-wrapper green-text text-lighten-2"><i className="fas fa-box mr-1"></i>PASSENGER PICKED UP</h6>
+                          </div>
+                        )}
                       </Fragment>
                     ) : (
                       order.is_claimed ? (
@@ -183,24 +189,46 @@ const Bookings = ({
                       )
                     )
                   )}
-                  {order.is_pickedup ? (
-                    <Fragment>
-                      <div className="col s12">
-                        <i className="material-icons blue-text">more_vert</i>
-                      </div>
-                      <div className="col s12 mb-1 flex-col center">
-                        <h6 className="valign-wrapper blue-text"><i className="material-icons mr-1">local_shipping</i>Your order is being delivered</h6>
-                      </div>
-                    </Fragment>
+                  {order.order_type === 'ride_hail' ? (
+                    order.is_pickedup ? (
+                      <Fragment>
+                        <div className="col s12">
+                          <i className="material-icons blue-text">more_vert</i>
+                        </div>
+                        <div className="col s12 mb-1 flex-col center">
+                          <h6 className="valign-wrapper blue-text"><i className="material-icons mr-1">local_shipping</i>Escorting Passenger</h6>
+                        </div>
+                      </Fragment>
+                    ) : (
+                      <Fragment>
+                        <div className="col s12">
+                          <i className="material-icons grey-text">more_vert</i>
+                        </div>
+                        <div className="col s12 mb-1 flex-col center">
+                          <h6 className="valign-wrapper grey-text"><i className="material-icons mr-1">local_shipping</i>Escorting Passenger</h6>
+                        </div>
+                      </Fragment>
+                    )
                   ) : (
-                    <Fragment>
-                      <div className="col s12">
-                        <i className="material-icons grey-text">more_vert</i>
-                      </div>
-                      <div className="col s12 mb-1 flex-col center">
-                        <h6 className="valign-wrapper grey-text"><i className="material-icons mr-1">local_shipping</i>Your order is being delivered</h6>
-                      </div>
-                    </Fragment>
+                    order.is_pickedup ? (
+                      <Fragment>
+                        <div className="col s12">
+                          <i className="material-icons blue-text">more_vert</i>
+                        </div>
+                        <div className="col s12 mb-1 flex-col center">
+                          <h6 className="valign-wrapper blue-text"><i className="material-icons mr-1">local_shipping</i>Your order is being delivered</h6>
+                        </div>
+                      </Fragment>
+                    ) : (
+                      <Fragment>
+                        <div className="col s12">
+                          <i className="material-icons grey-text">more_vert</i>
+                        </div>
+                        <div className="col s12 mb-1 flex-col center">
+                          <h6 className="valign-wrapper grey-text"><i className="material-icons mr-1">local_shipping</i>Your order is being delivered</h6>
+                        </div>
+                      </Fragment>
+                    )
                   )}
                 </div>
               </div>
