@@ -13,6 +13,7 @@ import AdminRoute from './common/AdminRoute';
 import RiderRoute from './common/RiderRoute';
 import SellerRoute from './common/SellerRoute';
 import Page404 from './common/Page404';
+import ScrollToTop from './common/ScrollToTop';
 
 import Preloader from './common/Preloader';
 import SiteMessage from './layout/SiteMessage'
@@ -69,6 +70,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
+        <ScrollToTop/>
         <SiteMessage/>
         <Switch>
           <AccountsRoute exact path="/login" component={Login} />
