@@ -46,7 +46,7 @@ const Claimed = ({
           id: checkedBox.value
         })
       })
-    } else if (order.order_type === 'delivery') {
+    } else if (order.order_type === 'delivery' || order.order_type === 'ride_hail') {
       pickupOrder({
         id: order.id
       })
