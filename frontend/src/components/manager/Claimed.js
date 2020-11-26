@@ -401,6 +401,14 @@ const Claimed = ({
                       <p className="fw-6 fs-22 m-0 ml-2">Delivery Total: <span className="fw-4 fs-18 ml-2">₱ {order.ordered_shipping.toFixed(2)}</span></p>
                     </Fragment>
                   )}
+                  {order.order_type === 'ride_hail' && (
+                    <Fragment>
+                      <div className="row">
+                        <div className="divider"></div>
+                      </div>
+                      <p className="fw-6 fs-22 m-0 ml-2">Ride Total: <span className="fw-4 fs-18 ml-2">₱ {order.ordered_shipping.toFixed(2)}</span></p>
+                    </Fragment>
+                  )}
                 </div>
               </Fragment>
             )}
