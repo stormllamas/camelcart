@@ -497,11 +497,11 @@ a {
 
 .sidenav {
   li.active {
-    background-color: $orange;
-    color: #fff;
+    background-color: $orange !important;
+    color: #fff !important;
 
-    a {
-      color: #fff;
+    &>a {
+      color: #fff !important;
       i {
         color: #fff;
       }

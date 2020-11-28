@@ -36,6 +36,13 @@ import Delivered from './manager/Delivered'
 import Home from './pages/Home'
 import Contact from './pages/Contact'
 import RiderInquiry from './pages/RiderInquiry'
+import About from './pages/questions/AboutUs/About'
+import FoodGuide from './pages/questions/Guide/FoodGuide'
+import DeliveryGuide from './pages/questions/Guide/DeliveryGuide'
+import RideGuide from './pages/questions/Guide/RideGuide'
+import TrackGuide from './pages/questions/Guide/TrackGuide'
+import RatesFAQ from './pages/questions/FAQ/RatesFAQ'
+import HoursFAQ from './pages/questions/FAQ/HoursFAQ'
 
 import Bookings from './accounts/Bookings'
 import Profile from './accounts/Profile'
@@ -87,6 +94,13 @@ const App = () => {
           <PublicRoute exact path="/" component={Home} />
           <PublicRoute exact path="/contact" component={Contact} />
           <PublicRoute exact path="/rider_inquiry" component={RiderInquiry} />
+          <PublicRoute exact path="/about" component={About} />
+          <PublicRoute exact path="/questions/food" component={FoodGuide} />
+          <PublicRoute exact path="/questions/delivery_guide" component={DeliveryGuide} />
+          <PublicRoute exact path="/questions/ride_guide" component={RideGuide} />
+          <PublicRoute exact path="/questions/track_guide" component={TrackGuide} />
+          <PublicRoute exact path="/questions/rates" component={RatesFAQ} />
+          <PublicRoute exact path="/questions/operating_hours" component={HoursFAQ} />
 
           <PublicRoute exact path="/food" component={Restaurants} />
           <PublicRoute exact path="/food/restaurant" component={RestaurantDetail} />

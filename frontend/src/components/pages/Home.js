@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import Topbar from '../layout/Topbar';
 
 
-const Home = ({}) => {
+const Home = ({setCurLocation}) => {
   const history = useHistory()
 
   useEffect(() => {
@@ -27,6 +27,11 @@ const Home = ({}) => {
       scrollOffset: '100'
     });
   }, [])
+
+  
+  useEffect(() => {
+    setCurLocation(history.location)
+  }, [history]);
   
   return (
     <Fragment>
@@ -83,7 +88,7 @@ const Home = ({}) => {
               </div>
             </li>
             <li>
-              <img src="static/frontend/img/motorcycles.jpg" alt=""/>
+              <img src="static/frontend/img/Buddys.jpg" alt=""/>
               <div className="primary-overlay"></div>
               <div className="caption center-align">
                 <h2>How we Help Local Businesses</h2>
@@ -91,12 +96,21 @@ const Home = ({}) => {
                 <a href="#" className="btn btn-large green">Learn More</a>
               </div>
             </li>
-            <li>
+            {/* <li>
               <img src="static/frontend/img/personal-shopper.jpg" alt=""/>
               <div className="primary-overlay"></div>
               <div className="caption left-align">
                 <h2>Have a Personal Shopper</h2>
                 <h5 className="light grey-text text-lighten-3 hide-on-small-only mb-5">Select your prefered grocery shop or even your favorite personal shopper to get your daily grocery needs.</h5>
+                <a href="#" className="btn btn-large green">Learn More</a>
+              </div>
+            </li> */}
+            <li>
+              <img src="static/frontend/img/motorcycles.jpg" alt=""/>
+              <div className="primary-overlay"></div>
+              <div className="caption left-align">
+                <h2>Become a Rider Now</h2>
+                <h5 className="light grey-text text-lighten-3 hide-on-small-only mb-5">Be part of our growing squad of riders and earn more than you ever could have</h5>
                 <a href="#" className="btn btn-large green">Learn More</a>
               </div>
             </li>

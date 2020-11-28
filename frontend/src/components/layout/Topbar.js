@@ -48,7 +48,7 @@ const Topbar = ({
               </a>
               {!userLoading && isAuthenticated ? (
                 <ul className="right topbar-links">
-                  <li className="waves-effect hide-on-med-and-down"><a className="grey-text text-darken-2">Help Center</a></li>
+                  <li className="waves-effect hide-on-med-and-down"><Link to="/about" className="grey-text text-darken-2">Help Center</Link></li>
                   <li className="waves-effect hide-on-med-and-down"><a className="grey-text text-darken-2 dropdown-trigger" data-target="partner-dropdown">Be Our Partner<i className="material-icons">keyboard_arrow_down</i></a></li>
                   {/* <li className="waves-effect"><Link to="/profile" className="grey-text text-darken-2">{user.first_name} {user.last_name}</Link></li> */}
                 </ul>
@@ -161,7 +161,7 @@ const Topbar = ({
                 </div>
                 <div className="collapsible-body">
                   <ul>
-                    <li><Link to="/rider_inquiry" className="sidenav-close grey-text text-darken-1">Rider</Link></li>
+                    <li className={history.location.pathname === "/rider_inquiry" ? "active" : ""}><Link to="/rider_inquiry" className="sidenav-close grey-text text-darken-1">Rider</Link></li>
                     <li><Link to="#!" className="sidenav-close grey-text text-darken-1">Food Merchant</Link></li>
                     {/* <li><a href="#!" className="sidenav-close grey-text text-darken-1">Personal Shopper</a></li>
                     <li><a href="#!" className="sidenav-close grey-text text-darken-1">Delivery Partner</a></li> */}
@@ -170,8 +170,11 @@ const Topbar = ({
               </li>
             </ul>
           </li>
+          <li className={history.location.pathname.includes('about') ? "active" : ''}>
+            <Link to="/about" className="sidenav-close waves-effect" ><i className="material-icons">help</i>Help Center</Link>
+          </li>
           <li>
-            <Link to="/contact" className="sidenav-close waves-effect" ><i className="material-icons">help</i>Ask a question</Link>
+            <Link to="/contact" className="sidenav-close waves-effect" ><i className="material-icons">contact_page</i>Ask a question</Link>
           </li>
         </div>
         {!userLoading && isAuthenticated ? (

@@ -102,6 +102,13 @@
   will-change: left, right;
 }
 
+.fixed-action-btn {
+  &.top-right {
+    right: 23px;
+    top: 80px;
+  }
+}
+
 .active-tab {
   display: block !important;
   transition: height 2s ease-in-out;

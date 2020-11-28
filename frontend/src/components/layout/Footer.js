@@ -31,28 +31,31 @@ const Footer = ({
               <h5 className="grey-text text-lighten-3">Customer Service</h5>
               <ul>
                 <li>
-                  <Link to="" className="white-text">Help and support</Link>
+                  <Link to="/contact" className="white-text">Contact support</Link>
                 </li>
                 <li>
-                  <Link to="" className="white-text">Get Started with Trike</Link>
+                  <Link to="/questions/delivery_guide" className="white-text">Get Started with Trike</Link>
                 </li>
               </ul>
             </div>
             <div className="col s12 m4 offset-m2 l3">
               <h5 className="grey-text text-lighten-3">Our Services</h5>
               <ul>
+                {!userLoading && (
+                  isAuthenticated && (
+                    <li>
+                      <Link to="/bookings" className="white-text">Tracking</Link>
+                    </li>
+                  )
+                )}
                 <li>
-                  <Link to="" className="white-text">Tracking</Link>
+                  <Link to="/questions/track_guide" className="white-text">Shipping</Link>
                 </li>
                 <li>
-                  <Link to="" className="white-text">Shipping</Link>
+                  <Link to="/questions/operating_hours" className="white-text">Locations</Link>
                 </li>
                 <li>
-                  <Link to="" className="white-text">Locations</Link>
-                </li>
-                <li>
-                  <Link to="" className="white-text">My Profile</Link>
-    
+                  <Link to="/profile" className="white-text">My Profile</Link>
                 </li>
               </ul>
             </div>
@@ -60,7 +63,7 @@ const Footer = ({
               <h5 className="grey-text text-lighten-3">Information</h5>
               <ul>
                 <li>
-                  <Link to="" className="white-text">About Trike</Link>
+                  <Link to="/about" className="white-text">About Trike</Link>
                 </li>
               </ul>
             </div>

@@ -1496,6 +1496,10 @@ tr {
   background-color: #58b160;
   will-change: left, right; }
 
+.fixed-action-btn.top-right {
+  right: 23px;
+  top: 80px; }
+
 .active-tab {
   display: block !important;
   transition: height 2s ease-in-out; }
@@ -1855,11 +1859,11 @@ a {
   min-height: 438px; }
 
 .sidenav li.active {
-  background-color: #FAA634;
-  color: #fff; }
-  .sidenav li.active a {
-    color: #fff; }
-    .sidenav li.active a i {
+  background-color: #FAA634 !important;
+  color: #fff !important; }
+  .sidenav li.active > a {
+    color: #fff !important; }
+    .sidenav li.active > a i {
       color: #fff; }
 
 .section-product-review .reviewed-product {

@@ -400,7 +400,7 @@ const Unclaimed = ({
                 <a className="modal-close cancel-fixed"><i className="material-icons grey-text">close</i></a>
               </div>
             </div>
-            <div id="addressmodal" className="modal supermodal">
+            <div id="addressmodal" className="modal">
               <div id="googlemap"></div>
               <div className="modal-footer">
                 <a className="modal-action modal-close cancel-fixed"><i className="material-icons grey-text">close</i></a>

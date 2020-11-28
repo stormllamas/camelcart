@@ -18,6 +18,13 @@ urlpatterns = [
 
   path('contact', views.IndexView.as_view(), name='contact'),
   path('rider_inquiry', views.IndexView.as_view(), name='rider_inquiry'),
+  path('about', views.IndexView.as_view(), name='about'),
+  path('questions/food', views.IndexView.as_view(), name='food'),
+  path('questions/delivery_guide', views.IndexView.as_view(), name='delivery_guide'),
+  path('questions/ride_guide', views.IndexView.as_view(), name='ride_guide'),
+  path('questions/track_guide', views.IndexView.as_view(), name='track_guide'),
+  path('questions/rates', views.IndexView.as_view(), name='rates'),
+  path('questions/operating_hours', views.IndexView.as_view(), name='operating_hours'),
 
   path('delivery', views.IndexView.as_view(), name='delivery'),
   path('delivery/payments', views.IndexView.as_view(), name='delivery_payments'),
