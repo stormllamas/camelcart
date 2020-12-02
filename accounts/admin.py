@@ -24,7 +24,7 @@ class MyUserAdmin(UserAdmin):
         ('Rider Info', {'fields': ['plate_number', 'picture']}),
         ('Socail Auth', {'fields': ['facebook_id']}),
     )
-    list_display = ('email', 'first_name', 'last_name', 'username', 'contact')
+    list_display = ('email', 'date_joined', 'first_name', 'last_name', 'username', 'contact')
     list_display_links = ('email',)
     list_filter = ('is_active', 'is_staff', 'is_superuser')
     list_per_page = 25
