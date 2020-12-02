@@ -714,6 +714,7 @@ class CompleteOrderAPI(UpdateAPIView):
     order.is_ordered = True
     order.date_ordered = timezone.now()
     order.ordered_shipping = order.shipping
+    order.ordered_shipping_commission = order.shipping*float(site_config.rider_commission)
     if order.seller and order.ordered_subtotal > 0:
       order.ordered_comission = order.ordered_subtotal*order.seller.commission
 

@@ -1,7 +1,7 @@
 from django.db import models
 from solo.models import SingletonModel
 
-# Create your models here.
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class SiteConfiguration(SingletonModel):
   maintenance_mode = models.BooleanField(default=False)
@@ -17,6 +17,9 @@ class SiteConfiguration(SingletonModel):
 
   # About Page
   about_text = models.TextField(max_length=4000, default='Insert About Text Here')
+
+  # Commission of Trike FROM riders
+  rider_commission = models.DecimalField(max_digits=5, decimal_places=5, default=0, validators=[MaxValueValidator(1)])
 
   def __str__(self):
     return f"{self.site_name}"

@@ -44,14 +44,14 @@ const Home = ({setCurLocation}) => {
           </div>
           <div className="row mt-1 mb-1">
             <div className="col s4">
-              <div className="card-panel left-align disabled">
-                <div className="primary-overlay above center"></div>
+              <Link to="/food" className="card-panel left-align">
+                {/* <div className="primary-overlay above center"></div> */}
                 <div className="center">
                   <img src="static/frontend/img/Trike_food_logo.png" className="scale-pop" alt=""/>
                 </div>
                 <h5>Food</h5>
                 <p className="hide-on-med-and-down">Order your favorite local food and have it delivered to you</p>
-              </div>
+              </Link>
             </div>
             <div className="col s4">
               <Link to="/delivery" className="card-panel left-align">
