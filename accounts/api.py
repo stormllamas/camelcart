@@ -75,9 +75,15 @@ def get_user_data(user) :
 
     'rider_info': {
       'plate_number': user.plate_number,
-      # 'accounts_payable': sum([int(sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]))+order.ordered_shipping for order in Order.objects.filter(rider=user, is_delivered=True)]) - sum([int(payment.amount) for payment in CommissionPayment.objects.filter(rider=user)]),
+      'review_total': user.rider_rating,
       'accounts_payable': sum([(order.ordered_subtotal-(order.ordered_commission if order.ordered_commission else 0))+order.ordered_shipping_commission for order in Order.objects.filter(rider=user, is_canceled=False, is_delivered=True)]) - sum([int(payment.amount) for payment in CommissionPayment.objects.filter(rider=user)]),
-      'review_total': user.rider_rating
+      'commission_payments': [{
+        'id': payment.id,
+        'ref_code': payment.ref_code,
+        'description': payment.description,
+        'date_paid': payment.date_paid,
+        'amount': payment.amount
+      } for payment in CommissionPayment.objects.filter(rider=user)]
     } if 'rider' in groups or user.is_superuser else None,
 
     'seller': {

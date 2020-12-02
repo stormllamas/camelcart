@@ -493,11 +493,11 @@ const Delivery = ({
                     <p className="m-0 no-white-space fw-6">Motorcycle</p>
                     <p className="m-0 no-white-space">1 Seat</p>
                   </div>
-                  <div className={`vehicle-selection ${vehicleChoice === siteInfo.vehicles.filter(vehicle => vehicle.name === 'tricycle')[0].id && 'active'}`} onClick={() => setVehicleChoice(siteInfo.vehicles.filter(vehicle => vehicle.name === 'tricycle')[0].id)}>
+                  {/* <div className={`vehicle-selection ${vehicleChoice === siteInfo.vehicles.filter(vehicle => vehicle.name === 'tricycle')[0].id && 'active'}`} onClick={() => setVehicleChoice(siteInfo.vehicles.filter(vehicle => vehicle.name === 'tricycle')[0].id)}>
                     <i className="material-icons fs-30">moped</i>
                     <p className="m-0 no-white-space fw-6">Tricycle</p>
                     <p className="m-0 no-white-space">1-2 Seats</p>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </li>
@@ -545,7 +545,7 @@ const Delivery = ({
                   <div className="col s12">
                     <div className="input-field relative">
                       <textarea id="item-description" className="materialize-textarea validate grey-text text-darken-2" value={description} onChange={e => setDescription(e.target.value)}></textarea>
-                      <label htmlFor="length" className="grey-text text-darken-2">Item Description</label>
+                      <label htmlFor="length" className="grey-text text-darken-2">Delivery Notes</label>
                     </div>
                   </div>
                 </div>

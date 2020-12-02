@@ -18,6 +18,7 @@ import {
 
   CLAIM_ORDER,
   RIDER_CANCEL_ORDER,
+  RIDER_UNCLAIM_ORDER,
   PREPARE_ORDER,
 
   DELIVER_ORDER_ITEM,
@@ -318,6 +319,54 @@ export const cancelOrder = ({ id }) => async (dispatch, getState) => {
     await dispatch(getOrders({
       page: 1,
       claimed: true,
+      pickedup: false,
+      delivered: false,
+      keywords: ''
+    }))
+    $('.loader').fadeOut();
+  }
+}
+export const unclaimOrder = ({ id }) => async (dispatch, getState) => {
+  $('.loader').fadeIn();
+  try {
+    const res = await axios.put(`/api/manager/unclaim_order/${id}/`, null, tokenConfig(getState))
+    if (res.data.status) {
+      if (res.data.status === 'error' && res.data.msg === 'Order already unclaimed') {
+        await dispatch(getOrders({
+          page: 1,
+          claimed: true,
+          pickedup: false,
+          delivered: false,
+          keywords: ''
+        }))
+        M.toast({
+          html: res.data.msg,
+          displayLength: 5000,
+          classes: 'red'
+        });
+      }
+    } else {
+      dispatch({
+        type: RIDER_UNCLAIM_ORDER,
+        payload: res.data
+      });
+      M.toast({
+        html: 'Order Unclaimed',
+        displayLength: 5000,
+        classes: 'blue'
+      });
+    }
+    $('.loader').fadeOut();
+  } catch (err) {
+    M.toast({
+      html: 'Opps something happend. Try again.',
+      displayLength: 5000,
+      classes: 'red'
+    });
+    await dispatch(getOrders({
+      page: 1,
+      claimed: true,
+      pickedup: false,
       delivered: false,
       keywords: ''
     }))

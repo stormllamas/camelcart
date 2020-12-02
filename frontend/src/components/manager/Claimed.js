@@ -9,7 +9,7 @@ import Preloader from '../common/Preloader'
 import Pagination from '../common/Pagination'
 import ManagerBreadcrumbs from './ManagerBreadcrumbs'
 
-import { pickupOrderItem, pickupOrder, cancelOrder, getOrders, getOrder } from '../../actions/manager'
+import { pickupOrderItem, pickupOrder, cancelOrder, unclaimOrder, getOrders, getOrder } from '../../actions/manager'
 
 const Claimed = ({
   manager: {
@@ -22,6 +22,7 @@ const Claimed = ({
   getOrder,
   pickupOrderItem, pickupOrder,
   cancelOrder,
+  unclaimOrder,
   setCurLocation
 }) => {
   const history = useHistory()
@@ -268,7 +269,8 @@ const Claimed = ({
                           <th>Order Total</th>
                           <th>Subtotal</th>
                           <th>Shipping</th>
-                          <th className="pl-2 pr-2">Cancel</th>
+                          <th>Cancel Order</th>
+                          <th className="pl-2 pr-2">Unclaim Order</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -287,8 +289,13 @@ const Claimed = ({
                               <td className="mw-medium">₱ {order.subtotal.toFixed(2)}</td>
                               <td className="mw-medium">₱ {order.ordered_shipping.toFixed(2)}</td>
                               <td className="center">
-                                <a href="#" className="modal-trigger" data-target="confirmation-modal" onClick={() => setOrderToDelete(order.id)}>
+                                <a href="#" className="modal-trigger" data-target="cancel-modal" onClick={() => setOrderToDelete(order.id)}>
                                   <i className="material-icons red-text">delete_forever</i>
+                                </a>
+                              </td>
+                              <td className="center">
+                                <a href="#" className="modal-trigger" data-target="unclaim-modal" onClick={() => setOrderToDelete(order.id)}>
+                                  <i className="material-icons blue-text">keyboard_return</i>
                                 </a>
                               </td>
                             </tr>
@@ -422,10 +429,17 @@ const Claimed = ({
               <a className="modal-action modal-close cancel-fixed"><i className="material-icons grey-text">close</i></a>
             </div>
           </div>
-          <div id="confirmation-modal" className="modal">
+          <div id="cancel-modal" className="modal">
             <div className="modal-content center">
-              <h4>Are you sure?</h4>
+              <h5>Are you sure?</h5>
               <a className="modal-action modal-close btn btn-large btn-extended red" onClick={() => cancelOrder({ id: orderToDelete })}>Cancel Order</a>
+              <a className="modal-action modal-close cancel"><i className="material-icons grey-text">close</i></a>
+            </div>
+          </div>
+          <div id="unclaim-modal" className="modal">
+            <div className="modal-content center">
+              <h5>Are you sure?</h5>
+              <a className="modal-action modal-close btn btn-large btn-extended blue" onClick={() => unclaimOrder({ id: orderToDelete })}>Unclaim Order</a>
               <a className="modal-action modal-close cancel"><i className="material-icons grey-text">close</i></a>
             </div>
           </div>
@@ -441,10 +455,11 @@ Claimed.propTypes = {
   pickupOrderItem: PropTypes.func.isRequired,
   pickupOrder: PropTypes.func.isRequired,
   cancelOrder: PropTypes.func.isRequired,
+  unclaimOrder: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
   manager: state.manager,
 });
 
-export default connect(mapStateToProps, { getOrders, getOrder, pickupOrderItem, pickupOrder, cancelOrder })(Claimed);
+export default connect(mapStateToProps, { getOrders, getOrder, pickupOrderItem, pickupOrder, cancelOrder, unclaimOrder })(Claimed);

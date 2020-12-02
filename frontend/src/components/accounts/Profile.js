@@ -384,6 +384,35 @@ const Profile = ({
             </div>
           </div>
         )}
+        {user.groups.includes('rider') || user.is_superuser ? (
+          <div className="container">
+            <div className="row mt-2">
+              <div className="col s12">
+                <div className="grey-text">
+                  <p>Payment History</p>
+                  {user.rider_info.commission_payments.length > 0 ? (
+                    <ul className="collection">
+                      {user.rider_info.commission_payments.map(payment => (
+                        <li key={payment.id} className="collection-item pr-5 relative">
+                          <p className="m-0">{payment.ref_code}</p>
+                          <p className="m-0">{payment.description}</p>
+                          <small>{moment(payment.date_paid).format('ll')}</small>
+                          <div className="right fw-6">₱ {payment.amount.toFixed(2)}</div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="row mt-3">
+                      <div className="col s12 center">
+                        <h5 className="grey-text text-lighten-1">No Payments Made</h5>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ): undefined}
       </section>
       
       <div id="addressmodal" className="modal supermodal">

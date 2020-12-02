@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .api import DashboardAPI, SellerDashboardDataAPI, OrderItemsAPI, DeliverOrderItemAPI, DeliverOrderAPI, PickupOrderItemAPI, PickupOrderAPI, OrdersAPI, OrderAPI, ClaimOrderAPI, PrepareOrderAPI, RiderCancelOrderAPI, IsPublishedAPI
+from .api import DashboardAPI, SellerDashboardDataAPI, OrderItemsAPI, DeliverOrderItemAPI, DeliverOrderAPI, PickupOrderItemAPI, PickupOrderAPI, OrdersAPI, OrderAPI, ClaimOrderAPI, PrepareOrderAPI, RiderCancelOrderAPI, RiderUnclaimOrderAPI, IsPublishedAPI
 from knox import views as knox_views
 
 urlpatterns = [
@@ -12,6 +12,7 @@ urlpatterns = [
   path('api/manager/claim_order/<int:order_id>/', ClaimOrderAPI.as_view(), name='claim_order'),
   path('api/manager/prepare_order/<int:order_id>/', PrepareOrderAPI.as_view(), name='prepare_order'),
   path('api/manager/cancel_order/<int:order_id>/', RiderCancelOrderAPI.as_view(), name='cancel_order'),
+  path('api/manager/unclaim_order/<int:order_id>/', RiderUnclaimOrderAPI.as_view(), name='unclaim_order'),
   path('api/manager/deliver_order_item/<int:pk>/', DeliverOrderItemAPI.as_view(), name='deliver_order_item'),
   path('api/manager/deliver_order/<int:pk>/', DeliverOrderAPI.as_view(), name='deliver_order'),
   path('api/manager/pickup_order_item/<int:pk>/', PickupOrderItemAPI.as_view(), name='pickup_order_item'),

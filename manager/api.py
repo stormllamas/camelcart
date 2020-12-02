@@ -466,6 +466,33 @@ class RiderCancelOrderAPI(UpdateAPIView):
       order.save()
 
       return Response(OrderSerializer(order, context=self.get_serializer_context()).data)
+class RiderUnclaimOrderAPI(UpdateAPIView):
+  serializer_class = OrderSerializer
+  permission_classes = [IsAuthenticated, HasGroupPermission]
+  required_groups = {
+    'GET': ['rider'],
+    'POST': ['rider'],
+    'PUT': ['rider'],
+  }
+
+  def get_object(self):
+    self.check_object_permissions(self.request, get_object_or_404(Order, id=self.kwargs['order_id']))
+    return get_object_or_404(Order, id=self.kwargs['order_id'])
+
+  def update(self, request, order_id=None):
+    order = self.get_object()
+    if order.is_ordered == True and order.rider == request.user:
+      order.rider = None
+      order.date_claimed = None
+      order.save()
+
+      return Response(OrderSerializer(order, context=self.get_serializer_context()).data)
+    else:
+      raise Response({
+        'status': 'error',
+        'msg': 'Order already unclaimed'
+      })
+      
 class PrepareOrderAPI(UpdateAPIView):
   serializer_class = OrderSerializer
   permission_classes = [IsAuthenticated, HasGroupPermission]

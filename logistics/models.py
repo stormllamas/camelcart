@@ -369,16 +369,18 @@ class OrderReview(models.Model):
   comment = models.TextField(max_length=4000, null=True, blank=True)
 
 class CommissionPayment(models.Model):
+  # Get GCash ref code and paste here
   ref_code = models.CharField(max_length=15, blank=True, null=True)
+  description = models.TextField(max_length=4000, default='Insert About Text Here')
   rider = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='commission_payments', on_delete=models.CASCADE)
-  date_paid = models.DateTimeField(null=False, blank=False)
   amount = models.DecimalField(max_digits=30, decimal_places=2)
+  date_paid = models.DateTimeField(default=timezone.now)
 
-  def save(self, *args, **kwargs):
-    if self.ref_code == None or self.ref_code == '':
-      self.ref_code = generate_id('')
+  # def save(self, *args, **kwargs):
+  #   if self.ref_code == None or self.ref_code == '':
+  #     self.ref_code = generate_id('')
 
-    super(CommissionPayment, self).save(*args, **kwargs)
+  #   super(CommissionPayment, self).save(*args, **kwargs)
 
   def __str__(self):
     return self.ref_code
