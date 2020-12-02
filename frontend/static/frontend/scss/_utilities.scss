@@ -762,6 +762,11 @@ tr {
     }
   }
 }
+@media (max-width: 601px) {
+  .site-message{
+    top: 56px;
+  }
+}
 
 .list-slider {
 
