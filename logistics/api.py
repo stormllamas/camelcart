@@ -331,7 +331,7 @@ class OrdersAPI(GenericAPIView):
       'loc2_address': order.loc2_address,
 
       'payment_type': order.payment_type,
-      'count': order.count, 'ordered_shipping': order.ordered_shipping, 'total': order.total,
+      'count': order.count, 'ordered_shipping': order.ordered_shipping, 'total': order.ordered_total,
       
       'ordered_subtotal': sum([item.quantity*item.ordered_price if item.is_ordered and item.ordered_price else 0 for item in order.order_items.all()]),
       'date_ordered': order.date_ordered,
@@ -339,9 +339,9 @@ class OrdersAPI(GenericAPIView):
       'rider': {
         'id': order.rider.id,
         'name': f'{order.rider.first_name} {order.rider.last_name}',
-        'contact': order.rider.contact,
-        'picture': order.rider.picture.url,
-        'plate_number': order.rider.plate_number
+        'contact': order.rider.contact if order.rider.contact else None,
+        'picture': order.rider.picture.url if order.rider.picture else None,
+        'plate_number': order.rider.plate_number if order.rider.plate_number else None
       } if order.rider != None else None,
       
       'is_claimed': True if order.rider != None else False, 'date_claimed': order.date_claimed,
