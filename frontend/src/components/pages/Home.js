@@ -44,14 +44,14 @@ const Home = ({setCurLocation}) => {
           </div>
           <div className="row mt-1 mb-1">
             <div className="col s4">
-              <Link to="/food" className="card-panel left-align">
-                {/* <div className="primary-overlay above center"></div> */}
+              <div className="card-panel left-align disabled">
+                <div className="primary-overlay above center"></div>
                 <div className="center">
                   <img src="static/frontend/img/Trike_food_logo.png" className="scale-pop" alt=""/>
                 </div>
                 <h5>Food</h5>
                 <p className="hide-on-med-and-down">Order your favorite local food and have it delivered to you</p>
-              </Link>
+              </div>
             </div>
             <div className="col s4">
               <Link to="/delivery" className="card-panel left-align">
@@ -63,13 +63,14 @@ const Home = ({setCurLocation}) => {
               </Link>
             </div>
             <div className="col s4">
-              <Link to="/ride_hail" className="card-panel left-align">
+              <div className="card-panel left-align disabled">
+                <div className="primary-overlay above center"></div>
                 <div className="center">
                   <img src="static/frontend/img/Trike_hail_logo.png" className="scale-pop" alt=""/>
                 </div>
                 <h5>Ride Hailing</h5>
                 <p className="hide-on-med-and-down">Get a ride from one our our riders</p>
-              </Link>
+              </div>
             </div>
           </div>
         </div>

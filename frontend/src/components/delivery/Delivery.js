@@ -353,7 +353,6 @@ const Delivery = ({
   useEffect(() => {
     if (!currentOrderLoading) {
       if (currentOrder) {
-        setGender(currentOrder.gender ? currentOrder.gender : "")
         setPickupLat(currentOrder.loc1_latitude ? currentOrder.loc1_latitude : "")
         setPickupLng(currentOrder.loc1_longitude ? currentOrder.loc1_longitude : "")
         setPickupAddress(currentOrder.loc1_address ? currentOrder.loc1_address : "")

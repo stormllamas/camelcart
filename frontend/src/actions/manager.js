@@ -346,7 +346,7 @@ export const pickupOrderItem = ({ id }) => async (dispatch, getState) => {
       //   payload: res.data
       // });
       M.toast({
-        html: 'Item marked as pickedup',
+        html: 'Item marked as picked up',
         displayLength: 5000,
         classes: 'orange'
       });
@@ -398,7 +398,7 @@ export const pickupOrder = ({ id }) => async (dispatch, getState) => {
         payload: res.data
       });
       M.toast({
-        html: 'Order fulfilled',
+        html: 'Order marked as picked up',
         displayLength: 5000,
         classes: 'blue'
       });
