@@ -129,17 +129,27 @@ const Topbar = ({
               </li>
             ) : undefined}
             {user.groups.includes('seller') ? (
-              <li>
-                <Link to="/seller_manager/new_orders" className="sidenav-close waves-effect" >
-                  <i className="material-icons menu-wrapper relative">
-                    fact_check
-                    {user.menu_notification && (
-                      <div className="menu-notification red rad-5"></div>
-                    )}
-                  </i>
-                  Seller Manager
-                </Link>
-              </li>
+              <Fragment>
+                <li>
+                  <Link to="/seller_dashboard" className="sidenav-close waves-effect" >
+                    <i className="material-icons menu-wrapper relative">
+                      dashboard
+                    </i>
+                    Seller Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/seller_manager/new_orders" className="sidenav-close waves-effect" >
+                    <i className="material-icons menu-wrapper relative">
+                      fact_check
+                      {user.menu_notification && (
+                        <div className="menu-notification red rad-5"></div>
+                      )}
+                    </i>
+                    Seller Manager
+                  </Link>
+                </li>
+              </Fragment>
             ) : undefined}
           </Fragment>
         ) : undefined}

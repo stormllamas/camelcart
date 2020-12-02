@@ -26,6 +26,10 @@ import {
   PICKUP_ORDER_ITEM,
   PICKUP_ORDER,
 
+  TOGGLING_IS_PUBLISHED,
+  TOGGLED_IS_PUBLISHED,
+  IS_PUBLISHED_ERROR,
+
   AUTH_ERROR
 } from './types'
 
@@ -136,6 +140,19 @@ export const getDashboardData = ({ fromDate, toDate }) => async (dispatch, getSt
   }
 }
 
+export const getSellerDashboardData = ({ fromDate, toDate }) => async (dispatch, getState) => {
+  // dispatch({ type: DASHBOARD_LOADING })
+  try {
+    const res = await axios.get(`/api/manager/seller_dashboard_data?from_date=${fromDate}&to_date=${toDate}`, tokenConfig(getState))
+    dispatch({
+      type: GET_DASHBOARD_DATA,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({type: DASHBOARD_DATA_ERROR});
+  }
+}
+
 export const getOrders = ({ page, claimed, prepared, pickedup, delivered, keywords, range }) => async (dispatch, getState) => {
   $('.loader').fadeIn();
   try {
@@ -167,6 +184,19 @@ export const getOrder = ({ id }) => async (dispatch, getState) => {
   } catch (err) {
     dispatch({type: AUTH_ERROR});
     dispatch({type: ORDER_ERROR});
+  }
+}
+
+export const toggleIsPublished = ({ id }) => async (dispatch, getState) => {
+  dispatch({ type: TOGGLING_IS_PUBLISHED });
+  try {
+    await axios.put(`/api/manager/toggle_is_published/${id}/`, null, tokenConfig(getState))
+    dispatch({
+      type: TOGGLED_IS_PUBLISHED,
+      payload: id
+    });
+  } catch (err) {
+    dispatch({ type: IS_PUBLISHED_ERROR });
   }
 }
 
@@ -214,7 +244,6 @@ export const prepareOrder = ({ id }) => async (dispatch, getState) => {
   $('.loader').fadeIn();
   try {
     const res = await axios.put(`/api/manager/prepare_order/${id}/`, null, tokenConfig(getState))
-    console.log(res.data)
     if (res.data.status) {
       if (res.data.status === 'error' && res.data.msg === 'Order already prepared') {
         await dispatch(getOrders({
@@ -234,7 +263,7 @@ export const prepareOrder = ({ id }) => async (dispatch, getState) => {
         payload: res.data
       });
       M.toast({
-        html: 'Orders Prepared',
+        html: 'Order Prepared',
         displayLength: 5000,
         classes: 'orange'
       });

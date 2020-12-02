@@ -3,6 +3,7 @@ import { Route, Redirect, useHistory } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import Topbar from '../layout/Topbar';
+import SiteMessage from '../layout/SiteMessage';
 
 const AccountsRoute = ({
   component: Component,
@@ -37,6 +38,7 @@ const AccountsRoute = ({
           } else {
             return (
               <Fragment>
+                <SiteMessage/>
                 <Topbar curLocation={curLocation}/>
                 <div className="middle-wrapper">
                   <div className="middle-content">

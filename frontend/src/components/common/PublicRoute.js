@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import Topbar from '../layout/Topbar';
 import Footer from '../layout/Footer';
+import SiteMessage from '../layout/SiteMessage';
 
 const PublicRoute = ({
   component: Component,
@@ -36,6 +37,7 @@ const PublicRoute = ({
           } else {
             return (
               <Fragment>
+                <SiteMessage/>
                 <Topbar curLocation={curLocation}/>
                 <div className="middle-wrapper">
                   <div className="middle-content">

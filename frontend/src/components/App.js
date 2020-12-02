@@ -16,7 +16,6 @@ import Page404 from './common/Page404';
 import ScrollToTop from './common/ScrollToTop';
 
 import Preloader from './common/Preloader';
-import SiteMessage from './layout/SiteMessage'
 
 import Login from './accounts/Login'
 import Signup from './accounts/Signup'
@@ -27,6 +26,7 @@ import PasswordResetForm from './accounts/passwordReset/PasswordResetForm';
 
 import AdminDashboard from './manager/AdminDashboard'
 import SellerManager from './manager/SellerManager'
+import SellerDashboard from './manager/SellerDashboard'
 import SellerManagerPrepared from './manager/SellerManagerPrepared'
 import Unclaimed from './manager/Unclaimed'
 import Claimed from './manager/Claimed'
@@ -78,7 +78,6 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <ScrollToTop/>
-        <SiteMessage/>
         <Switch>
           <AccountsRoute exact path="/login" component={Login} />
           <AccountsRoute exact path="/signup" component={Signup} />
@@ -117,6 +116,7 @@ const App = () => {
           <PrivateRoute exact path="/ride_hail/payments" component={RideHailPayments} />
 
           <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
+          <SellerRoute exact path="/seller_dashboard" component={SellerDashboard} />
           <SellerRoute exact path="/seller_manager/new_orders" component={SellerManager} />
           <SellerRoute exact path="/seller_manager/prepared_orders" component={SellerManagerPrepared} />
           <RiderRoute exact path="/order_manager/unclaimed" component={Unclaimed} />

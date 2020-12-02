@@ -90,9 +90,10 @@ const FoodCart = ({
           setDistanceValue(distanceValue);
           setDurationText(durationString);
           setDurationValue(durationValue);
+          console.log(distanceValue)
           
-          let total = Math.round((parseInt(distanceValue)/1000))*siteInfo.per_km_price
-          if (total < 25) total = 25
+          let total = Math.round((parseInt(distanceValue)/1000))*siteInfo.vehicles.filter(vehicle => vehicle.name = 'motorcycle')[0].per_km_price
+          if (total < 50) total = 50
           setDelivery(total)
         }
       });
@@ -107,6 +108,7 @@ const FoodCart = ({
     $('.loader').fadeIn();
     if(pickupLat && pickupLng && pickupAddress && deliveryLat && deliveryLng && distanceText && distanceValue && durationText && durationValue && firstName && lastName && contact && email && gender ? true : false) {
       const formData = {
+        vehicleChoice: siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].id,
         firstName, lastName, contact, email, gender,
         pickupLat, pickupLng, pickupAddress,
         deliveryLat, deliveryLng, deliveryAddress,

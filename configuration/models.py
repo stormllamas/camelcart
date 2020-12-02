@@ -18,9 +18,6 @@ class SiteConfiguration(SingletonModel):
   # About Page
   about_text = models.TextField(max_length=4000, default='Insert About Text Here')
 
-  # Deliveries
-  per_km_price = models.PositiveIntegerField(default=20, null=False)
-
   def __str__(self):
     return f"{self.site_name}"
   

@@ -43,6 +43,7 @@ urlpatterns = [
   path('product_review/<int:pk>', views.IndexView.as_view(), name='product_review'),
   path('order_review/<int:pk>', views.IndexView.as_view(), name='order_review'),
 
+  path('seller_dashboard', views.IndexView.as_view(), name='seller_dashboard'),
   path('admin/dashboard', views.IndexView.as_view(), name='admin_dashboard'),
   path('seller_manager/new_orders', views.IndexView.as_view(), name='seller_new_orders'),
   path('seller_manager/prepared_orders', views.IndexView.as_view(), name='seller_prepared_orders'),

@@ -421,7 +421,7 @@ class OrderAPI(RetrieveAPIView):
     })
 class CancelOrderAPI(UpdateAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, UserNotPartner]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def check_object_permissions(self, request, obj):
     if obj.is_ordered == True and obj.user == request.user:
@@ -459,7 +459,7 @@ class OrderItemAPI(DestroyAPIView, CreateAPIView):
   permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def check_object_permissions(self, request, obj):
-    if obj.order.is_ordered == False and obj.order.user == request.user:
+    if obj.order.user == request.user:
       return True
     else:
       raise PermissionDenied
@@ -714,6 +714,9 @@ class CompleteOrderAPI(UpdateAPIView):
     order.is_ordered = True
     order.date_ordered = timezone.now()
     order.ordered_shipping = order.shipping
+    if order.seller and order.ordered_subtotal > 0:
+      order.ordered_comission = order.ordered_subtotal*order.seller.commission
+
     order.is_paid = True if paid == 2 else False
     order.date_paid = timezone.now() if paid == 2 else None
     order.payment_type = paid
@@ -722,12 +725,12 @@ class CompleteOrderAPI(UpdateAPIView):
     order.save()
     
     # Carry invalid order items to new order
-    if order.order_type == 'food':
-      new_order = Order.objects.create(user=self.request.user, order_type='food')
+    # if order.order_type == 'food':
+    #   new_order = Order.objects.create(user=self.request.user, order_type='food')
       
-      for order_item in order.order_items.filter(is_ordered=False):
-        order_item.order = new_order
-        order_item.save()
+    #   for order_item in order.order_items.filter(is_ordered=False):
+    #     order_item.order = new_order
+    #     order_item.save()
 
     return Response({
       'status': 'success',

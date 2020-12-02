@@ -1,10 +1,12 @@
 from django.urls import path, include
 from rest_framework import routers
-from .api import DashboardAPI, OrderItemsAPI, DeliverOrderItemAPI, DeliverOrderAPI, PickupOrderItemAPI, PickupOrderAPI, OrdersAPI, OrderAPI, ClaimOrderAPI, PrepareOrderAPI, RiderCancelOrderAPI #, RefundsAPI
+from .api import DashboardAPI, SellerDashboardDataAPI, OrderItemsAPI, DeliverOrderItemAPI, DeliverOrderAPI, PickupOrderItemAPI, PickupOrderAPI, OrdersAPI, OrderAPI, ClaimOrderAPI, PrepareOrderAPI, RiderCancelOrderAPI, IsPublishedAPI
 from knox import views as knox_views
 
 urlpatterns = [
   path('api/manager/dashboard_data', DashboardAPI.as_view(), name='dashboard_data'),
+  path('api/manager/seller_dashboard_data', SellerDashboardDataAPI.as_view(), name='seller_dashboard_data'),
+  path('api/manager/toggle_is_published/<int:product_id>/', IsPublishedAPI.as_view(), name='toggle_is_published'),
   path('api/manager/orders', OrdersAPI.as_view(), name='orders'),
   path('api/manager/order/<int:pk>/', OrderAPI.as_view(), name='order'),
   path('api/manager/claim_order/<int:order_id>/', ClaimOrderAPI.as_view(), name='claim_order'),

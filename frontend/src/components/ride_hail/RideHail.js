@@ -10,11 +10,14 @@ import { confirmRideHail, getCurrentOrder } from '../../actions/logistics'
 
 const RideHail = ({
   auth: { userLoading, user, isAuthenticated },
+  siteConfig: { siteInfo },
   logistics: { currentOrder, currentOrderLoading },
   confirmRideHail,
   getCurrentOrder
 }) => {
   const history = useHistory()
+
+  const [delivery, setDelivery] = useState("");
 
   const [currentMap, setCurrentMap] = useState('');
   const [pickupSearchBox, setPickupSearchBox] = useState(''); 
@@ -23,6 +26,8 @@ const RideHail = ({
   const [deliveryMarker, setDeliveryMarker] = useState('');
 
   const [activeModal, setActiveModal] = useState('');
+
+  const [vehicleChoice, setVehicleChoice] = useState(siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].id);
 
   const [firstName, setFirstName] = useState(user ? (user.first_name ? user.first_name : '') : '');
   const [lastName, setLastName] = useState(user ? (user.last_name ? user.last_name : '') : '');
@@ -268,6 +273,7 @@ const RideHail = ({
   const proceedToPayment = async () => {
     if(pickupLat && pickupLng && pickupAddress && deliveryLat && deliveryLng && deliveryAddress && firstName && lastName && contact && email && gender ? true : false) {
       const formData = {
+        vehicleChoice,
         firstName, lastName, contact, email, gender,
         pickupLat, pickupLng, pickupAddress,
         deliveryLat, deliveryLng, deliveryAddress,
@@ -324,6 +330,31 @@ const RideHail = ({
     $('select').formSelect();
     M.updateTextFields();
   }, [gender]);
+
+  useEffect(() => {
+    if (pickupAddress && deliveryAddress) {
+      const origin = new google.maps.LatLng(pickupLat, pickupLng);
+      const destination =  new google.maps.LatLng(deliveryLat, deliveryLng);
+    
+      try {
+        const distanceService = new google.maps.DistanceMatrixService();
+        distanceService.getDistanceMatrix({
+          origins: [origin],
+          destinations: [destination],
+          travelMode: 'DRIVING',
+        }, async (response, status) => {
+          if (status === 'OK') {
+            const distanceValue = response.rows[0].elements[0].distance.value
+            let total = Math.round((parseInt(distanceValue)/1000))*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price
+            if (total < 50) total = 50
+            setDelivery(total)
+          }
+        });
+      } catch (err) {
+        console.log('error', err.data)
+      }
+    }
+  }, [pickupAddress, deliveryAddress, vehicleChoice]);
 
   return (
     isAuthenticated && !user.groups.includes('rider') === true ? (
@@ -395,24 +426,41 @@ const RideHail = ({
                 <i className="material-icons">keyboard_arrow_down</i>
               </div>
               <div className="collapsible-body maps-body relative grey lighten-4">
-                <div className="collection">
-                  <a href="#" data-target="addressmodal" className="collection-item grey-text text-darken-2 modal-trigger" onClick={() => setUpAddress('pickup')}>
-                    <span className="badge">
-                      <i className="material-icons green-text darken-2">house</i>
-                    </span>
-                    Pickup Address: ({pickupLat && pickupLng ? (pickupAddress ? pickupAddress : `${pickupLat}, ${pickupLng}`) : 'Please set a pickup address'})
-                  </a>
-                  <a href="#" data-target="addressmodal" className="collection-item grey-text text-darken-2 modal-trigger" onClick={() => setUpAddress('delivery')}>
-                    <span className="badge">
-                      <i className="material-icons blue-text darken-2">local_shipping</i>
-                    </span>
-                    Delivery Address: ({deliveryLat && deliveryLng ? (deliveryAddress ? deliveryAddress : `${deliveryLat}, ${deliveryLng}`) : 'Please set a delivery address'})
-                  </a>
+                <div className="row">
+                  <div className="collection">
+                    <a href="#" data-target="addressmodal" className="collection-item grey-text text-darken-2 modal-trigger" onClick={() => setUpAddress('pickup')}>
+                      <span className="badge">
+                        <i className="material-icons green-text darken-2">house</i>
+                      </span>
+                      Pickup Address: ({pickupLat && pickupLng ? (pickupAddress ? pickupAddress : `${pickupLat}, ${pickupLng}`) : 'Please set a pickup address'})
+                    </a>
+                    <a href="#" data-target="addressmodal" className="collection-item grey-text text-darken-2 modal-trigger" onClick={() => setUpAddress('delivery')}>
+                      <span className="badge">
+                        <i className="material-icons blue-text darken-2">local_shipping</i>
+                      </span>
+                      Delivery Address: ({deliveryLat && deliveryLng ? (deliveryAddress ? deliveryAddress : `${deliveryLat}, ${deliveryLng}`) : 'Please set a delivery address'})
+                    </a>
+                  </div>
+                </div>
+                <div className="row flex-row">
+                  <div className={`vehicle-selection mr-2 ${vehicleChoice === siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].id && 'active'}`} onClick={() => setVehicleChoice(siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].id)}>
+                    <i className="material-icons fs-30">two_wheeler</i>
+                    <p className="m-0 no-white-space fw-6">Motorcycle</p>
+                    <p className="m-0 no-white-space">1 Seat</p>
+                  </div>
+                  <div className={`vehicle-selection ${vehicleChoice === siteInfo.vehicles.filter(vehicle => vehicle.name === 'tricycle')[0].id && 'active'}`} onClick={() => setVehicleChoice(siteInfo.vehicles.filter(vehicle => vehicle.name === 'tricycle')[0].id)}>
+                    <i className="material-icons fs-30">moped</i>
+                    <p className="m-0 no-white-space fw-6">Tricycle</p>
+                    <p className="m-0 no-white-space">1-2 Seats</p>
+                  </div>
                 </div>
               </div>
             </li>
           </ul>
-          <button className="btn btn-large btn-extended green lighten-1 bold mt-5 mb-2 mobile-btn waves-effect waves-green" onClick={proceedToPayment}>Confirm Booking</button>
+          <button className="btn btn-large btn-extended green lighten-1 bold mt-5 mb-2 mobile-btn waves-effect waves-green" onClick={proceedToPayment}>
+            <span className="btn-float-text">{delivery && vehicleChoice ? `₱${(parseFloat(delivery)).toFixed(2)}` : ''}</span>
+            Confirm Booking
+          </button>
           <div id="addressmodal" className="modal supermodal">
             <div id="googlemap"></div>
             <div className="modal-footer">
@@ -453,6 +501,7 @@ RideHail.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.auth,
+  siteConfig: state.siteConfig,
   logistics: state.logistics,
 });
 

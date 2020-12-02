@@ -358,6 +358,7 @@ export const foodCheckout = ({ formData, history, orderSeller }) => async (dispa
   try {
     const orderBody = {
       user: getState().auth.user.id,
+      vehicle_chosen: formData.vehicleChoice,
   
       first_name: formData.firstName,
       last_name: formData.lastName,
@@ -410,9 +411,12 @@ export const confirmDelivery = ({ formData, history }) => async (dispatch, getSt
         const distanceValue = response.rows[0].elements[0].distance.value
         const durationString = response.rows[0].elements[0].duration.text
         const durationValue = response.rows[0].elements[0].duration.value
+
         const orderBody = {
           user: getState().auth.user.id,
           rider_payment_needed: formData.riderPaymentNeeded,
+          two_way: formData.twoWay,
+          vehicle_chosen: formData.vehicleChoice,
 
           first_name: formData.firstName,
           last_name: formData.lastName,
@@ -466,6 +470,7 @@ export const confirmRideHail = ({ formData, history }) => async (dispatch, getSt
         const durationValue = response.rows[0].elements[0].duration.value
         const orderBody = {
           user: getState().auth.user.id,
+          vehicle_chosen: formData.vehicleChoice,
 
           first_name: formData.firstName,
           last_name: formData.lastName,

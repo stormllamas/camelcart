@@ -30,6 +30,13 @@ def normal_round(n):
   if n - math.floor(n) < 0.5:
     return math.floor(n)
   return math.ceil(n)
+    
+class Vehicle(models.Model):
+  name = models.CharField(max_length=15, blank=True, null=True)
+  per_km_price = models.PositiveIntegerField(default=35, null=False)
+
+  def __str__(self):
+    return self.name
 
 class CategoryGroup(models.Model):
   name = models.CharField(max_length=50)
@@ -59,6 +66,7 @@ class Seller(models.Model):
   address = models.CharField(max_length=225, blank=True, null=True)
   thumbnail = models.ImageField(upload_to='photos/sellers/%Y/%m/%d/', blank=True)
   categories = models.ManyToManyField(Category)
+  commission = models.DecimalField(max_digits=5, decimal_places=5, default=0, validators=[MaxValueValidator(1)])
 
   def __str__(self):
     return self.name
@@ -126,6 +134,10 @@ class Product(models.Model):
       rating = 0
     return rating
 
+  @property
+  def total_orders(self):
+    return sum([int(variant.orders) for variant in self.variants.all()])
+
 class ProductVariant(models.Model):
   product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE)
   # Basic Details
@@ -174,6 +186,21 @@ class ProductVariant(models.Model):
       return self.sale_price
     else:
       return self.price
+
+  @property
+  def percent_off(self):
+    if self.sale_price_active:
+      return str(normal_round((1-self.sale_price/self.price)*100))
+    else:
+      return None
+
+  @property
+  def total_rating(self):
+    try:
+      rating = (sum([review.rating for review in self.reviews.all()]))/self.reviews.all().count()
+    except:
+      rating = None
+    return rating
       
 class Order(models.Model):
   # Basic Details
@@ -181,6 +208,7 @@ class Order(models.Model):
   user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='orders', on_delete=models.CASCADE, null=False)
   order_type = models.CharField(max_length=15, blank=True, null=True)
   seller = models.ForeignKey(Seller, related_name='orders', on_delete=models.SET_NULL, blank=True, null=True)
+  vehicle_chosen = models.ForeignKey(Vehicle, related_name='orders', on_delete=models.SET_NULL, blank=True, null=True)
 
   # Personal Details
   first_name = models.CharField(max_length=55, blank=True, null=True)
@@ -215,6 +243,7 @@ class Order(models.Model):
   is_ordered = models.BooleanField(default=False)
   date_ordered = models.DateTimeField(null=True, blank=True)
   ordered_shipping = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+  ordered_commission = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
   rider = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='claimed_orders', on_delete=models.SET_NULL, blank=True, null=True)
   date_claimed = models.DateTimeField(null=True, blank=True)
@@ -227,6 +256,7 @@ class Order(models.Model):
 
   is_paid = models.BooleanField(default=False)
   rider_payment_needed = models.BooleanField(default=False)
+  two_way = models.BooleanField(default=False)
   date_paid = models.DateTimeField(null=True, blank=True)
   payment_type = models.PositiveIntegerField(default=1) # (1) for COD (2) for Card or Detail
 
@@ -239,6 +269,9 @@ class Order(models.Model):
   auth_id = models.CharField(max_length=125, blank=True, null=True)
   capture_id = models.CharField(max_length=125, blank=True, null=True)
 
+  class Meta:
+    verbose_name_plural="Orders"
+
   def save(self, *args, **kwargs):
     if self.ref_code == None or self.ref_code == '':
       self.ref_code = generate_id('')
@@ -247,9 +280,6 @@ class Order(models.Model):
 
   def __str__(self):
     return self.ref_code
-
-  class Meta:
-    verbose_name_plural="Orders"
 
   @property
   def count(self):
@@ -265,10 +295,12 @@ class Order(models.Model):
 
   @property
   def shipping(self):
-    total = round((self.distance_value/1000), 0)*site_config.per_km_price
+    total = round((self.distance_value/1000), 0)*self.vehicle_chosen.per_km_price if self.vehicle_chosen else 0
     if total < 50:
       total = 50
-    return total
+    if self.two_way:
+      total = total*1.75
+    return round(total, 0)
 
   @property
   def total(self):

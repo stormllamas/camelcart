@@ -422,7 +422,7 @@ const Claimed = ({
               <a className="modal-action modal-close cancel-fixed"><i className="material-icons grey-text">close</i></a>
             </div>
           </div>
-          <div id="confirmation-modal" className="modal supermodal">
+          <div id="confirmation-modal" className="modal">
             <div className="modal-content center">
               <h4>Are you sure?</h4>
               <a className="modal-action modal-close btn btn-large btn-extended red" onClick={() => cancelOrder({ id: orderToDelete })}>Cancel Order</a>

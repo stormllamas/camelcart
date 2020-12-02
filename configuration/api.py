@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 # Models
 from django.conf import settings
 from .models import SiteConfiguration
-from logistics.models import Order
+from logistics.models import Order, Vehicle
 
 # Serializers
 from rest_framework import viewsets, mixins
@@ -27,8 +27,13 @@ class SiteInformationAPI(GenericAPIView):
       'email': site_config.email,
       'location': site_config.location,
       'about_text': site_config.about_text,
-      'per_km_price': site_config.per_km_price,
       'version': settings.APPLICATION_VERSION,
+
+      'vehicles': [{
+        'id': vehicle.id,
+        'name': vehicle.name,
+        'per_km_price': vehicle.per_km_price
+      } for vehicle in Vehicle.objects.all()],
     })
     
 class PayPalKeysAPI(GenericAPIView):

@@ -15,7 +15,6 @@ def is_in_group(user, group_name):
   except Group.DoesNotExist:
       return None
 
-
 class ReadOnly(BasePermission):
   def has_permission(self, request, view):
     return request.method in SAFE_METHODS

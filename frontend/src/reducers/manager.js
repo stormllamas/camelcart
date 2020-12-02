@@ -22,6 +22,10 @@ import {
 
   PICKUP_ORDER_ITEM,
   PICKUP_ORDER,
+
+  TOGGLING_IS_PUBLISHED,
+  TOGGLED_IS_PUBLISHED,
+  IS_PUBLISHED_ERROR,
 } from '../actions/types'
 
 const initialState = {
@@ -31,6 +35,8 @@ const initialState = {
   orders: null,
   orderLoading: true,
   order: null,
+
+  togglingIsPublished: false,
 }
 
 export default (state = initialState, action) => {
@@ -144,6 +150,39 @@ export default (state = initialState, action) => {
           ...state.order,
           order_items: newOrderItems,
         }
+      }
+
+    case TOGGLING_IS_PUBLISHED:
+      return {
+        ...state,
+        togglingIsPublished: true
+      }
+
+    case TOGGLED_IS_PUBLISHED:
+      // const newOrderItems = state.order.order_items.map(orderItem => {
+      //   if (orderItem.id === action.payload.id) {
+      //     orderItem.is_delivered = true
+      //   }
+      //   return orderItem
+      // })
+      return {
+        ...state,
+        togglingIsPublished: false,
+        dashboardData: {
+          ...state.dashboardData,
+          products: state.dashboardData.products.map(product => {
+            if (product.id === action.payload) {
+              product.is_published = !product.is_published
+            }
+            return product
+          })
+        }
+      }
+
+    case IS_PUBLISHED_ERROR:
+      return {
+        ...state,
+        togglingIsPublished: false,
       }
     
     default:

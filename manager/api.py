@@ -13,7 +13,7 @@ from .serializers import OrderSerializer as AdminOrderSerializer
 from logistics.serializers import OrderSerializer
 
 # Models
-from logistics.models import Order, OrderItem, Seller
+from logistics.models import Order, OrderItem, Seller, Product
 from django.conf import settings
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -75,6 +75,87 @@ class DashboardAPI(GenericAPIView):
       'food_orders_count': len(food_orders),
       'delivery_orders': delivery_orders,
       'delivery_orders_count': len(delivery_orders),
+    })
+class SellerDashboardDataAPI(RetrieveAPIView):
+  permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]
+  required_groups = {
+    'GET': ['seller'],
+    'POST': ['seller'],
+    'PUT': ['seller'],
+  }
+
+  def get(self, request, pk=None):
+    try:
+      user_seller = request.user.seller
+    except:
+      raise PermissionDenied
+
+    from_date = self.request.query_params.get('from_date', None).split('-')
+    to_date = self.request.query_params.get('to_date', None).split('-')
+    
+    sales_total = sum([order.ordered_subtotal for order in Order.objects.filter(seller=user_seller, is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
+    sold = sum([order_item.quantity for order_item in OrderItem.objects.filter(order__seller=user_seller, order__is_paid=True, order__date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), order__date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
+
+    orders = [{
+      'id': order.id,
+      'ref_code': order.ref_code,
+      'order_type': order.order_type,
+      'seller': {
+        'id': order.seller.id if order.seller != None else None,
+        'name': order.seller.name if order.seller != None else None
+      },
+      'loc1_address': order.loc1_address,
+      'loc2_address': order.loc2_address,
+      'payment_type': order.payment_type,
+      'ordered_shipping': order.ordered_shipping,
+      'ordered_commission': order.ordered_commission if order.ordered_commission else 0,
+      'total': order.ordered_total,
+      'count': order.count,
+      'rider_payment_needed': order.rider_payment_needed,
+      'subtotal': sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]),
+      'date_ordered': order.date_ordered,
+    } for order in Order.objects.filter(seller=user_seller, is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2])))).order_by('-date_paid')]
+
+    recent_orders = [{
+      'id': order.id,
+      'ref_code': order.ref_code,
+      'order_type': order.order_type,
+      'seller': {
+        'id': order.seller.id if order.seller != None else None,
+        'name': order.seller.name if order.seller != None else None
+      },
+      'loc1_address': order.loc1_address,
+      'loc2_address': order.loc2_address,
+      'payment_type': order.payment_type,
+      'ordered_shipping': order.ordered_shipping,
+      'ordered_commission': order.ordered_commission if order.ordered_commission else 0,
+      'total': order.ordered_total,
+      'count': order.count,
+      'rider_payment_needed': order.rider_payment_needed,
+      'subtotal': sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]),
+      'date_ordered': order.date_ordered,
+    } for order in Order.objects.filter(seller=user_seller, is_paid=True).order_by('-date_paid')]
+
+    products = [{
+      'id': product.id,
+      'is_published': product.is_published,
+      'name': product.name,
+      'thumbnail': product.thumbnail.url,
+      'final_price': product.cheapest_variant_price,
+      'total_orders': product.total_orders,
+    } for product in sorted(Product.objects.filter(seller=user_seller), key=lambda a: (a.total_orders, -a.id), reverse=True)]
+
+    return Response({
+      'seller' : {
+        'name': user_seller.name
+      },
+      'sales_total': sales_total,
+      'sold': sold,
+      'orders_count': len(orders),
+
+      'products': products,
+      'orders': orders,
+      'recent_orders': recent_orders,
     })
 
 class OrdersAPI(GenericAPIView):
@@ -170,6 +251,7 @@ class OrdersAPI(GenericAPIView):
       'loc2_address': order.loc2_address,
       'payment_type': order.payment_type,
       'ordered_shipping': order.ordered_shipping,
+      'ordered_commission':  order.ordered_commission if order.ordered_commission else 0,
       'total': order.ordered_total,
       'count': order.count,
       'rider_payment_needed': order.rider_payment_needed,
@@ -565,6 +647,26 @@ class DeliverOrderAPI(UpdateAPIView):
 
       return Response(AdminOrderSerializer(order, context=self.get_serializer_context()).data)
 
+class IsPublishedAPI(UpdateAPIView):
+  permission_classes = [IsAuthenticated, HasGroupPermission]
+  required_groups = {
+    'GET': ['seller'],
+    'POST': ['seller'],
+    'PUT': ['seller'],
+  }
+
+  def get_object(self):
+    return get_object_or_404(Product, id=self.kwargs['product_id'])
+
+  def update(self, request, product_id=None):
+    product = self.get_object()
+
+    product.is_published = not product.is_published
+    product.save()
+
+    return Response({
+      'status': 'success'
+    })
 # class RefundsAPI(GenericAPIView):
 #   serializer_class = OrderSerializer
 #   permission_classes = [IsAuthenticated, IsAdminUser]

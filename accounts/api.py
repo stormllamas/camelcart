@@ -75,7 +75,8 @@ def get_user_data(user) :
 
     'rider_info': {
       'plate_number': user.plate_number,
-      'accounts_payable': sum([int(sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]))+order.ordered_shipping for order in Order.objects.filter(rider=user, is_delivered=True)]) - sum([int(payment.amount) for payment in CommissionPayment.objects.filter(rider=user)]),
+      # 'accounts_payable': sum([int(sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]))+order.ordered_shipping for order in Order.objects.filter(rider=user, is_delivered=True)]) - sum([int(payment.amount) for payment in CommissionPayment.objects.filter(rider=user)]),
+      'accounts_payable': sum([(order.ordered_subtotal-(order.ordered_commission if order.ordered_commission else 0))+order.ordered_shipping for order in Order.objects.filter(rider=user, is_canceled=False, is_delivered=True)]) - sum([int(payment.amount) for payment in CommissionPayment.objects.filter(rider=user)]),
       'review_total': user.rider_rating
     } if 'rider' in groups or user.is_superuser else None,
 
@@ -134,7 +135,7 @@ class SocialAuthAPI(GenericAPIView):
           })
 
           request.session['auth_token'] = token
-          request.session.set_expiry(60*60)
+          request.session.set_expiry(60*60*24*30)
 
           return response
 
@@ -172,7 +173,7 @@ class SocialAuthAPI(GenericAPIView):
         })
 
         request.session['auth_token'] = token
-        request.session.set_expiry(60*60)
+        request.session.set_expiry(60*60*24*30)
 
         return response
       
@@ -247,7 +248,7 @@ class ActivateAPI(GenericAPIView):
       })
 
       request.session['auth_token'] = token
-      request.session.set_expiry(60*60)
+      request.session.set_expiry(60*60*24*30)
 
       return response
     else:

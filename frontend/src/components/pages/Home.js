@@ -135,10 +135,10 @@ const Home = ({setCurLocation}) => {
             <div className="col s12 m4">
               <div className="card">
                 <div className="card-content">
-                  <Link to="#" className="card-title">Haven’t Shipped with Us?</Link>
+                  <Link to="/questions/food" className="card-title">Haven’t Shipped with Us?</Link>
                   <p>Learn more about how to send with Trike</p>
                 </div>
-                <Link to="#" className="card-image">
+                <Link to="/questions/food" className="card-image">
                   <img src="static/frontend/img/parcel-delivery.jpg" className="responsive-img"/>
                 </Link>
               </div>
@@ -146,10 +146,10 @@ const Home = ({setCurLocation}) => {
             <div className="col s12 m4">
               <div className="card">
                 <div className="card-content">
-                  <Link to="#" className="card-title">FAQ</Link>
+                  <Link to="/about" className="card-title">FAQ</Link>
                   <p>Have questions you want asked? Check them first at our FAQ Page</p>
                 </div>
-                <Link to="#" className="card-image">
+                <Link to="/about" className="card-image">
                   <img src="static/frontend/img/motorcycles.jpg" className="responsive-img"/>
                 </Link>
               </div>
