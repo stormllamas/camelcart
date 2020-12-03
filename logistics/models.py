@@ -297,7 +297,9 @@ class Order(models.Model):
 
   @property
   def shipping(self):
-    total = round((self.distance_value/1000), 0)*self.vehicle_chosen.per_km_price if self.vehicle_chosen else 0
+    total = round(((self.distance_value/1000)*(self.vehicle_chosen.per_km_price if self.vehicle_chosen else 0)), 0)
+    print(self.distance_value/1000)
+    print(total)
     if total < 55:
       total = 55
     if self.two_way:

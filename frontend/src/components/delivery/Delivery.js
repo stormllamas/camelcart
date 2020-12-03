@@ -318,7 +318,9 @@ const Delivery = ({
         }, async (response, status) => {
           if (status === 'OK') {
             const distanceValue = response.rows[0].elements[0].distance.value
-            let total = Math.round((parseInt(distanceValue)/1000))*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price
+            let total = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price)
+            // console.log(distanceValue)
+            // console.log(total)
             if (total < 55) total = 55
             if (twoWay) total = total*1.75
             setDelivery(total)
@@ -347,7 +349,6 @@ const Delivery = ({
         accordion: false
       });
       $('.tooltipped').tooltip();
-      console.log(vehicleChoice)
     }
   }, [userLoading]);
   
@@ -509,6 +510,12 @@ const Delivery = ({
               </div>
               <div className="collapsible-body grey lighten-4">
                 <div className="row">
+                  <div className="col s12">
+                    <div className="input-field relative">
+                      <textarea id="delivery-details" className="materialize-textarea validate grey lighten-3 grey-text text-darken-2" value={description} onChange={e => setDescription(e.target.value)}></textarea>
+                      <label htmlFor="delivery-details" className="grey-text text-darken-2">Delivery Notes</label>
+                    </div>
+                  </div>
                   <div className="col s12 m6">
                     <div className="input-field">
                       <select id="weight_unit" className="text-grey validate grey-text text-darken-2" value={unit} onChange={e => setUnit(e.target.value)} required>
@@ -543,12 +550,6 @@ const Delivery = ({
                       <label htmlFor="length" className="grey-text text-darken-2">Length Dimensions (in inches)</label>
                     </div>
                   </div>
-                  <div className="col s12">
-                    <div className="input-field relative">
-                      <textarea id="item-description" className="materialize-textarea validate grey-text text-darken-2" value={description} onChange={e => setDescription(e.target.value)}></textarea>
-                      <label htmlFor="length" className="grey-text text-darken-2">Delivery Notes</label>
-                    </div>
-                  </div>
                 </div>
               </div>
             </li>
@@ -561,7 +562,7 @@ const Delivery = ({
             <div id="googlemap"></div>
             <div className="modal-footer">
               {/* Pickup Modal Input */}
-              <input id="pickup_address" type="text" placeholder="Please set a pickup address" autoComplete='off' className={`addressmodal-input ${activeModal === 'pickup' ? 'open' : ''}`}
+              <input id="pickup_address" type="text" placeholder="Please set a pickup address" className={`addressmodal-input ${activeModal === 'pickup' ? 'open' : ''}`}
                 value={pickupLat && pickupLng ? (pickupAddress ? pickupAddress : `(${pickupLat}), (${pickupLng})`) : pickupAddress}
                 onChange={e => {
                   setPickupAddress(e.target.value);
@@ -570,7 +571,7 @@ const Delivery = ({
                 }}
               />
               {/* Delivery Modal Input */}
-              <input id="delivery_address" type="text" placeholder="Please set a delivery address" autoComplete='off' className={`addressmodal-input ${activeModal === 'delivery' ? 'open' : ''}`}
+              <input id="delivery_address" type="text" placeholder="Please set a delivery address" className={`addressmodal-input ${activeModal === 'delivery' ? 'open' : ''}`}
                 value={deliveryLat && deliveryLng ? (deliveryAddress ? deliveryAddress : `(${deliveryLat}), (${deliveryLng})`) : deliveryAddress}
                 onChange={e => {
                   setDeliveryAddress(e.target.value);
