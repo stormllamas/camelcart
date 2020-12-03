@@ -355,12 +355,78 @@ const Delivery = ({
   useEffect(() => {
     if (!currentOrderLoading) {
       if (currentOrder) {
-        setPickupLat(currentOrder.loc1_latitude ? currentOrder.loc1_latitude : "")
-        setPickupLng(currentOrder.loc1_longitude ? currentOrder.loc1_longitude : "")
-        setPickupAddress(currentOrder.loc1_address ? currentOrder.loc1_address : "")
+        if (currentOrder.loc1_latitude && currentOrder.loc1_longitude && currentOrder.loc1_address) {
+          setPickupAddress(currentOrder.loc1_address)
+          const pickupLatlng = new google.maps.LatLng(currentOrder.loc1_latitude, currentOrder.loc1_longitude);
+          
+          const newPickupMarker = new google.maps.Marker({
+            position: pickupLatlng,
+            map: currentMap,
+            icon: {
+              url: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+            },
+            draggable: true,
+            animation: google.maps.Animation.DROP
+          });
+          
+          setPickupMarker(newPickupMarker);
+          pickupMarkerDown = newPickupMarker
+          newPickupMarker.setMap(currentMap)
+
+          setPickupLat(newPickupMarker.getPosition().lat())
+          setPickupLng(newPickupMarker.getPosition().lng())
+          
+          newPickupMarker.addListener('dragend', function(e) {
+            const locationLatLng = new google.maps.LatLng(newPickupMarker.getPosition().lat(), newPickupMarker.getPosition().lng())
+            locationGeocode(locationLatLng, 'pickup');
+            setPickupLat(newPickupMarker.getPosition().lat())
+            setPickupLng(newPickupMarker.getPosition().lng())
+          });
+    
+          const locationLatLng = new google.maps.LatLng(newPickupMarker.getPosition().lat(), newPickupMarker.getPosition().lng())
+          locationGeocode(locationLatLng, 'pickup');
+        }
+
+        if (currentOrder.loc2_latitude && currentOrder.loc2_longitude && currentOrder.loc2_address) {
+          setDeliveryAddress(currentOrder.loc1_address)
+          const deliveryLatlng = new google.maps.LatLng(currentOrder.loc2_latitude, currentOrder.loc2_longitude);
+    
+          const newDeliveryMarker = new google.maps.Marker({
+            position: deliveryLatlng,
+            icon: {
+              url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+            },
+            map: currentMap,
+            draggable: true,
+            animation: google.maps.Animation.DROP
+          });
+    
+          setDeliveryMarker(newDeliveryMarker);
+          deliveryMarkerDown = newDeliveryMarker
+          newDeliveryMarker.setMap(currentMap)
+    
+          setDeliveryLat(newDeliveryMarker.getPosition().lat())
+          setDeliveryLng(newDeliveryMarker.getPosition().lng())
+    
+          newDeliveryMarker.addListener('dragend', e => {
+            const locationLatLng = new google.maps.LatLng(newDeliveryMarker.getPosition().lat(), newDeliveryMarker.getPosition().lng())
+            locationGeocode(locationLatLng, 'delivery');
+            setDeliveryLat(newDeliveryMarker.getPosition().lat())
+            setDeliveryLng(newDeliveryMarker.getPosition().lng())
+          });
+    
+          const locationLatLng = new google.maps.LatLng(newDeliveryMarker.getPosition().lat(), newDeliveryMarker.getPosition().lng())
+          locationGeocode(locationLatLng, 'delivery');
+
+        }
+
+
+
         setDeliveryLat(currentOrder.loc2_latitude ? currentOrder.loc2_latitude : "")
         setDeliveryLng(currentOrder.loc2_longitude ? currentOrder.loc2_longitude : "")
         setDeliveryAddress(currentOrder.loc2_address ? currentOrder.loc2_address : "")
+
+
         setUnit(currentOrder.unit ? currentOrder.unit : "")
         setWeight(currentOrder.weight ? currentOrder.weight : "")
         setHeight(currentOrder.height ? currentOrder.height : "")
