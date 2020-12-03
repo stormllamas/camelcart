@@ -13,7 +13,7 @@ from .serializers import OrderSerializer as AdminOrderSerializer
 from logistics.serializers import OrderSerializer
 
 # Models
-from logistics.models import Order, OrderItem, Seller, Product
+from logistics.models import Order, OrderItem, Seller, Product, CommissionPayment
 from django.conf import settings
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -36,10 +36,10 @@ class DashboardAPI(GenericAPIView):
     from_date = self.request.query_params.get('from_date', None).split('-')
     to_date = self.request.query_params.get('to_date', None).split('-')
     
+    shipping_commission_total = sum([order.ordered_shipping_commission for order in Order.objects.filter(is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
     shipping_total = sum([order.ordered_shipping for order in Order.objects.filter(is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
     sales_total = sum([order.ordered_subtotal for order in Order.objects.filter(is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
     sold = sum([order_item.quantity for order_item in OrderItem.objects.filter(order__is_paid=True, order__date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), order__date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
-    checkouts = Order.objects.filter(is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2])))).count()
 
     top_brands = [{
       'id': seller.id,
@@ -52,7 +52,7 @@ class DashboardAPI(GenericAPIView):
     food_orders = [{
       'id': order.id,
       'ref_code': order.ref_code,
-      'ordered_shipping': order.ordered_shipping,
+      'ordered_shipping_commission': order.ordered_shipping_commission,
       'sub_total': order.ordered_subtotal,
       'date_paid': order.date_paid,
     } for order in Order.objects.filter(order_type='food', is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2])))).order_by('date_paid')]
@@ -60,21 +60,30 @@ class DashboardAPI(GenericAPIView):
     delivery_orders = [{
       'id': order.id,
       'ref_code': order.ref_code,
-      'ordered_shipping': order.ordered_shipping,
+      'ordered_shipping_commission': order.ordered_shipping_commission,
       'sub_total': order.ordered_subtotal,
       'date_paid': order.date_paid,
     } for order in Order.objects.filter(order_type='delivery', is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2])))).order_by('date_paid')]
+
+    riders = [{
+      'id': rider.id,
+      'name': f'{rider.first_name} {rider.last_name}',
+      'review_total': rider.rider_rating,
+      'picture': rider.picture.url if rider.picture else None,
+      'accounts_payable': sum([(order.ordered_subtotal-(order.ordered_commission if order.ordered_commission else 0))+order.ordered_shipping_commission for order in Order.objects.filter(rider=rider, is_canceled=False, is_delivered=True)]) - sum([int(payment.amount) for payment in CommissionPayment.objects.filter(rider=rider)]),
+    } for rider in User.objects.filter(groups__name__in=['rider'])]
     
     return Response({
+      'shipping_commission_total': shipping_commission_total,
       'shipping_total': shipping_total,
       'sales_total': sales_total,
       'sold': sold,
-      'checkouts': checkouts,
       'top_brands': top_brands,
       'food_orders': food_orders,
       'food_orders_count': len(food_orders),
       'delivery_orders': delivery_orders,
       'delivery_orders_count': len(delivery_orders),
+      'riders': riders,
     })
 class SellerDashboardDataAPI(RetrieveAPIView):
   permission_classes = [IsAuthenticated, SiteEnabled, HasGroupPermission]

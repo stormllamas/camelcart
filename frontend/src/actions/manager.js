@@ -120,7 +120,7 @@ export const renderSalesPieChart = data => (dispatch, getState) => {
       toolTipContent: "<b>{label}:</b> {y} (#percent%)",
       dataPoints: [
         { y: data.food_count, label: "Food", color: '#FFC442', legendText: "Food" },
-        { y: 0, label: "Shopping", color: "#0063FF", legendText: "Shopping" },
+        { y: 0, label: "Ride Hail", color: "#0063FF", legendText: "Ride Hail" },
         { y: data.delivery_count, label: "Delivery", color: '#3DD598', legendText: "Delivery" },
       ]
     }]

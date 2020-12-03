@@ -38,23 +38,6 @@ const AdminDashboard = ({
     if (value == 367) return 'this year'
   }
 
-  const createChartData = (orders, range) => {
-    const rangedList = []
-    for (let i = 0; i < range+1; i++) {
-      rangedList.unshift (
-        { x: new Date(moment(toDate).subtract(i ,'days').format("YYYY-MM-DD")), y: 0},
-      )
-    }
-    rangedList.forEach((info, infoIndex) => {
-      orders.forEach((order, index) => {
-        if (moment(info.x, "YYYY-MM-DD").format("YYYY-MM-DD") === moment(order.date_paid, "YYYY-MM-DD").format("YYYY-MM-DD")) {
-          info.y += order.shipping
-        }
-      })
-    })
-    return rangedList
-  }
-
   const fromDateSelected = (date) => {
     setShortcutDate('')
     if (date > toDate) {
@@ -81,6 +64,23 @@ const AdminDashboard = ({
     setShortcutDate(days)
     setFromDate(new Date(moment().subtract(days, 'days').format("YYYY-MM-DD")))
     setToDate(new Date(moment().format("YYYY-MM-DD")))
+  }
+
+  const createChartData = (orders, range) => {
+    const rangedList = []
+    for (let i = 0; i < range+1; i++) {
+      rangedList.unshift (
+        { x: new Date(moment(toDate).subtract(i ,'days').format("YYYY-MM-DD")), y: 0},
+      )
+    }
+    rangedList.forEach((info, infoIndex) => {
+      orders.forEach((order, index) => {
+        if (moment(info.x, "YYYY-MM-DD").format("YYYY-MM-DD") === moment(order.date_paid, "YYYY-MM-DD").format("YYYY-MM-DD")) {
+          info.y += order.ordered_shipping_commission
+        }
+      })
+    })
+    return rangedList
   }
   
   useEffect(() => {
@@ -189,7 +189,7 @@ const AdminDashboard = ({
             <div className="row">
               <div className="col l3 m6 s12">
                 <div className="card-panel white rad-3 no-shadow relative">
-                  <h5 className="m-0 mb-1 fw-6">Revenue</h5>
+                  <h5 className="m-0 mb-1 fs-20 fw-6">Revenue</h5>
                   <p className="m-0 fs-22">₱ <span className="count">{dashboardData.shipping_total}</span></p>
                   <div className="side-icon flex-col center">
                     <i className="material-icons green-text text-lighten-2 fs-50">bar_chart</i>
@@ -199,7 +199,17 @@ const AdminDashboard = ({
               </div>
               <div className="col l3 m6 s12">
                 <div className="card-panel white rad-3 no-shadow relative">
-                  <h5 className="m-0 mb-1 fw-6">Sales</h5>
+                  <h5 className="m-0 mb-1 fs-20 fw-6">Commissions</h5>
+                  <p className="m-0 fs-22">₱ <span className="count">{dashboardData.shipping_commission_total}</span></p>
+                  <div className="side-icon flex-col center">
+                    <i className="material-icons green-text text-lighten-2 fs-50">bar_chart</i>
+                    <p className="green-text text-lighten-2 fs-15">16%</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col l3 m6 s12">
+                <div className="card-panel white rad-3 no-shadow relative">
+                  <h5 className="m-0 mb-1 fs-20 fw-6">Sales</h5>
                   <p className="m-0 fs-22">₱ <span className="count">{dashboardData.sales_total}</span></p>
                   <div className="side-icon flex-col center">
                     <i className="material-icons green-text text-lighten-2 fs-50">bar_chart</i>
@@ -209,18 +219,8 @@ const AdminDashboard = ({
               </div>
               <div className="col l3 m6 s12">
                 <div className="card-panel white rad-3 no-shadow relative">
-                  <h5 className="m-0 mb-1 fw-6">Sold</h5>
+                  <h5 className="m-0 mb-1 fs-20 fw-6">Sold</h5>
                   <p className="m-0 fs-22"><span className="count">{dashboardData.sold}</span></p>
-                  <div className="side-icon flex-col center">
-                    <i className="material-icons green-text text-lighten-2 fs-50">bar_chart</i>
-                    <p className="green-text text-lighten-2 fs-15">16%</p>
-                  </div>
-                </div>
-              </div>
-              <div className="col l3 m6 s12">
-                <div className="card-panel white rad-3 no-shadow relative">
-                  <h5 className="m-0 mb-1 fw-6">Checkouts</h5>
-                  <p className="m-0 fs-22"><span className="count">{dashboardData.checkouts}</span></p>
                   <div className="side-icon flex-col center">
                     <i className="material-icons green-text text-lighten-2 fs-50">bar_chart</i>
                     <p className="green-text text-lighten-2 fs-15">16%</p>
@@ -262,10 +262,8 @@ const AdminDashboard = ({
                 </div>
               </div>
               <div className="col l7 s12">
-                <div id="dashboard-recent-orders" className="card-panel white rad-3 no-shadow height-530">
-                  <div className="row m-0">
-                    <h5 className="m-0 mb-3">Recent Orders</h5>
-                  </div>
+                <div className="card-panel white rad-3 no-shadow height-530">
+                  <h5 className="m-0 mb-3">Recent Orders</h5>
                   <div className="row m-0 overflow-scroll height-438">
                     <table className="bordered highlight">
                       <thead>
@@ -295,6 +293,39 @@ const AdminDashboard = ({
                             </tr>
                           ))
                         )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div className="col l7 s12">
+                <div className="card-panel white rad-3 no-shadow height-530">
+                  <h5 className="m-0 mb-3">Recent Orders</h5>
+                  <div className="row m-0 overflow-scroll height-438">
+                    
+                  <table className="bordered highlight">
+                      <thead>
+                        <tr className="grey lighten-3">
+                          <th>Name</th>
+                          <th>Amount Due</th>
+                          <th>Total Rating</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {dashboardData.riders.map(rider => (
+                          <tr key={rider.id} className="collection-item avatar pr-5 relative mt-3">
+                            <td className="title flex-row valign-wrapper">
+                              <div className="grey lighten-2 circle bg-cover mr-2" style={{ backgroundImage: `url(${rider.picture})`, height: "50px", width: "50px"}}></div>
+                              {rider.name}
+                            </td>
+                            <td className="title mw-medium">₱ {(rider.accounts_payable).toFixed(2)}</td>
+                            <td className="title">
+                              {[...Array(parseInt(rider.review_total)).keys()].map(star => <i key={star} className="material-icons yellow-text text-darken-2">star</i>)}
+                              {[...Array(Math.max(5-parseInt(rider.review_total), 0)).keys()].map(star => <i key={star} className="material-icons grey-text text-lighten-2">star</i>)}
+                            </td>
+                            {/* <td className="title mw-medium">₱ {(rider.accounts_payable).toFixed(2)}</td> */}
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
