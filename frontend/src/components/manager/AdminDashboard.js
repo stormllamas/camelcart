@@ -248,7 +248,7 @@ const AdminDashboard = ({
                 </div>
               </div>
               <div className="col l5 s12">
-                <div className="card-panel white rad-3 no-shadow">
+                <div className="card-panel white rad-3 no-shadow height-530">
                   <h5 className="m-0 mb-3">Top Brands</h5>
                   <ul className="collection with-header top-brands no-shadow">
                     {dashboardData.top_brands.map(brand => (
