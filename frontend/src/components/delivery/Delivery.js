@@ -29,7 +29,7 @@ const Delivery = ({
 
   const [riderPaymentNeeded, setRiderPaymentNeeded] = useState(false);
   const [twoWay, setTwoWay] = useState(false);
-  const [vehicleChoice, setVehicleChoice] = useState(siteInfo.vehicles[0].id);
+  const [vehicleChoice, setVehicleChoice] = useState(siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].id);
 
   const [firstName, setFirstName] = useState(user ? (user.first_name ? user.first_name : '') : '');
   const [lastName, setLastName] = useState(user ? (user.last_name ? user.last_name : '') : '');
@@ -319,7 +319,7 @@ const Delivery = ({
           if (status === 'OK') {
             const distanceValue = response.rows[0].elements[0].distance.value
             let total = Math.round((parseInt(distanceValue)/1000))*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price
-            if (total < 50) total = 50
+            if (total < 55) total = 55
             if (twoWay) total = total*1.75
             setDelivery(total)
           }
@@ -347,6 +347,7 @@ const Delivery = ({
         accordion: false
       });
       $('.tooltipped').tooltip();
+      console.log(vehicleChoice)
     }
   }, [userLoading]);
   
