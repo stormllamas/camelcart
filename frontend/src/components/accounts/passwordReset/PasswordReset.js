@@ -29,6 +29,14 @@ const PasswordReset = ({
     }
   }
 
+  useEffect(() => {
+    if (!requestLoading) {
+      $('.loader').fadeOut();
+    } else {
+      $('.loader').fadeIn();
+    }
+  }, [requestLoading]);
+
   return (
     !userLoading && (
       <div className="section section-password-reset">
@@ -39,7 +47,7 @@ const PasswordReset = ({
                 <div className="card-panel mt-5">
                   <h4 className="card-title">Reset your password</h4>
                   <p>Enter your email address below and we'll send you a link to reset your password.</p>
-                  <form method="post" className="block" onSubmit={onSubmit} noValidate>
+                  <form method="post" className="block" onSubmit={() => !requestLoading && onSubmit()} noValidate>
                     <div className="input-field">
                       <label htmlFor="email">Email</label>
                       <input type="email" name="email" value={email} autoFocus maxLength="254" className="form-control" required id="id_email" onChange={e => setEmail(e.target.value)} required/>

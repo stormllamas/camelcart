@@ -560,7 +560,7 @@ const Delivery = ({
             <div id="googlemap"></div>
             <div className="modal-footer">
               {/* Pickup Modal Input */}
-              <input id="pickup_address" type="text" placeholder="Please set a pickup address" className={`addressmodal-input ${activeModal === 'pickup' ? 'open' : ''}`}
+              <input id="pickup_address" type="text" placeholder="Please set a pickup address" autoComplete='off' className={`addressmodal-input ${activeModal === 'pickup' ? 'open' : ''}`}
                 value={pickupLat && pickupLng ? (pickupAddress ? pickupAddress : `(${pickupLat}), (${pickupLng})`) : pickupAddress}
                 onChange={e => {
                   setPickupAddress(e.target.value);
@@ -569,7 +569,7 @@ const Delivery = ({
                 }}
               />
               {/* Delivery Modal Input */}
-              <input id="delivery_address" type="text" placeholder="Please set a delivery address" className={`addressmodal-input ${activeModal === 'delivery' ? 'open' : ''}`}
+              <input id="delivery_address" type="text" placeholder="Please set a delivery address" autoComplete='off' className={`addressmodal-input ${activeModal === 'delivery' ? 'open' : ''}`}
                 value={deliveryLat && deliveryLng ? (deliveryAddress ? deliveryAddress : `(${deliveryLat}), (${deliveryLng})`) : deliveryAddress}
                 onChange={e => {
                   setDeliveryAddress(e.target.value);

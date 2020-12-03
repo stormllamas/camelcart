@@ -388,6 +388,7 @@ class VerifyPasswordResetAPI(GenericAPIView):
       user = User.objects.get(id=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
       user = None
+    
     if user is not None and account_activation_token.check_token(user, request.data['token']):
       addresses = [{
         'id': address.id,
@@ -397,27 +398,14 @@ class VerifyPasswordResetAPI(GenericAPIView):
         'address': address.address,
       } for address in user.addresses.all()]
 
+
       groups = [{
         'id': group.id,
         'name': group.name,
       } for group in user.groups.all()]
-
       return Response({
         'status': 'okay',
-        'user': {
-          'id': user.id,
-          'username': user.username,
-          'email': user.email,
-          'first_name': user.first_name,
-          'last_name': user.last_name,
-          'contact': user.contact,
-          'gender': user.gender,
-          'picture': user.picture,
-          'is_staff': user.is_staff,
-          'is_superuser': user.is_superuser,
-          'addresses': addresses,
-          'groups': groups,
-        }
+        'user': get_user_data(user)
       })
     else:
       return Response({

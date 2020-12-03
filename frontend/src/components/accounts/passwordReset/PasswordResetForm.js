@@ -19,6 +19,7 @@ const PasswordResetForm = ({
   const [newPassword2, setNewPassword2] = useState('');
 
   useEffect(() => {
+    console.log(uidb64, token)
     verifyPasswordReset(uidb64, token)
   }, []);
 
