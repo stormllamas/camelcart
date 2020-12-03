@@ -501,7 +501,7 @@ const Delivery = ({
                 </div>
               </div>
             </li>
-            <li>
+            <li className="active">
               <div className="collapsible-header relative">
                 <span className="main-title">Shipment Details (optional)</span>
                 <i className="material-icons">keyboard_arrow_down</i>

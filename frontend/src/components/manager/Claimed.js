@@ -262,6 +262,7 @@ const Claimed = ({
                           <th>Ref Code</th>
                           <th className="center">Type</th>
                           <th className="center">Payment Needed</th>
+                          <th className="center">Two Way</th>
                           <th className="center">Payment</th>
                           <th>Pickup Address</th>
                           <th>Delivery Address</th>
@@ -281,6 +282,7 @@ const Claimed = ({
                               <td><a href="" data-target="order-modal" className="mw-small modal-trigger fw-6 blue-text text-lighten-2" onClick={() => getOrder({ id:order.id })}>{order.ref_code}</a></td>
                               <td className="mw-small center">{order.order_type.replace('_', ' ')}</td>
                               <td className={`fw-6 mw-medium center ${order.rider_payment_needed === true ? 'green-text' : ''}`}>{order.rider_payment_needed === true ? 'Yes' : 'No'}</td>
+                              <td className={`fw-6 mw-medium center ${order.two_way === true ? 'green-text' : ''}`}>{order.two_way === true ? 'Yes' : 'No'}</td>
                               <td className={`fw-6 mw-medium center ${order.payment_type === 1 ? 'orange-text' : 'green-text'}`}>{order.payment_type === 1 ? 'COD' : 'Card'}</td>
                               <td className="mw-large"><p className="m-0">{order.order_type === 'food' && order.seller.name}</p><a href="" data-target="addressmodal" className="mw-small modal-trigger fw-6 green-text text-lighten-1" onClick={() => {getOrder({ id:order.id }), setAddressFocus('pickup')}}>{order.loc1_address}</a></td>
                               <td className="mw-large"><a href="" data-target="addressmodal" className="mw-small modal-trigger fw-6 blue-text text-lighten-1" onClick={() => {getOrder({ id:order.id }), setAddressFocus('delivery')}}>{order.loc2_address}</a></td>
