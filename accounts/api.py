@@ -17,7 +17,7 @@ from knox.models import AuthToken
 from .models import Address
 from logistics.models import Order, CommissionPayment
 from django.conf import settings
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 User = get_user_model()
 
 # For Email
@@ -96,21 +96,32 @@ class LoginAPI(GenericAPIView):
   serializer_class = LoginSerializer
 
   def post(self, request, *args, **kwargs):
-    serializer = self.get_serializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    user = serializer.validated_data
+    try:
+      user_exists = User.objects.get(email=request.data.get('email'), is_active=True)
+    except:
+      return Response({
+        'status': 'error',
+        'msg': 'Email does not exist, Please Sign Up first'
+      })
 
-    _, token = AuthToken.objects.create(user)
+    user = authenticate(**request.data)
+    if user:
+      _, token = AuthToken.objects.create(user)
 
-    response = Response({
-      'user': get_user_data(user),
-      'token': token
-    })
+      request.session['auth_token'] = token
+      request.session.set_expiry(60*60*24*29)
 
-    request.session['auth_token'] = token
-    request.session.set_expiry(60*60*24*29)
-
-    return response
+      return Response({
+        'status': 'ok',
+        'user': get_user_data(user),
+        'token': token
+      })
+    else:
+      return Response({
+        'status': 'error',
+        'msg': 'The usename or password you have entered is incorrect'
+      })
+      
 
 class SocialAuthAPI(GenericAPIView):
   serializer_class = SocialAuthSerializer

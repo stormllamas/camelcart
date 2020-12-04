@@ -17,14 +17,17 @@ const Login = ({
 }) => {
   const history = useHistory()
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const onSubmit = async e => {
     e.preventDefault();
 
-    if(username && password) {
-      login(username, password, history)
+    if(email && password) {
+      login({
+        email,
+        password,
+      })
     }
   }
 
@@ -54,7 +57,7 @@ const Login = ({
               <form method="post" onSubmit={onSubmit} noValidate>
                 <div className="input-field">
                   <i className="material-icons prefix">person</i>
-                  <input type="text" id="user" className="validate" required onChange={e => setUsername(e.target.value)}/>
+                  <input type="text" id="user" className="validate" required onChange={e => setEmail(e.target.value)}/>
                   <label htmlFor="user">Email</label>
                 </div>
                 <div className="input-field">

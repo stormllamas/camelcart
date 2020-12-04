@@ -280,7 +280,35 @@ const Delivery = ({
   }
 
   const proceedToPayment = async () => {
-    if(pickupLat && pickupLng && pickupAddress && deliveryLat && deliveryLng && deliveryAddress && firstName && lastName && contact && email && gender ? true : false) {
+    if (!firstName || !lastName || !contact || !email || !gender ? true : false) {
+      $('.form-notification').attr('style', 'opacity: 1')
+      M.toast({
+        html: 'Please complete personal details',
+        displayLength: 3500,
+        classes: 'red'
+      });
+    } else if (!pickupLat || !pickupLng || !pickupAddress) {
+      $('.form-notification').attr('style', 'opacity: 1')
+      M.toast({
+        html: 'Please setup pickup address',
+        displayLength: 3500,
+        classes: 'red'
+      });
+    } else if (!deliveryLat || !deliveryLng || !deliveryAddress) {
+      $('.form-notification').attr('style', 'opacity: 1')
+      M.toast({
+        html: 'Please setup delivery address',
+        displayLength: 3500,
+        classes: 'red'
+      });
+    } else if (!description) {
+      $('.form-notification').attr('style', 'opacity: 1')
+      M.toast({
+        html: 'Please provide delivery notes',
+        displayLength: 3500,
+        classes: 'red'
+      });
+    } else {
       const formData = {
         riderPaymentNeeded,
         twoWay,
@@ -294,13 +322,6 @@ const Delivery = ({
         formData,
         history
       })
-    } else {
-      $('.form-notification').attr('style', 'opacity: 1')
-      M.toast({
-        html: 'Form incomplete',
-        displayLength: 3500,
-        classes: 'red'
-      });
     }
   }
   
@@ -348,12 +369,11 @@ const Delivery = ({
       $('.collapsible').collapsible({
         accordion: false
       });
-      $('.tooltipped').tooltip();
     }
   }, [userLoading]);
   
   useEffect(() => {
-    if (!currentOrderLoading) {
+    if (!currentOrderLoading && currentMap) {
       if (currentOrder) {
         if (currentOrder.loc1_latitude && currentOrder.loc1_longitude && currentOrder.loc1_address) {
           setPickupAddress(currentOrder.loc1_address)
@@ -420,8 +440,6 @@ const Delivery = ({
 
         }
 
-
-
         setDeliveryLat(currentOrder.loc2_latitude ? currentOrder.loc2_latitude : "")
         setDeliveryLng(currentOrder.loc2_longitude ? currentOrder.loc2_longitude : "")
         setDeliveryAddress(currentOrder.loc2_address ? currentOrder.loc2_address : "")
@@ -436,7 +454,7 @@ const Delivery = ({
         setRiderPaymentNeeded(currentOrder.rider_payment_needed)
       }
     }
-  }, [currentOrderLoading]);
+  }, [currentOrderLoading, currentMap]);
 
   useEffect(() => {
     $('select').formSelect();
@@ -504,8 +522,8 @@ const Delivery = ({
             </li>
             <li className="active">
               <div className="collapsible-header valign-wrapper relative">
-                <span className="main-title">Set Pickup & Delivery</span>
-                {!pickupLat || !pickupLng || !pickupAddress || !deliveryLat || !deliveryLng || !deliveryAddress ? (
+                <span className="main-title">Set Pickup & Delivery Details</span>
+                {!pickupLat || !pickupLng || !pickupAddress || !deliveryLat || !deliveryLng || !deliveryAddress || !description ? (
                   <i className="material-icons red-text form-notification">error</i>
                 ) : (
                   <i className="material-icons green-text form-notification">check_circle</i>
@@ -531,15 +549,25 @@ const Delivery = ({
                 </div>
                 <div className="row">
                   <div className="col s12">
+                    <div className="input-field relative">
+                      <textarea id="delivery-details" className="materialize-textarea validate grey-text text-darken-2" placeholder="Please enter notes that will help our riders" value={description} onChange={e => setDescription(e.target.value)} required></textarea>
+                      <label htmlFor="delivery-details" className="grey-text text-darken-2">Delivery Notes</label>
+                      <span className="helper-text" data-error="This field is required"></span>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col s12">
                     <p className="m-0 valign-wrapper">
                       <label>
                         <input type="checkbox" id="rider_acknowledgent" name="rider_acknowledgent" className="filled-in" 
                           onChange={e => setRiderPaymentNeeded(!riderPaymentNeeded)}
                           checked={riderPaymentNeeded === true}
                         />
-                        <span className="tooltipped fs-18" data-position="bottom" data-tooltip="If the item to be pickedup needs to be paid by the rider first, check this box">Rider payment needed?</span>
+                        <span className="fs-18">Rider payment needed?</span>
                       </label>
                     </p>
+                    <p className="fw-4 m-0 mt-1 grey-text">(If the item to be pickedup needs to be paid by the rider first, check this box)</p>
                   </div>
                 </div>
                 <div className="row mb-5">
@@ -550,9 +578,10 @@ const Delivery = ({
                           onChange={e => setTwoWay(!twoWay)}
                           checked={twoWay === true}
                         />
-                        <span className="tooltipped fs-18" data-position="bottom" data-tooltip="If the item needs to return to the pickup address, check this box">Two Way?</span>
+                        <span className="fs-18">Two Way?</span>
                       </label>
                     </p>
+                    <p className="fw-4 m-0 mt-1 grey-text">(If the item needs to return to the pickup address, check this box)</p>
                   </div>
                 </div>
                 <div className="row flex-row">
@@ -571,17 +600,11 @@ const Delivery = ({
             </li>
             <li className="active">
               <div className="collapsible-header relative">
-                <span className="main-title">Shipment Details (optional)</span>
+                <span className="main-title">Shipment Size (optional)</span>
                 <i className="material-icons">keyboard_arrow_down</i>
               </div>
               <div className="collapsible-body grey lighten-4">
                 <div className="row">
-                  <div className="col s12">
-                    <div className="input-field relative">
-                      <textarea id="delivery-details" className="materialize-textarea validate grey lighten-3 grey-text text-darken-2" value={description} onChange={e => setDescription(e.target.value)}></textarea>
-                      <label htmlFor="delivery-details" className="grey-text text-darken-2">Delivery Notes</label>
-                    </div>
-                  </div>
                   <div className="col s12 m6">
                     <div className="input-field">
                       <select id="weight_unit" className="text-grey validate grey-text text-darken-2" value={unit} onChange={e => setUnit(e.target.value)} required>

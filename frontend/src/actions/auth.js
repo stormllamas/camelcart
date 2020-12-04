@@ -15,20 +15,33 @@ import {
 
 import axios from 'axios';
 
-export const login = (username, password, history) => async dispatch => {
+export const login = ({email, password}) => async dispatch => {
   dispatch({ type: USER_LOADING })
-  const body = {username, password};
+  const body = {email, password};
 
   try {
     const res = await axios.post('/api/auth/login', body)
-    dispatch({
-      type: LOGIN_SUCCESS,
-      payload: res.data
-    })
-    M.Toast.dismissAll();
+    if (res.data.status === 'ok') {
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: {
+          'user': res.data.user,
+          'token': res.data.token
+        }
+      })
+      M.Toast.dismissAll();
+    } else {
+      M.toast({
+        html: res.data.msg,
+        displayLength: 3500,
+        classes: 'red',
+      });
+      dispatch({ type: LOGIN_FAIL });
+    }
   } catch (err) {
+    console.log(err)
     M.toast({
-      html: 'Incorrect authentication details',
+      html: 'Oops something went wrong, Try again later',
       displayLength: 3500,
       classes: 'red',
     });

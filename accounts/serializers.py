@@ -61,28 +61,28 @@ class RegisterSerializer(serializers.ModelSerializer):
       raise serializers.ValidationError("Email has already been used")
 
 class LoginSerializer(serializers.Serializer):
-  username = serializers.CharField()
+  email = serializers.CharField()
   password = serializers.CharField()
 
   def validate(self, data):
     try:
-      user_exists = User.objects.get(email=data.get('username'), is_active=True)
+      user_exists = User.objects.get(email=data.get('email'), is_active=True)
     except:
-      user_exists = False
+      # raise serializers.ValidationError("The usename or password you have entered is incorrect")
+      return {
+        'status': 'error',
+        'msg': 'User not active'
+      }
 
-    if user_exists:
-      if user_exists.is_active:
-        user = authenticate(**data)
-        if user:
-          return user
-        else:
-          raise serializers.ValidationError("The usename or password you have entered is incorrect")
-        
+    if user_exists.is_active:
+      user = authenticate(**data)
+      if user:
+        return user
       else:
-        raise serializers.ValidationError(user_exists.email)
-
+        raise serializers.ValidationError("The usename or password you have entered is incorrect")
+      
     else:
-      raise serializers.ValidationError("The usename or password you have entered is incorrect")
+      raise serializers.ValidationError(user.email)
 
 class SocialAuthSerializer(serializers.ModelSerializer):
   class Meta:
