@@ -749,7 +749,7 @@ class NewOrderUpdateAPI(GenericAPIView):
   permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def get(self, request):
-    for rider in User.objects.filter(groups__name__in=['rider']):
+    for rider in User.objects.filter(groups__name__in=['rider']).exclude(groups__name__in=['test']):
       current_site = get_current_site(request)
       mail_subject = 'New Order'
       message = render_to_string(
