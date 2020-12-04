@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework import routers
-from .api import CurrentOrderAPI, OrdersAPI, OrderAPI, SellersAPI, SellerAPI, CategoryGroupAPI, CategoryAPI, ProductsAPI, ProductAPI, OrderItemAPI, ChangeQuantityAPI, CancelOrderAPI, CompleteOrderAPI, ProductReviewAPI, OrderReviewAPI
+from .api import CurrentOrderAPI, OrdersAPI, OrderAPI, SellersAPI, SellerAPI, CategoryGroupAPI, CategoryAPI, ProductsAPI, ProductAPI, OrderItemAPI, ChangeQuantityAPI, CancelOrderAPI, CompleteOrderAPI, NewOrderUpdateAPI, ProductReviewAPI, OrderReviewAPI
 
 urlpatterns = [
   path('api/category_groups/', CategoryGroupAPI.as_view(), name='category_groups'),
@@ -23,6 +23,7 @@ urlpatterns = [
   path('api/cancel_order/<int:order_id>/', CancelOrderAPI.as_view(), name='cancel_order'),
   
   path('api/complete_order/<int:paid>/<str:order_type>/', CompleteOrderAPI.as_view(), name='complete_order'),
+  path('api/new_order_update/', NewOrderUpdateAPI.as_view(), name='new_order_update'),
 
   path('api/review_product/', ProductReviewAPI.as_view(), name='review_product'),
   path('api/review_order/', OrderReviewAPI.as_view(), name='review_order'),

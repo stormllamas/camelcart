@@ -571,6 +571,7 @@ export const proceedWithCOD = ({ history, type, query }) => async (dispatch, get
       classes: 'green'
     });
     dispatch({ type: COMPLETE_ORDER_SUCCESS });
+    axios.get('/api/new_order_update', tokenConfig(getState))
     $('.loader').fadeOut();
     history.push('/')
   } catch (error) {

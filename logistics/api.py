@@ -8,6 +8,9 @@ from trike.permissions import SiteEnabled, UserNotPartner
 # Models
 from .models import Order, OrderItem, Seller, CategoryGroup, Category, Product, ProductReview, OrderReview
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 from configuration.models import SiteConfiguration
 try:
   site_config = SiteConfiguration.objects.first()
@@ -16,6 +19,11 @@ except:
 
 # Serializers
 from .serializers import OrderSerializer, OrderItemSerializer, SellerSerializer, CategoryGroupSerializer, CategorySerializer, ProductSerializer, ProductReviewSerializer, OrderReviewSerializer
+
+# For Email
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
 
 # Tools
 from trike.pagination import OctPagination
@@ -737,6 +745,31 @@ class CompleteOrderAPI(UpdateAPIView):
       'status': 'success',
       'msg': 'Order Finalized'
     })
+class NewOrderUpdateAPI(GenericAPIView):
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
+
+  def get(self, request):
+    for rider in User.objects.filter(groups__name__in=['rider']):
+      current_site = get_current_site(request)
+      mail_subject = 'New Order'
+      message = render_to_string(
+        'new_order_notification.html',
+        {
+          'rider': rider,
+          'domain': current_site.domain,
+        }
+      )
+      
+      email = rider.email
+      send_mail(
+        mail_subject,
+        message,
+        'Trike <info@trike.com.ph>',
+        [email],
+        fail_silently=False
+      )
+    return Response({'status': 'okay'})
+
 
 class ProductReviewAPI(CreateAPIView):
   serializer_class = ProductReviewSerializer
