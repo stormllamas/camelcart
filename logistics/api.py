@@ -750,7 +750,7 @@ class NewOrderUpdateAPI(GenericAPIView):
 
   def get(self, request):
     try:
-      for rider in User.objects.filter(groups__name__in=['rider']).exclude(groups__name__in=['test']):
+      for rider in User.objects.filter(groups__name__in=['rider'], is_active=True).exclude(groups__name__in=['test']):
         current_site = get_current_site(request)
         mail_subject = 'New Order'
         message = render_to_string(
