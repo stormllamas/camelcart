@@ -121,7 +121,6 @@ class LoginAPI(GenericAPIView):
         'status': 'error',
         'msg': 'The usename or password you have entered is incorrect'
       })
-      
 
 class SocialAuthAPI(GenericAPIView):
   serializer_class = SocialAuthSerializer

@@ -749,26 +749,29 @@ class NewOrderUpdateAPI(GenericAPIView):
   permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
   def get(self, request):
-    for rider in User.objects.filter(groups__name__in=['rider']).exclude(groups__name__in=['test']):
-      current_site = get_current_site(request)
-      mail_subject = 'New Order'
-      message = render_to_string(
-        'new_order_notification.html',
-        {
-          'rider': rider,
-          'domain': current_site.domain,
-        }
-      )
-      
-      email = rider.email
-      send_mail(
-        mail_subject,
-        message,
-        'Trike <info@trike.com.ph>',
-        [email],
-        fail_silently=False
-      )
-    return Response({'status': 'okay'})
+    try:
+      for rider in User.objects.filter(groups__name__in=['rider']).exclude(groups__name__in=['test']):
+        current_site = get_current_site(request)
+        mail_subject = 'New Order'
+        message = render_to_string(
+          'new_order_notification.html',
+          {
+            'rider': rider,
+            'domain': current_site.domain,
+          }
+        )
+        email = rider.email
+        
+        send_mail(
+          mail_subject,
+          message,
+          'Trike <info@trike.com.ph>',
+          [email],
+          fail_silently=False
+        )
+      return Response({'status': 'okay'})
+    except:
+      return Response({'status': 'error'})
 
 
 class ProductReviewAPI(CreateAPIView):
