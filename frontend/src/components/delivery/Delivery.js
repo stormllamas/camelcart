@@ -598,9 +598,9 @@ const Delivery = ({
                 </div>
               </div>
             </li>
-            <li className="active">
+            <li>
               <div className="collapsible-header relative">
-                <span className="main-title">Shipment Size (optional)</span>
+                <span className="main-title">Parcel Size (optional)</span>
                 <i className="material-icons">keyboard_arrow_down</i>
               </div>
               <div className="collapsible-body grey lighten-4">
