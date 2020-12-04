@@ -573,7 +573,7 @@ export const proceedWithCOD = ({ history, type, query }) => async (dispatch, get
     dispatch({ type: COMPLETE_ORDER_SUCCESS });
     $('.loader').fadeOut();
     history.push('/')
-    const update = await axios.get('/api/new_order_update', tokenConfig(getState))
+    const update = await axios.get('/api/new_order_update/', tokenConfig(getState))
     console.log(update.data)
   } catch (error) {
     dispatch({ type: COMPLETE_ORDER_FAILED });
