@@ -198,27 +198,35 @@ const Delivered = ({
                         <div className="row">
                           <div className="divider"></div>
                         </div>
-                        <ul className="collection transparent no-shadow rad-3">
-                          {order.order_items.map(orderItem => (
-                            <li key={orderItem.id} className="collection-item flex-row middle">
-                              <div className="mw-small manager-checklist flex-col middle center pr-2">
-                                <div className="checklist-item flex-col middle center">
-                                  <input id={`${order.ref_code}-${orderItem.id}`} type="checkbox" className="check" name={`${order.ref_code}-${orderItem.id}`} value={orderItem.id} defaultChecked={orderItem.is_delivered === true ? true : false} disabled={orderItem.is_delivered === true ? true : false}/>
-                                  <label className="btn-check text-center" htmlFor={`${order.ref_code}-${orderItem.id}`}><i className="fas fa-check"></i></label>
+                        <div className="row">
+                          <ul className="collection transparent no-shadow rad-3">
+                            {order.order_items.map(orderItem => (
+                              <li key={orderItem.id} className="collection-item flex-row middle">
+                                <div className="mw-small manager-checklist flex-col middle center pr-2">
+                                  <div className="checklist-item flex-col middle center">
+                                    <input id={`${order.ref_code}-${orderItem.id}`} type="checkbox" className="check" name={`${order.ref_code}-${orderItem.id}`} value={orderItem.id} defaultChecked={orderItem.is_delivered === true ? true : false} disabled={orderItem.is_delivered === true ? true : false}/>
+                                    <label className="btn-check text-center" htmlFor={`${order.ref_code}-${orderItem.id}`}><i className="fas fa-check"></i></label>
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="collection-item avatar transparent">
-                                <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}></div>
-                                <p className="title">{orderItem.product.name} - {orderItem.product_variant.name}</p>
-                                <p className="grey-text">{orderItem.quantity} x ₱ {orderItem.ordered_price.toFixed(2)}</p>
-                                <p className="title">₱ {(orderItem.quantity*orderItem.ordered_price).toFixed(2)}</p>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                        <p className="fs-16 m-0 ml-2">Subtotal: <span className="fw-4 fs-16 ml-2">₱ {order.subtotal.toFixed(2)}</span></p>
-                        <p className="fs-16 m-0 ml-2">Delivery: <span className="fw-4 fs-16 ml-2">₱ {order.ordered_shipping.toFixed(2)}</span></p>
-                        <p className="fw-6 fs-22 m-0 ml-2">Total: <span className="fw-4 fs-18 ml-2">₱ {order.total.toFixed(2)}</span></p>
+                                <div className="collection-item avatar transparent">
+                                  <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}></div>
+                                  <p className="title">{orderItem.product.name} - {orderItem.product_variant.name}</p>
+                                  <p className="grey-text">{orderItem.quantity} x ₱ {orderItem.ordered_price.toFixed(2)}</p>
+                                  <p className="title">₱ {(orderItem.quantity*orderItem.ordered_price).toFixed(2)}</p>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                          <p className="fs-16 m-0 ml-2">Subtotal: <span className="fw-4 fs-16 ml-2">₱ {order.subtotal.toFixed(2)}</span></p>
+                          <p className="fs-16 m-0 ml-2">Delivery: <span className="fw-4 fs-16 ml-2">₱ {order.ordered_shipping.toFixed(2)}</span></p>
+                          <p className="fw-6 fs-22 m-0 ml-2">Total: <span className="fw-4 fs-18 ml-2">₱ {order.total.toFixed(2)}</span></p>
+                        </div>
+                        <div className="row">
+                          <div className="col s12 mb-1">
+                            <small>Description</small>
+                            <p className="grey lighten-3 p-1 m-0 rad-2 summary linebreak">{order.description}</p>
+                          </div>
+                        </div>
                       </Fragment>
                     )}
                     {order.order_type === 'delivery' && (
@@ -227,6 +235,10 @@ const Delivered = ({
                           <div className="divider"></div>
                         </div>
                         <div className="row">
+                          <div className="col s12 mb-1">
+                            <small>Description</small>
+                            <p className="grey lighten-3 p-1 m-0 rad-2 summary linebreak">{order.description}</p>
+                          </div>
                           <div className="col s12 m4 mb-1">
                             <small>Item Weight</small>
                             <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.weight}{order.unit}</p>
@@ -242,10 +254,6 @@ const Delivered = ({
                           <div className="col s12 mb-1">
                             <small>Item Length</small>
                             <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.length}</p>
-                          </div>
-                          <div className="col s12 mb-1">
-                            <small>Description</small>
-                            <p className="grey lighten-3 p-1 m-0 rad-2 summary">{order.description}</p>
                           </div>
                         </div>
                         <p className="fw-6 fs-22 m-0 ml-2">Delivery Total: <span className="fw-4 fs-18 ml-2">₱ {order.ordered_shipping.toFixed(2)}</span></p>

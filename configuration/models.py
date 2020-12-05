@@ -19,6 +19,8 @@ class SiteConfiguration(SingletonModel):
   about_text = models.TextField(max_length=4000, default='Insert About Text Here')
 
   # Commission of Trike FROM riders
+  shipping_base = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+  two_way_multiplier = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
   rider_commission = models.DecimalField(max_digits=5, decimal_places=5, default=0, validators=[MaxValueValidator(1)])
 
   def __str__(self):

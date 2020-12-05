@@ -27,6 +27,8 @@ class SiteInformationAPI(GenericAPIView):
       'email': site_config.email,
       'location': site_config.location,
       'about_text': site_config.about_text,
+      'shipping_base': site_config.shipping_base,
+      'two_way_multiplier': site_config.two_way_multiplier,
       'version': settings.APPLICATION_VERSION,
 
       'vehicles': [{

@@ -8,7 +8,7 @@ class SingletonModelAdminModified(admin.ModelAdmin):
     (None, {'fields': ['site_name', 'maintenance_mode', 'beta_mode', 'site_message']}),
     ('Contact Information', {'fields': ['phone', 'email', 'location']}),
     ('About Page', {'fields': ['about_text']}),
-    ('Logistics', {'fields': ['rider_commission']}),
+    ('Logistics', {'fields': ['shipping_base', 'two_way_multiplier', 'rider_commission']}),
   ]
 
   def has_delete_permission(self, request, obj=None):

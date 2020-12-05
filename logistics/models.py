@@ -297,11 +297,10 @@ class Order(models.Model):
 
   @property
   def shipping(self):
-    total = round(((self.distance_value/1000)*(self.vehicle_chosen.per_km_price if self.vehicle_chosen else 0)), 0)
-    if total < 55:
-      total = 55
+    per_km_total = round(((self.distance_value/1000)*(self.vehicle_chosen.per_km_price if self.vehicle_chosen else 0)), 0)
+    total = float(site_config.shipping_base)+per_km_total
     if self.two_way:
-      total = total*1.75
+      total = total*float(site_config.two_way_multiplier)
     return round(total, 0)
 
   @property

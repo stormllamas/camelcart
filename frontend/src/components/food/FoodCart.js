@@ -81,7 +81,7 @@ const FoodCart = ({
         // avoidHighways: Boolean,
         // avoidTolls: Boolean,
       }, async (response, status) => {
-        if (status === 'OK') {
+        if (status === 'OK' && response.rows[0].elements[0].distance) {
           const distanceString = response.rows[0].elements[0].distance.text
           const distanceValue = response.rows[0].elements[0].distance.value
           const durationString = response.rows[0].elements[0].duration.text
@@ -91,9 +91,9 @@ const FoodCart = ({
           setDurationText(durationString);
           setDurationValue(durationValue);
           
-          let total = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].per_km_price)
-          if (total < 55) total = 55
-          setDelivery(total)
+          const perKmTotal = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].per_km_price)
+          const total = siteInfo.shipping_base+perKmTotal
+          setDelivery(Math.round(total))
         }
       });
     } catch (err) {

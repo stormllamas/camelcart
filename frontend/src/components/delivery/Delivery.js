@@ -337,12 +337,12 @@ const Delivery = ({
           destinations: [destination],
           travelMode: 'DRIVING',
         }, async (response, status) => {
-          if (status === 'OK') {
+          if (status === 'OK' && response.rows[0].elements[0].distance) {
             const distanceValue = response.rows[0].elements[0].distance.value
-            let total = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price)
-            if (total < 55) total = 55
-            if (twoWay) total = total*1.75
-            setDelivery(total)
+            const perKmTotal = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price)
+            const total = siteInfo.shipping_base+perKmTotal
+            if (twoWay) total = total*siteInfo.two_way_multiplier
+            setDelivery(Math.round(total))
           }
         });
       } catch (err) {
