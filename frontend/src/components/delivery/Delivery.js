@@ -340,8 +340,6 @@ const Delivery = ({
           if (status === 'OK') {
             const distanceValue = response.rows[0].elements[0].distance.value
             let total = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price)
-            // console.log(distanceValue)
-            // console.log(total)
             if (total < 55) total = 55
             if (twoWay) total = total*1.75
             setDelivery(total)

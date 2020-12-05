@@ -150,7 +150,7 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
                 <p className="fw-6 fs-17 m-0">Total</p>
               </div>
               <div className="col s6 flex-col end p-0">
-                <p className="fw-6 fs-17 m-0">₱ {order.total.toFixed(2)}</p>
+                <p className="fw-6 fs-17 m-0">₱ {order.ordered_total.toFixed(2)}</p>
               </div>
             </div>
           </li>

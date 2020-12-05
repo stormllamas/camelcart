@@ -90,10 +90,9 @@ const FoodCart = ({
           setDistanceValue(distanceValue);
           setDurationText(durationString);
           setDurationValue(durationValue);
-          console.log(distanceValue)
           
-          let total = Math.round((parseInt(distanceValue)/1000))*siteInfo.vehicles.filter(vehicle => vehicle.name = 'motorcycle')[0].per_km_price
-          if (total < 50) total = 50
+          let total = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].per_km_price)
+          if (total < 55) total = 55
           setDelivery(total)
         }
       });

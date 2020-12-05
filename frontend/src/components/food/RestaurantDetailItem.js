@@ -29,7 +29,11 @@ const RestaurantDetailItem = ({ productsLoading, product, products, index, getPr
           </div>
           <div className="card-content grey lighten-3 p-5">
             <p className="no-white-space">
-              <span className="badge orange-text">{product.cheapest_variant_price ? `₱ ${product.cheapest_variant_price}` : ''}</span>
+              {product.cheapest_variant.sale_price_active ? (
+                <span className="badge orange-text"> <span className="sale grey-text">₱ { product.cheapest_variant.price }</span><span className="grey-text">-{ product.cheapest_variant.percent_off }%</span> {product.cheapest_variant.final_price ? `₱ ${product.cheapest_variant.final_price}` : ''}</span>
+              ) : (
+                <span className="badge orange-text">{product.cheapest_variant.price ? `₱ ${product.cheapest_variant.price}` : ''}</span>
+              )}
               {product.name}
             </p>
           </div>

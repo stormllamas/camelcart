@@ -119,21 +119,19 @@ class SellerAPI(GenericAPIView):
       'features': features,
     })
 
-class ProductsAPI(ListAPIView):
-  serializer_class = ProductSerializer
-  pagination_class = OctPagination
+class ProductsAPI(GenericAPIView):
   permission_classes = [SiteEnabled]
 
-  def get_queryset(self):
+  def get(self, request):
     seller_query = Q()
-    sellerQuery = self.request.query_params.get('seller', None)
+    sellerQuery = request.query_params.get('seller', None)
 
     course_query = Q()
-    courseQuery = self.request.query_params.get('course', None)
+    courseQuery = request.query_params.get('course', None)
 
     feature_query = Q()
-    featureQuery = self.request.query_params.get('feature', None)
-   
+    featureQuery = request.query_params.get('feature', None)
+      
     if sellerQuery:
       try:
         seller = Seller.objects.get(name=sellerQuery.replace('-', ' ').replace('and', '&'))
@@ -152,8 +150,56 @@ class ProductsAPI(ListAPIView):
       feature_query.add(Q(feature=True), Q.AND)
 
     queryset = Product.objects.filter(course_query & seller_query & feature_query).order_by('id')
+    queryset_full_length = queryset.count()
 
-    return queryset
+    page_query = int(self.request.query_params.get('page', 1))
+    from_item = 0
+    to_item = 8
+    if page_query > 1:
+      from_item = (page_query-1)*8
+      to_item = page_query*8
+
+    if (page_query*8) >= queryset_full_length:
+      next_path = None
+    else:
+      next_path = f'api/products?page={page_query+1}'
+
+    if page_query > 1:
+      previous_path = f'api/products?page={page_query-1}'
+    else:
+      previous_path = None
+
+    products = [{
+      'id': product.id,
+      'name': product.name,
+      'seller': product.seller.id,
+      'categories': [{
+        'id': category.id
+      } for category in product.categories.all()],
+      'description': product.description,
+      'thumbnail': product.thumbnail.url,
+      'photo_1': product.photo_1 if product.photo_1 else None,
+      'photo_2': product.photo_2 if product.photo_2 else None,
+      'photo_3': product.photo_3 if product.photo_3 else None,
+      'feature': product.feature,
+      'name_to_url': product.name_to_url,
+      'cheapest_variant': {
+        'id': product.cheapest_variant.id,
+        'price': product.cheapest_variant.price,
+        'sale_price_active': product.cheapest_variant.sale_price_active,
+        'final_price': product.cheapest_variant.final_price,
+        'percent_off': product.cheapest_variant.percent_off
+      },
+      'total_rating': product.total_rating
+
+    } for product in queryset[from_item:to_item]]
+
+    return Response({
+      'count': len(products),
+      'next': next_path,
+      'previous': previous_path,
+      'results': products,
+    })
 class ProductAPI(GenericAPIView):
   serializer_class = ProductSerializer
   permission_classes = [SiteEnabled]
@@ -167,7 +213,10 @@ class ProductAPI(GenericAPIView):
     variants = [{
       'id': variant.id,
       'name': variant.name,
-      'price': float(variant.price)
+      'price': float(variant.price),
+      'sale_price_active': variant.sale_price_active,
+      'final_price': variant.final_price,
+      'percent_off': variant.percent_off
     } for variant in product.variants.all()]
 
     return Response({
@@ -339,7 +388,7 @@ class OrdersAPI(GenericAPIView):
       'loc2_address': order.loc2_address,
 
       'payment_type': order.payment_type,
-      'count': order.count, 'ordered_shipping': order.ordered_shipping, 'total': order.ordered_total,
+      'count': order.count, 'ordered_shipping': order.ordered_shipping, 'ordered_total': order.ordered_total,
       
       'ordered_subtotal': sum([item.quantity*item.ordered_price if item.is_ordered and item.ordered_price else 0 for item in order.order_items.all()]),
       'date_ordered': order.date_ordered,

@@ -125,7 +125,11 @@ const ItemDetail = ({
                                 <input className="with-gap green-text" name="group1" type="radio" value={variant.id} onChange={e => setSelectedVariant(e.target.value)} required/>
                                 <span className="grey-text text-darken-2">{variant.name}</span>
                               </label>
-                              <span className="grey-text text-darken-2 right">₱ {variant.price}</span>
+                              {variant.sale_price_active ? (
+                                <span className="grey-text text-darken-2 right"><span className="grey-text">₱ { variant.price }</span><span className="grey-text">-{ variant.percent_off }%</span> ₱ {variant.final_price}</span>
+                              ) : (
+                                <span className="grey-text text-darken-2 right">₱ {variant.final_price}</span>
+                              )}
                             </p>
                           ))}
                           {!user.groups.includes('rider') && (

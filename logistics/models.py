@@ -123,8 +123,8 @@ class Product(models.Model):
     return self.name.replace(' ','-').replace('&', 'and')
 
   @property
-  def cheapest_variant_price(self):
-    return ProductVariant.objects.filter(product=self).order_by('price', 'id').first().final_price
+  def cheapest_variant(self):
+    return ProductVariant.objects.filter(product=self).order_by('price', 'id').first()
 
   @property
   def total_rating(self):
