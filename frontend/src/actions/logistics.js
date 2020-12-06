@@ -113,7 +113,7 @@ export const getSellers = ({ getMore }) => async (dispatch, getState) => {
 export const getSeller = ({ sellerQuery }) => async (dispatch, getState) => {
   try {
     dispatch({ type: SELLER_LOADING });
-    const res = await axios.get(`/api/seller/${sellerQuery}`)
+    const res = await axios.get(`/api/seller/${sellerQuery}/`)
     dispatch({
       type: GET_SELLER,
       payload: res.data,
