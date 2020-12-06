@@ -110,7 +110,8 @@ const RestaurantDetail = ({
                 <div className="col s12">
                   <h4 className="mb-1">{seller.name}</h4>
                 </div>
-                {seller.categories.length > 0 && (
+                {seller.categories && (
+                  seller.categories.length > 0 && (
                   <div className="col s12">
                     <ul className="mt-0">
                       {seller.categories.map((category) => (
@@ -118,6 +119,7 @@ const RestaurantDetail = ({
                       ))}
                     </ul>
                   </div>
+                  )
                 )}
                 <div className="col s12">
                   {seller.review_count > 0 ? [...Array(seller.total_rating).keys()].map(star => <i key={star} className="material-icons orange-text">star</i>) : <div className="mb-2"><span className="bdg bdg-mute bdg-small m-0 mb-2 grey lighten-2 fs-16 rad-1 p-1">Unrated</span></div>}
