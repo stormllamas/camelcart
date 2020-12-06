@@ -91,8 +91,8 @@ const FoodCart = ({
           setDurationText(durationString);
           setDurationValue(durationValue);
           
-          const perKmTotal = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].per_km_price)
-          const total = siteInfo.shipping_base+perKmTotal
+          let perKmTotal = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].per_km_price)
+          let total = siteInfo.shipping_base+perKmTotal
           setDelivery(Math.round(total))
         }
       });

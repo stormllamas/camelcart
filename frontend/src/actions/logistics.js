@@ -564,7 +564,7 @@ export const finalizeTransaction = ({ authID, currentOrder, history, type, query
 export const proceedWithCOD = ({ history, type, query }) => async (dispatch, getState) => {
   dispatch({ type: COMPLETE_ORDER_LOADING });
   try {
-    await axios.put(`/api/complete_order/1/${type}/${query ? query : ''}`, null, tokenConfig(getState))
+    const res = await axios.put(`/api/complete_order/1/${type}/${query ? query : ''}`, null, tokenConfig(getState))
     M.toast({
       html: type === 'food' ? 'Food Ordered': 'Delivery Booked',
       displayLength: 5000,
@@ -573,7 +573,7 @@ export const proceedWithCOD = ({ history, type, query }) => async (dispatch, get
     dispatch({ type: COMPLETE_ORDER_SUCCESS });
     $('.loader').fadeOut();
     history.push('/')
-    axios.get('/api/new_order_update/', tokenConfig(getState))
+    axios.post('/api/new_order_update/', { 'ref_code': res.data.ref_code }, tokenConfig(getState))
   } catch (error) {
     dispatch({ type: COMPLETE_ORDER_FAILED });
     M.toast({

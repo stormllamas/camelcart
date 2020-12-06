@@ -792,12 +792,13 @@ class CompleteOrderAPI(UpdateAPIView):
 
     return Response({
       'status': 'success',
-      'msg': 'Order Finalized'
+      'msg': 'Order Finalized',
+      'ref_code': order.ref_code
     })
 class NewOrderUpdateAPI(GenericAPIView):
   permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
 
-  def get(self, request):
+  def post(self, request, *args, **kwargs):
     try:
       for rider in User.objects.filter(groups__name__in=['rider'], is_active=True).exclude(groups__name__in=['test']):
         current_site = get_current_site(request)
@@ -807,6 +808,7 @@ class NewOrderUpdateAPI(GenericAPIView):
           {
             'rider': rider,
             'domain': current_site.domain,
+            'ref_code': request.data.get('ref_code'),
           }
         )
         email = rider.email

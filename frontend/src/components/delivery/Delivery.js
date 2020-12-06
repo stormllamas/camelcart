@@ -338,9 +338,9 @@ const Delivery = ({
           travelMode: 'DRIVING',
         }, async (response, status) => {
           if (status === 'OK' && response.rows[0].elements[0].distance) {
-            const distanceValue = response.rows[0].elements[0].distance.value
-            const perKmTotal = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price)
-            const total = siteInfo.shipping_base+perKmTotal
+            let distanceValue = response.rows[0].elements[0].distance.value
+            let perKmTotal = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price)
+            let total = siteInfo.shipping_base+perKmTotal
             if (twoWay) total = total*siteInfo.two_way_multiplier
             setDelivery(Math.round(total))
           }

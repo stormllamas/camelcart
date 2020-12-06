@@ -20,6 +20,8 @@ const Login = ({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const onSubmit = async e => {
     e.preventDefault();
 
@@ -60,9 +62,10 @@ const Login = ({
                   <input type="text" id="user" className="validate" required onChange={e => setEmail(e.target.value)}/>
                   <label htmlFor="user">Email</label>
                 </div>
-                <div className="input-field">
+                <div className="input-field relative">
+                  <span className="visibility-2"><i className="material-icons waves-effect" onClick={() => setShowPassword(!showPassword)}>visibility</i></span>
                   <i className="material-icons prefix">lock</i>
-                  <input type="password" id="password" className="validate" onChange={e => setPassword(e.target.value)} required/>
+                  <input type={showPassword ? 'text' : 'password'} id="password" className="validate" onChange={e => setPassword(e.target.value)} required/>
                   <label htmlFor="password">Password</label>
                 </div>
                 <button type="submit" className="btn btn-large btn-extended green">Login</button>
