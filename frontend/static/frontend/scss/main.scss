@@ -310,6 +310,41 @@ a {
   }
 }
 
+.advertisement {
+  overflow: visible;
+  max-height: 90vw;
+  height: 90vh !important;
+  max-width: 90vh;
+  width: 90vw;
+  top: calc(5%) !important;
+
+  .modal-content {
+    padding: 2px;
+  }
+  
+  .modal-footer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    height: 10%;
+    min-height: 72px;
+    padding-right: 45px;
+  }
+
+  .modal-close {
+    width: 28px;
+    height: 28px;
+  }
+
+  &::-webkit-scrollbar {
+    display: none; 
+  }
+}
+
 // .google-maps-close {
 //   height: 40px;
 //   top: -69px !important;

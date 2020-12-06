@@ -549,7 +549,7 @@ const Delivery = ({
                   <div className="col s12">
                     <div className="input-field relative">
                       <textarea id="delivery-details" className="materialize-textarea validate grey-text text-darken-2" placeholder="Please enter notes that will help our riders" value={description} onChange={e => setDescription(e.target.value)} required></textarea>
-                      <label htmlFor="delivery-details" className="grey-text text-darken-2">Delivery Notes</label>
+                      <label htmlFor="delivery-details" className="grey-text text-darken-2 fs-22">Order/Delivery Details</label>
                       <span className="helper-text" data-error="This field is required"></span>
                     </div>
                   </div>

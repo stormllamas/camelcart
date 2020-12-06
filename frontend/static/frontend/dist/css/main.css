@@ -723,6 +723,11 @@
   top: 35%;
   right: 25px; }
 
+.modal-close.ad {
+  position: absolute;
+  top: -10px;
+  right: -10px; }
+
 .modal-close.cancel {
   position: absolute;
   top: 30px;
@@ -1768,6 +1773,32 @@ a {
     min-height: 72px;
     padding-right: 45px; }
   .supermodal::-webkit-scrollbar {
+    display: none; }
+
+.advertisement {
+  overflow: visible;
+  max-height: 90vw;
+  height: 90vh !important;
+  max-width: 90vh;
+  width: 90vw;
+  top: calc(5%) !important; }
+  .advertisement .modal-content {
+    padding: 2px; }
+  .advertisement .modal-footer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    height: 10%;
+    min-height: 72px;
+    padding-right: 45px; }
+  .advertisement .modal-close {
+    width: 28px;
+    height: 28px; }
+  .advertisement::-webkit-scrollbar {
     display: none; }
 
 .addressmodal-input {
