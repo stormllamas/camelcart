@@ -111,8 +111,8 @@ export const getSellers = ({ getMore }) => async (dispatch, getState) => {
   }
 }
 export const getSeller = ({ sellerQuery }) => async (dispatch, getState) => {
+  dispatch({ type: SELLER_LOADING });
   try {
-    dispatch({ type: SELLER_LOADING });
     const res = await axios.get(`/api/seller/${sellerQuery}/`)
     dispatch({
       type: GET_SELLER,
@@ -187,7 +187,9 @@ export const setCourse = ({ course, history, sellerQuery }) => async (dispatch, 
   })
   // Updates URL query strings
   const { courseFilter, seller } = getState().logistics;
-  history.push({ search: courseFilter !== null ? `?b=${sellerQuery ? sellerQuery : seller.name_to_url}&course=${courseFilter}`: ''})
+  if (!history.location.search.includes(`&course=${courseFilter}`)) {
+    history.push({ search: courseFilter !== null ? `?b=${sellerQuery ? sellerQuery : seller.name_to_url}&course=${courseFilter}`: ''})
+  }
 }
 
 

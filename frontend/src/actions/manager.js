@@ -9,12 +9,12 @@ import {
   GET_ORDER_ITEMS,
   ORDER_ITEMS_ERROR,
 
-  GET_ORDERS,
-  ORDERS_ERROR,
+  GET_MANAGER_ORDERS,
+  MANAGER_ORDERS_ERROR,
 
-  ORDER_LOADING,
-  GET_ORDER,
-  ORDER_ERROR,
+  MANAGER_ORDER_LOADING,
+  GET_MANAGER_ORDER,
+  MANAGER_ORDER_ERROR,
 
   CLAIM_ORDER,
   RIDER_CANCEL_ORDER,
@@ -164,27 +164,27 @@ export const getOrders = ({ page, claimed, prepared, pickedup, delivered, keywor
       res = await axios.get(`/api/manager/orders?page=${page ? page : '0'}${claimed !== undefined ? `&claimed=${claimed}` : ''}${prepared !== undefined ? `&prepared=${prepared}` : ''}${pickedup !== undefined ? `&pickedup=${pickedup}` : ''}${delivered !== undefined ? `&delivered=${delivered}` : ''}${keywords !== undefined ? `&keywords=${keywords}` : ''}`, tokenConfig(getState))
     }
     dispatch({
-      type: GET_ORDERS,
+      type: GET_MANAGER_ORDERS,
       payload: res.data
     });
     $('.loader').fadeOut();
   } catch (err) {
-    dispatch({type: ORDERS_ERROR});
+    dispatch({type: MANAGER_ORDERS_ERROR});
     dispatch({type: AUTH_ERROR});
     $('.loader').fadeOut();
   }
 }
 export const getOrder = ({ id }) => async (dispatch, getState) => {
-  dispatch({type: ORDER_LOADING});
+  dispatch({type: MANAGER_ORDER_LOADING});
   try {
     const res = await axios.get(`/api/manager/order/${id}/`, tokenConfig(getState))
     dispatch({
-      type: GET_ORDER,
+      type: GET_MANAGER_ORDER,
       payload: res.data
     });
   } catch (err) {
     dispatch({type: AUTH_ERROR});
-    dispatch({type: ORDER_ERROR});
+    dispatch({type: MANAGER_ORDER_ERROR});
   }
 }
 
@@ -378,32 +378,23 @@ export const pickupOrderItem = ({ id }) => async (dispatch, getState) => {
 
   try {
     const res = await axios.put(`/api/manager/pickup_order_item/${id}/`, null, tokenConfig(getState))
-    await dispatch(getOrder({
-      id: getState().manager.order.id
-    }))
-    if (res.data.status) {
-      if (res.data.status === 'error') {
-        M.toast( {
-          html: res.data.msg,
-          displayLength: 5000,
-          classes: 'red'
-        });
-      }
+    if (res.data.status === 'error') {
+      M.toast( {
+        html: res.data.msg,
+        displayLength: 5000,
+        classes: 'red'
+      });
     } else {
-      // await dispatch({
-      //   type: PICKUP_ORDER_ITEM,
-      //   payload: res.data
-      // });
+      await dispatch({
+        type: PICKUP_ORDER_ITEM,
+        payload: parseInt(id)
+      });
       M.toast({
         html: 'Item marked as picked up',
         displayLength: 5000,
         classes: 'orange'
       });
-    }
-    if (getState().manager.order.order_items.filter(orderItem => orderItem.is_pickedup === false).length < 1) {
-      if (getState().manager.order.is_pickedup === false) {
-        await dispatch(deliverOrder({ id: getState().manager.order.id }));
-      } else {
+      if (res.data.order_picked_up) {
         await dispatch({
           type: PICKUP_ORDER,
           payload: getState().manager.order
@@ -413,11 +404,9 @@ export const pickupOrderItem = ({ id }) => async (dispatch, getState) => {
           displayLength: 5000,
           classes: 'blue'
         });
-        $('.loader').fadeOut();
       }
-    } else {
-      $('.loader').fadeOut();
     }
+    $('.loader').fadeOut();
   } catch (error) {
     $('.loader').fadeOut();
   }
@@ -462,46 +451,35 @@ export const deliverOrderItem = ({ id }) => async (dispatch, getState) => {
 
   try {
     const res = await axios.put(`/api/manager/deliver_order_item/${id}/`, null, tokenConfig(getState))
-    await dispatch(getOrder({
-      id: getState().manager.order.id
-    }))
-    if (res.data.status) {
-      if (res.data.status === 'error') {
-        M.toast( {
-          html: res.data.msg,
-          displayLength: 5000,
-          classes: 'red'
-        });
-      }
+    if (res.data.status === 'error') {
+      M.toast( {
+        html: res.data.msg,
+        displayLength: 5000,
+        classes: 'red'
+      });
     } else {
       await dispatch({
         type: DELIVER_ORDER_ITEM,
-        payload: res.data
+        payload: id
       });
       M.toast({
         html: 'Item marked as delivered',
         displayLength: 5000,
         classes: 'orange'
       });
-    }
-    if (getState().manager.order.order_items.filter(orderItem => orderItem.is_delivered === false).length < 1) {
-      if (getState().manager.order.is_delivered === false) {
-        await dispatch(deliverOrder({ id: getState().manager.order.id }));
-      } else {
+      if (res.data.order_delivered) {
         await dispatch({
           type: DELIVER_ORDER,
           payload: getState().manager.order
         });
         M.toast({
-          html: 'Order fulfilled',
+          html: 'Order delivered',
           displayLength: 5000,
           classes: 'blue'
         });
-        $('.loader').fadeOut();
       }
-    } else {
-      $('.loader').fadeOut();
     }
+    $('.loader').fadeOut();
   } catch (error) {
     $('.loader').fadeOut();
   }

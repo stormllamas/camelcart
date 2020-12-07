@@ -749,7 +749,7 @@
   text-decoration: line-through; }
 
 .materialize-textarea {
-  height: 150px !important; }
+  min-height: 150px !important; }
 
 .m-0 {
   margin: 0 !important; }

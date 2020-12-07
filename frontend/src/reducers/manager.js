@@ -6,12 +6,12 @@ import {
   GET_ORDER_ITEMS,
   ORDER_ITEMS_ERROR,
 
-  GET_ORDERS,
-  ORDERS_ERROR,
+  GET_MANAGER_ORDERS,
+  MANAGER_ORDERS_ERROR,
 
-  ORDER_LOADING,
-  GET_ORDER,
-  ORDER_ERROR,
+  MANAGER_ORDER_LOADING,
+  GET_MANAGER_ORDER,
+  MANAGER_ORDER_ERROR,
 
   CLAIM_ORDER,
   RIDER_CANCEL_ORDER,
@@ -76,34 +76,34 @@ export default (state = initialState, action) => {
         orderItems: null
       }
 
-    case GET_ORDERS:
+    case GET_MANAGER_ORDERS:
       return {
         ...state,
         ordersLoading: false,
         orders: action.payload
       }
 
-    case ORDERS_ERROR:
+    case MANAGER_ORDERS_ERROR:
       return {
         ...state,
         ordersLoading: false,
         orders: null
       }
 
-    case ORDER_LOADING:
+    case MANAGER_ORDER_LOADING:
       return {
         ...state,
         orderLoading: true,
       }
 
-    case GET_ORDER:
+    case GET_MANAGER_ORDER:
       return {
         ...state,
         orderLoading: false,
         order: action.payload
       }
 
-    case ORDER_ERROR:
+    case MANAGER_ORDER_ERROR:
       return {
         ...state,
         orderLoading: false,
@@ -124,24 +124,24 @@ export default (state = initialState, action) => {
         }
       }
 
-    // case PICKUP_ORDER_ITEM:
-    //   const newPickedupItems = state.order.order_items.map(orderItem => {
-    //     if (orderItem.id === action.payload.id) {
-    //       orderItem.is_delivered = true
-    //     }
-    //     return orderItem
-    //   })
-    //   return {
-    //     ...state,
-    //     order: {
-    //       ...state.order,
-    //       order_items: newPickedupItems,
-    //     }
-    //   }
+    case PICKUP_ORDER_ITEM:
+      const newPickedupItems = state.order.order_items.map(orderItem => {
+        if (orderItem.id === action.payload) {
+          orderItem.is_pickedup = true
+        }
+        return orderItem
+      })
+      return {
+        ...state,
+        order: {
+          ...state.order,
+          order_items: newPickedupItems,
+        }
+      }
 
     case DELIVER_ORDER_ITEM:
       const newOrderItems = state.order.order_items.map(orderItem => {
-        if (orderItem.id === action.payload.id) {
+        if (orderItem.id === action.payload) {
           orderItem.is_delivered = true
         }
         return orderItem

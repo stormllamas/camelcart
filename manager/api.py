@@ -562,12 +562,19 @@ class PickupOrderItemAPI(UpdateAPIView):
       order_item.date_pickedup = timezone.now()
       order_item.save()
 
+      order_picked_up = False
+
       if order_item.order.order_items.filter(is_pickedup=False).count() == 0:
         order_item.order.is_pickedup = True
         order_item.order.date_pickedup = timezone.now()
         order_item.order.save()
+        order_picked_up = True
 
-      return Response(AdminOrderItemSerializer(order_item, context=self.get_serializer_context()).data)
+      return Response({
+        'status': 'ok',
+        'msg': 'Item picked up',
+        'order_picked_up': order_picked_up,
+      })
 class PickupOrderAPI(UpdateAPIView):
   serializer_class = AdminOrderSerializer
   permission_classes = [IsAuthenticated, HasGroupPermission]
@@ -640,14 +647,21 @@ class DeliverOrderItemAPI(UpdateAPIView):
       order_item.date_delivered = timezone.now()
       order_item.save()
 
+      order_delivered = False
+
       if order_item.order.order_items.filter(is_delivered=False).count() == 0:
         order_item.order.is_delivered = True
         order_item.order.date_delivered = timezone.now()
         order_item.order.is_paid = True
         order_item.order.date_paid = timezone.now()
         order_item.order.save()
+        order_delivered = True
 
-      return Response(AdminOrderItemSerializer(order_item, context=self.get_serializer_context()).data)
+      return Response({
+        'status': 'ok',
+        'msg': 'Item delivered',
+        'order_delivered': order_delivered,
+      })
 class DeliverOrderAPI(UpdateAPIView):
   serializer_class = AdminOrderSerializer
   permission_classes = [IsAuthenticated, HasGroupPermission]

@@ -89,7 +89,7 @@ const RestaurantDetail = ({
         getMore: false
       })
     }
-  }, [courseFilter, sellerLoading]);
+  }, [courseFilter, seller]);
   
   return (
     !sellerLoading && (
