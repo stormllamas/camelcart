@@ -1,5 +1,5 @@
 import os
-import django
+# import django
 
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
@@ -12,7 +12,7 @@ from logistics.consumers import OrderConsumer
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "trike.settings")
-django.setup()
+# django.setup()
 
 application = ProtocolTypeRouter({
     # Django's ASGI application to handle traditional HTTP requests
