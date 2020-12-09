@@ -1,6 +1,5 @@
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "trike.settings")
-os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+import django
 
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
@@ -11,6 +10,9 @@ from django.core.asgi import get_asgi_application
 # Models
 from logistics.consumers import OrderConsumer
 
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "trike.settings")
+django.setup()
 
 application = ProtocolTypeRouter({
     # Django's ASGI application to handle traditional HTTP requests
