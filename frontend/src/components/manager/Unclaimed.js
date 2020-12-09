@@ -12,6 +12,9 @@ import ManagerBreadcrumbs from './ManagerBreadcrumbs'
 import { claimOrder, getOrders, getOrder } from '../../actions/manager'
 
 const Unclaimed = ({
+  auth: {
+    user
+  },
   manager: {
     ordersLoading,
     orders,
@@ -34,17 +37,16 @@ const Unclaimed = ({
   const [deliveryMarker, setDeliveryMarker] = useState('');
 
   const [addressFocus, setAddressFocus] = useState('');
+  
+  const [socket, setSocket] = useState('')
 
   const onSubmit = () => {
     const checkedBoxes = $('.check:checked:not([disabled])')
-    checkedBoxes.each((index, checkedBox) => {
-      // const IDs = checkedBox.value.split('-')
-      // const body = {
-      //   order: IDs[1],
-      //   product_variant: IDs[2]
-      // }
+    checkedBoxes.each(async (index, checkedBox) => {
       claimOrder({
         id: checkedBox.value,
+        rider_id: user.id,
+        socket: socket,
       })
     })
   }
@@ -211,6 +213,32 @@ const Unclaimed = ({
       })
     }
   }, [order]);
+  
+  useEffect(() => {
+    let wsStart = 'ws://'
+    if (window.location.protocol === 'https:') {
+      wsStart = 'wss://'
+    }
+    let endpoint = wsStart + window.location.host
+    setSocket(new WebSocket(endpoint+'/order_update/'))
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.onmessage = function(e){
+        console.log('message', e)
+      }
+      socket.onopen = function(e){
+        console.log('open', e)
+      }
+      socket.onerror = function(e){
+        console.log('error', e)
+      }
+      socket.onclose = function(e){
+        console.log('close', e)
+      }
+    }
+  }, [socket]);
   
   return (
     !ordersLoading && (
@@ -430,6 +458,7 @@ Unclaimed.propTypes = {
 }
 
 const mapStateToProps = state => ({
+  auth: state.auth,
   manager: state.manager,
 });
 

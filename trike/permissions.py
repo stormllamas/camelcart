@@ -51,3 +51,7 @@ class IsSuperUser(BasePermission):
 class UserNotPartner(BasePermission):
   def has_permission(self, request, view):
     return 'partner' not in [group.name for group in request.user.groups.all()]
+
+class UserNotRider(BasePermission):
+  def has_permission(self, request, view):
+    return 'rider' not in [group.name for group in request.user.groups.all()]

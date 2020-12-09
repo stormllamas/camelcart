@@ -275,7 +275,6 @@ class OrdersAPI(GenericAPIView):
       'previous': previous_path,
       'results': orders,
     })
-
 class OrderAPI(RetrieveAPIView):
   serializer_class = OrderSerializer
   permission_classes = [IsAuthenticated, HasGroupPermission]

@@ -35,17 +35,21 @@ const Undelivered = ({
 
   const [addressFocus, setAddressFocus] = useState('');
 
+  const [socket, setSocket] = useState('')
+
   const onSubmit = async () => {
     if (order.order_type === 'food') {
       const checkedBoxes = $('.check:checked:not([disabled])')
       await checkedBoxes.each(async (index, checkedBox) => {
         deliverOrderItem({
-          id: checkedBox.value
+          id: checkedBox.value,
+          socket: socket,
         })
       })
     } else if (order.order_type === 'delivery' || order.order_type === 'ride_hail') {
       deliverOrder({
-        id: order.id
+        id: order.id,
+        socket: socket,
       })
     }
   }
@@ -212,6 +216,32 @@ const Undelivered = ({
       })
     }
   }, [order]);
+  
+  useEffect(() => {
+    let wsStart = 'ws://'
+    if (window.location.protocol === 'https:') {
+      wsStart = 'wss://'
+    }
+    let endpoint = wsStart + window.location.host
+    setSocket(new WebSocket(endpoint+'/order_update/'))
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.onmessage = function(e){
+        console.log('message', e)
+      }
+      socket.onopen = function(e){
+        console.log('open', e)
+      }
+      socket.onerror = function(e){
+        console.log('error', e)
+      }
+      socket.onclose = function(e){
+        console.log('close', e)
+      }
+    }
+  }, [socket]);
   
   return (
     !ordersLoading && (

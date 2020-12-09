@@ -52,6 +52,8 @@ import {
   COMPLETE_ORDER_SUCCESS,
   COMPLETE_ORDER_FAILED,
 
+  SYNC_ORDER,
+
   AUTH_ERROR,
 } from './types'
 
@@ -112,9 +114,10 @@ export const getSellers = ({ getMore }) => async (dispatch, getState) => {
 }
 export const getSeller = ({ sellerQuery }) => async (dispatch, getState) => {
   dispatch({ type: SELLER_LOADING });
+  dispatch({ type: PRODUCTS_LOADING });
   try {
     const res = await axios.get(`/api/seller/${sellerQuery}/`)
-    dispatch({
+    await dispatch({
       type: GET_SELLER,
       payload: res.data,
     })
@@ -721,4 +724,12 @@ export const reviewOrder = ({ order, userID, rating, comment, history }) => asyn
     history.push('/bookings')
   }
   $('.loader').fadeOut();
+}
+
+
+export const syncOrder = ({ data }) => async (dispatch, getState) => {
+  dispatch({
+    type: SYNC_ORDER,
+    payload: data
+  })
 }

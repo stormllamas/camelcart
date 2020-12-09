@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import BookingItem from './BookingItem'
 import Preloader from '../../components/common/Preloader'
 
-import { getOrders, setCurrentOnly, cancelOrder } from '../../actions/logistics'
+import { getOrders, setCurrentOnly, cancelOrder, syncOrder } from '../../actions/logistics'
 
 
 const Bookings = ({
@@ -21,7 +21,9 @@ const Bookings = ({
   },
   getOrders,
   setCurrentOnly,
-  cancelOrder
+  cancelOrder,
+
+  syncOrder
 }) => {
   const history = useHistory()
 
@@ -29,6 +31,8 @@ const Bookings = ({
   const [showCurrentOnly, setShowCurrentOnly] = useState(false);
 
   const [orderToDelete, setOrderToDelete] = useState('');
+  
+  const [socket, setSocket] = useState('')
   
   useEffect(() => {
     setCurrentOnly({
@@ -56,6 +60,34 @@ const Bookings = ({
       $('.middle-content').hide();
     }
   }, [ordersLoading]);
+  
+  useEffect(() => {
+    let wsStart = 'ws://'
+    if (window.location.protocol === 'https:') {
+      wsStart = 'wss://'
+    }
+    let endpoint = wsStart + window.location.host
+    setSocket(new WebSocket(endpoint+'/order_update/'))
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.onmessage = function(e){
+        console.log('message', e)
+        const data = JSON.parse(e.data)
+        syncOrder({ data })
+      }
+      socket.onopen = function(e){
+        console.log('open', e)
+      }
+      socket.onerror = function(e){
+        console.log('error', e)
+      }
+      socket.onclose = function(e){
+        console.log('close', e)
+      }
+    }
+  }, [socket]);
 
   return (
     !user.groups.includes('rider') ? (
@@ -211,14 +243,25 @@ const Bookings = ({
                     )
                   ) : (
                     order.is_pickedup ? (
-                      <Fragment>
-                        <div className="col s12">
-                          <i className="material-icons blue-text">more_vert</i>
-                        </div>
-                        <div className="col s12 mb-1 flex-col center">
-                          <h6 className="valign-wrapper blue-text"><i className="material-icons mr-1">local_shipping</i>Your order is being delivered</h6>
-                        </div>
-                      </Fragment>
+                      order.is_delivered ? (
+                        <Fragment>
+                          <div className="col s12">
+                            <i className="material-icons green-text text-lighten-2">more_vert</i>
+                          </div>
+                          <div className="col s12 mb-1 flex-col center">
+                            <h6 className="valign-wrapper green-text text-lighten-2"><i className="material-icons mr-1">local_shipping</i>Your order has been delivered</h6>
+                          </div>
+                        </Fragment>
+                      ) : (
+                        <Fragment>
+                          <div className="col s12">
+                            <i className="material-icons blue-text">more_vert</i>
+                          </div>
+                          <div className="col s12 mb-1 flex-col center">
+                            <h6 className="valign-wrapper blue-text"><i className="material-icons mr-1">local_shipping</i>Your order is being delivered</h6>
+                          </div>
+                        </Fragment>
+                      )
                     ) : (
                       <Fragment>
                         <div className="col s12">
@@ -256,6 +299,8 @@ Bookings.propTypes = {
   getOrders: PropTypes.func.isRequired,
   setCurrentOnly: PropTypes.func.isRequired,
   cancelOrder: PropTypes.func.isRequired,
+
+  syncOrder: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
@@ -263,4 +308,4 @@ const mapStateToProps = state => ({
   logistics: state.logistics,
 });
 
-export default connect(mapStateToProps, { getOrders, setCurrentOnly, cancelOrder })(Bookings);
+export default connect(mapStateToProps, { getOrders, setCurrentOnly, cancelOrder, syncOrder })(Bookings);

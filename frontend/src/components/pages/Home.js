@@ -7,7 +7,9 @@ import { connect } from 'react-redux';
 import Topbar from '../layout/Topbar';
 
 
-const Home = ({setCurLocation}) => {
+const Home = ({
+  setCurLocation
+}) => {
   const history = useHistory()
 
   useEffect(() => {
@@ -31,14 +33,13 @@ const Home = ({setCurLocation}) => {
       inDuration: 300,
       outDuration: 200,
     });
-    console.log($('[data-target="advertisement-modal"]')[0])
     $('[data-target="advertisement-modal"]').hide()
     let ad_elem = $('#advertisement-modal')[0]
     let instance = M.Modal.getInstance(ad_elem);
     instance.open()
+    
   }, [])
 
-  
   useEffect(() => {
     setCurLocation(history.location)
   }, [history]);

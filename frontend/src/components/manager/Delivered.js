@@ -27,7 +27,7 @@ const Delivered = ({
 
   const [keywords, setKeywords] = useState('')
   const [page, setPage] = useState(1)
-  
+
   useEffect(() => {
     setCurLocation(history.location)
   }, [history]);

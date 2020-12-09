@@ -3,7 +3,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView,
 from rest_framework.response import Response
 
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from trike.permissions import SiteEnabled, UserNotPartner
+from trike.permissions import SiteEnabled, UserNotRider
 
 # Models
 from .models import Order, OrderItem, Seller, CategoryGroup, Category, Product, ProductReview, OrderReview
@@ -241,7 +241,7 @@ class ProductAPI(GenericAPIView):
 
 class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def get_object(self):
     order_type = self.kwargs['order_type']
@@ -343,7 +343,7 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
     })
     
 class OrdersAPI(GenericAPIView):
-  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def get(self, request):
     delivered_query = Q()
@@ -438,7 +438,7 @@ class OrdersAPI(GenericAPIView):
     })
 class OrderAPI(RetrieveAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def check_object_permissions(self, request, obj):
     if obj.is_ordered == True and obj.user == request.user:
@@ -478,7 +478,7 @@ class OrderAPI(RetrieveAPIView):
     })
 class CancelOrderAPI(UpdateAPIView):
   serializer_class = OrderSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def check_object_permissions(self, request, obj):
     if obj.is_ordered == True and obj.user == request.user:
@@ -513,7 +513,7 @@ class CancelOrderAPI(UpdateAPIView):
 
 class OrderItemAPI(DestroyAPIView, CreateAPIView):
   serializer_class = OrderItemSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def check_object_permissions(self, request, obj):
     if obj.order.user == request.user:
@@ -633,7 +633,7 @@ class OrderItemAPI(DestroyAPIView, CreateAPIView):
       })
 class ChangeQuantityAPI(UpdateAPIView):
   serializer_class = OrderItemSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def check_object_permissions(self, request, obj):
     if obj.order.is_ordered == False and obj.order.user == request.user:
@@ -722,7 +722,7 @@ class ChangeQuantityAPI(UpdateAPIView):
 
 class CompleteOrderAPI(UpdateAPIView):
   serializer_class = OrderItemSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def get_object(self):
     order_type = self.kwargs['order_type']
@@ -796,7 +796,7 @@ class CompleteOrderAPI(UpdateAPIView):
       'ref_code': order.ref_code
     })
 class NewOrderUpdateAPI(GenericAPIView):
-  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def post(self, request, *args, **kwargs):
     try:
@@ -824,10 +824,9 @@ class NewOrderUpdateAPI(GenericAPIView):
     except:
       return Response({'status': 'error'})
 
-
 class ProductReviewAPI(CreateAPIView):
   serializer_class = ProductReviewSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def create(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)
@@ -866,7 +865,7 @@ class ProductReviewAPI(CreateAPIView):
       })
 class OrderReviewAPI(CreateAPIView):
   serializer_class = OrderReviewSerializer
-  permission_classes = [IsAuthenticated, SiteEnabled, UserNotPartner]
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def create(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)

@@ -31,6 +31,7 @@ INSTALLED_APPS = [
   'django.contrib.staticfiles',
   'rest_framework',
   'knox',
+  'channels',
 
   'frontend',
   'logistics',
@@ -51,6 +52,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'trike.urls'
+ASGI_APPLICATION = "trike.asgi.application"
 
 TEMPLATES = [
   {
@@ -128,6 +130,22 @@ STATIC_URL = '/static/'
 # STATICFILES_DIRS = [
 #   os.path.join(BASE_DIR, 'agrimart/static')
 # ]
+
+if config('CHANNEL_LAYERS') == 'redis':
+  CHANNEL_LAYERS = {
+    "default": {
+      "BACKEND": "channels_redis.core.RedisChannelLayer",
+      "CONFIG": {
+        "hosts": [(os.getenv('MY_IP'), 6379)],
+      },
+    },
+  }
+else:
+  CHANNEL_LAYERS = {
+    "default": {
+      "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+  }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
