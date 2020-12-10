@@ -64,7 +64,7 @@ const Bookings = ({
   useEffect(() => {
     let wsStart = 'ws://'
     if (window.location.protocol === 'https:') {
-      wsStart = 'wss://'
+      wsStart = 'ws://'
     }
     let endpoint = wsStart + window.location.host
     setSocket(new WebSocket(endpoint+'/order_update/'))
