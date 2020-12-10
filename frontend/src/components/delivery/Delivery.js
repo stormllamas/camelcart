@@ -75,9 +75,9 @@ const Delivery = ({
 
     // Map options
     const LUCENA_BOUNDS = {
-      north: 13.990870,
-      south: 13.889484,
-      west: 121.554958,
+      north: 14.056553,
+      south: 13.880757,
+      west: 121.511323,
       east: 121.709314,
     }
 
