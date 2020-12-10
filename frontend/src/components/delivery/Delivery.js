@@ -51,7 +51,6 @@ const Delivery = ({
   const [length, setLength] = useState('');
   const [description, setDescription] = useState('');
   
-  
   const locationGeocode = (latLng, mode) => {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ location: latLng }, (results, status) => {
@@ -222,7 +221,7 @@ const Delivery = ({
         position: e.latLng,
         map: currentMap,
         icon: {
-          url: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+          url: '/static/frontend/img/google-marker-green.png'
         },
         draggable: true,
         animation: google.maps.Animation.DROP
@@ -253,7 +252,7 @@ const Delivery = ({
       const newDeliveryMarker = new google.maps.Marker({
         position: e.latLng,
         icon: {
-          url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+          url: '/static/frontend/img/google-marker-blue.png'
         },
         map: currentMap,
         draggable: true,
@@ -381,7 +380,7 @@ const Delivery = ({
             position: pickupLatlng,
             map: currentMap,
             icon: {
-              url: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+              url: '/static/frontend/img/google-marker-green.png'
             },
             draggable: true,
             animation: google.maps.Animation.DROP
@@ -412,7 +411,7 @@ const Delivery = ({
           const newDeliveryMarker = new google.maps.Marker({
             position: deliveryLatlng,
             icon: {
-              url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+              url: '/static/frontend/img/google-marker-blue.png'
             },
             map: currentMap,
             draggable: true,

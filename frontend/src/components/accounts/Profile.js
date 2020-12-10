@@ -166,7 +166,7 @@ const Profile = ({
       position: e.latLng,
       map: currentMap,
       icon: {
-        url: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        url: '/static/frontend/img/google-marker-green.png'
       },
       draggable: true,
       animation: google.maps.Animation.DROP
