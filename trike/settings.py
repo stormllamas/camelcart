@@ -71,6 +71,22 @@ TEMPLATES = [
 ]
 
 ADMINS = [('Storm', 'storm@techllama.dev')]
+LOGGING = {
+  'version': 1,
+  'disable_existing_loggers': False,
+  'handlers': {
+    'logfile': {
+      'class': 'logging.FileHandler',
+      'filename': 'server.log',
+      'level': 'DEBUG',
+    },
+  },
+  'loggers': {
+    'django': {
+      'handlers': ['logfile'],
+    },
+  },
+}
 
 WSGI_APPLICATION = 'trike.wsgi.application'
 
@@ -140,7 +156,7 @@ if config('CHANNEL_LAYERS') == 'redis':
       "CONFIG": {
         # "hosts": [(os.getenv('MY_IP'), 6379)],
         # "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-        "hosts": [("localhost", 6379)],
+        "hosts": [('127.0.0.1', '6379')],
       },
     },
   }
