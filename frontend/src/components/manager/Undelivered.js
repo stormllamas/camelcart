@@ -219,11 +219,13 @@ const Undelivered = ({
   
   useEffect(() => {
     let wsStart = 'ws://'
+    let port = ''
     if (window.location.protocol === 'https:') {
       wsStart = 'wss://'
+      port = ':8001'
     }
-    let endpoint = wsStart + window.location.host
-    setSocket(new WebSocket(endpoint+'/order_update/'))
+    let endpoint = wsStart + window.location.host + port
+    setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
   }, []);
 
   useEffect(() => {

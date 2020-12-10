@@ -69,11 +69,10 @@ const Bookings = ({
       port = ':8001'
     }
     let endpoint = wsStart + window.location.host + port
-    setSocket(new WebSocket(endpoint+'/order_update/'))
+    setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
   }, []);
 
   useEffect(() => {
-    console.log(socket)
     if (socket) {
       socket.onmessage = function(e){
         console.log('message', e)
