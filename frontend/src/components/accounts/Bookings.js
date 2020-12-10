@@ -137,7 +137,7 @@ const Bookings = ({
                       <div className="col s12 mb-1 flex-row center middle">
                         <div className="bg-cover circle" style={{ backgroundImage: `url(${order.rider.picture}`, height: '100px', width: '100px'}}></div>
                         <div className="ml-2 flex-col start grey-text">
-                          <p className="m-0 fw-6">{order.rider.name}</p>
+                          <p className="m-0 fw-6">{order.rider && order.rider.name}</p>
                           <p className="m-0">{order.rider.contact}</p>
                           <p className="m-0 fs-17 fw-6">{order.rider.plate_number}</p>
                         </div>

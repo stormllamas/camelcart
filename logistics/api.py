@@ -394,8 +394,8 @@ class OrdersAPI(GenericAPIView):
       'date_ordered': order.date_ordered,
 
       'rider': {
-        'id': order.rider.id,
-        'name': f'{order.rider.first_name} {order.rider.last_name}',
+        'id': order.rider.id if order.rider else None,
+        'name': f'{order.rider.first_name} {order.rider.last_name}' if order.rider else None,
         'contact': order.rider.contact if order.rider.contact else None,
         'picture': order.rider.picture.url if order.rider.picture else None,
         'plate_number': order.rider.plate_number if order.rider.plate_number else None

@@ -47,7 +47,7 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
                       <Link to={`/order_review/${order.id}`} className="chip amber white-text right waves-effect waves-orange">REVIEW</Link>
                     </div>
                     <div className="col s12 flex-col end">
-                      <small>delivered by {order.rider.name}</small>
+                      <small>delivered by {order.rider && order.rider.name}</small>
                     </div>
                   </Fragment>
                 ) : (
@@ -56,7 +56,7 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
                       <div className="chip grey lighten-2 white-text right"><i>Reviewed</i></div>
                     </div>
                     <div className="col s12 flex-col end">
-                      <small>delivered by {order.rider.name}</small>
+                      <small>delivered by {order.rider && order.rider.name}</small>
                     </div>
                   </Fragment>
                 )
