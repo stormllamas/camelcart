@@ -9,7 +9,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "trike.settings")
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 
-
 # Models
 from logistics.consumers import OrderConsumer
 django.setup()

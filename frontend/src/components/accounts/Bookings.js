@@ -71,6 +71,7 @@ const Bookings = ({
   }, []);
 
   useEffect(() => {
+    console.log(socket)
     if (socket) {
       socket.onmessage = function(e){
         console.log('message', e)

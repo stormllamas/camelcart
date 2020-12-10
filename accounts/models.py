@@ -19,7 +19,7 @@ class User(AbstractUser):
   # Additional fields
   facebook_id = models.CharField(max_length=25, blank=True, null=True)
 
-  email = models.EmailField(max_length=254, unique=True, blank=False, null=False)
+  email = models.EmailField(max_length=254, blank=False, null=False)
   username = models.CharField(max_length=55, unique=True)
   contact = models.CharField(max_length=55, blank=True, null=True)
   gender = models.CharField(max_length=10, blank=True, null=True)

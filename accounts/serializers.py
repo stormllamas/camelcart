@@ -43,12 +43,21 @@ class RegisterSerializer(serializers.ModelSerializer):
       user_exists = User.objects.get(email=validated_data['email'], is_active=True)
     except:
       user_exists = None
+
     
     if not user_exists:
       fn = validated_data['first_name'].split()
       ln = validated_data['last_name'].split()
       name = ((fn[0]+ln[0]).lower())+makeID(4)
 
+      try:
+        email = User.objects.get(email=validated_data['email'])
+      except:
+        email = None
+      
+      if email:
+        email.delete()
+      
       user = User.objects.create_user(
         username=name,
         email=validated_data['email'],
@@ -56,8 +65,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         first_name=validated_data['first_name'],
         last_name=validated_data['last_name'],
       )
+
       return user
+
     else:
+      print('email exists')
       raise serializers.ValidationError("Email has already been used")
 
 class LoginSerializer(serializers.Serializer):

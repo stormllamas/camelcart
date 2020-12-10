@@ -61,7 +61,7 @@ export const logout = () => async (dispatch, getState) => {
 }
 
 export const signup = ({first_name, last_name, username, email, password}, history) => async dispatch => {
-  dispatch({ type: USER_LOADING })
+  // dispatch({ type: USER_LOADING })
   const body = {
     first_name,
     last_name,
