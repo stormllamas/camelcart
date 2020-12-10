@@ -1,5 +1,6 @@
 import os
 import django
+django.setup()
 
 from django.conf.urls import url
 from django.core.asgi import get_asgi_application
@@ -9,9 +10,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "trike.settings")
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 
-# Models
 from logistics.consumers import OrderConsumer
-django.setup()
 
 application = ProtocolTypeRouter({
     # Django's ASGI application to handle traditional HTTP requests
