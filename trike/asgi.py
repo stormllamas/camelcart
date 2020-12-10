@@ -1,6 +1,5 @@
 import os
 import django
-django.setup()
 
 from django.conf.urls import url
 from django.core.asgi import get_asgi_application
