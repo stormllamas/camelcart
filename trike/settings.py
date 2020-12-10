@@ -70,6 +70,8 @@ TEMPLATES = [
   },
 ]
 
+ADMINS = [('Storm', 'storm@techllama.dev')]
+
 WSGI_APPLICATION = 'trike.wsgi.application'
 
 
