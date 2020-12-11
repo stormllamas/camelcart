@@ -269,6 +269,67 @@ class SingupAPI(GenericAPIView):
 
     return Response({'status': 'okay'})
 
+class ResendActivationAPI(GenericAPIView):
+
+  def post(self, request, *args, **kwargs):
+    try:
+      try:
+        user_exists = User.objects.get(email=request.data.get('email'), is_active=True)
+      except:
+        user_exists = None
+      
+      if not user_exists:
+        try:
+          user = User.objects.get(email=request.data.get('email'), is_active=False)
+        except:
+          user = None
+        
+        if user:
+          current_site = get_current_site(self.request)
+          mail_subject = 'Activate your Trike account'
+          message = render_to_string(
+            'acc_active_email.html',
+            {
+              'user': user,
+              'domain': current_site.domain,
+              'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+              'token':account_activation_token.make_token(user),
+            }
+          )
+          
+          email = user.email
+          # print('send reactivation mail for:', email)
+          send_mail(
+            mail_subject,
+            message,
+            'Trike <info@trike.com.ph>',
+            [email],
+            fail_silently=False
+          )
+
+          return Response({
+            'status': 'okay',
+            'msg': 'Activation email resent!'
+          })
+        
+        else:
+          return Response({
+            'status': 'error',
+            'msg': 'Email does not exist. Please signup first'
+          })
+
+      else:
+        return Response({
+          'status': 'error',
+          'msg': 'Email already activated'
+        })
+
+    except:
+      return Response({
+        'status': 'error',
+        'msg': 'Something went wrong. Please try again'
+      })
+
 class ActivateAPI(GenericAPIView):
 
   def post(self, request, *args, **kwargs):

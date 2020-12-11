@@ -90,7 +90,41 @@ export const signup = ({first_name, last_name, username, email, password}, histo
   } catch (err) {
     dispatch({ type: SIGNUP_FAIL });
     M.toast({
-      html: 'Somethings went wrong. Please try again',
+      html: 'Something went wrong. Please try again',
+      displayLength: 3500,
+      classes: 'red'
+    });
+  }
+}
+export const resendActivation = ({ email }, history) => async dispatch => {
+  const body = {
+    email
+  }
+  try {
+    const res = await axios.post('/api/auth/resend_activation', body)
+    if (res.data.status === "okay") {
+      // dispatch({ type: SIGNUP_SUCCESS })
+      M.toast({
+        html: res.data.msg,
+        displayLength: 3500,
+        classes: 'green'
+      });
+    } else {
+      M.toast({
+        html: res.data.msg,
+        displayLength: 3500,
+        classes: 'red'
+      });
+      if (res.data.msg === 'Email already activated') {
+        history.push(`/login`)
+      } else if (res.data.msg === 'Email does not exist. Please signup first') {
+        history.push(`/signup`)
+      }
+    }
+  } catch (err) {
+    // dispatch({ type: SIGNUP_FAIL });
+    M.toast({
+      html: 'Something went wrong. Please try again',
       displayLength: 3500,
       classes: 'red'
     });
