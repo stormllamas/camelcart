@@ -65,9 +65,10 @@ const ItemDetail = ({
         inDuration: 300,
         outDuration: 200,
       });
-      // product.variants.length > 0 && (
-      //   setSelectedVariant(product.variants[0].id)
-      // )
+      product.variants.length > 0 && (
+        setSelectedVariant(product.variants[0].id)
+      )
+      !product.is_published && history.push('/food')
     } else {
       $('.loader').show();
     }

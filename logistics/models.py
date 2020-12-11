@@ -289,8 +289,10 @@ class Order(models.Model):
 
   @property
   def subtotal(self):
-    return sum([item.quantity*item.product_variant.final_price for item in self.order_items.all()])
-
+    return sum([item.quantity*item.product_variant.final_price if item.product_variant.product.is_published else 0 for item in self.order_items.all()])
+  @property
+  def checkout_subtotal(self):
+    return sum([item.quantity*item.product_variant.final_price for item in self.order_items.filter(checkout_validity__gte=timezone.now())])
   @property
   def ordered_subtotal(self):
     return sum([item.quantity*item.ordered_price for item in self.order_items.all()])

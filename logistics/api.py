@@ -181,6 +181,7 @@ class ProductsAPI(GenericAPIView):
       'photo_1': product.photo_1 if product.photo_1 else None,
       'photo_2': product.photo_2 if product.photo_2 else None,
       'photo_3': product.photo_3 if product.photo_3 else None,
+      'is_published': product.is_published,
       'feature': product.feature,
       'name_to_url': product.name_to_url,
       'cheapest_variant': {

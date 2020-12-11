@@ -37,6 +37,11 @@ const RestaurantDetailItem = ({ productsLoading, product, products, index, getPr
               {product.name}
             </p>
           </div>
+          {!product.is_published && (
+            <div className="na-overlay flex-col middle center">
+              <span className="grey-text text-lighten-3 fs-38">OUT OF STOCK</span>
+            </div>
+          )}
         </div>
       </div>
     </Fragment>
