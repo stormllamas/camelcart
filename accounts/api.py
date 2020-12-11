@@ -29,10 +29,14 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .tokens import account_activation_token
 
 # Tools
+from django.utils.crypto import get_random_string
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 import datetime
 import re
+
+def makeID(length):
+  return get_random_string(length=length, allowed_chars='01234567889')
 
 def get_user_data(user) :
   addresses = [{
@@ -194,16 +198,62 @@ class SocialAuthAPI(GenericAPIView):
         return response
       
 class SingupAPI(GenericAPIView):
-  serializer_class = RegisterSerializer
+  # serializer_class = RegisterSerializer
 
   def post(self, request, *args, **kwargs):
-    serializer = self.get_serializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    user = serializer.save()
+    # serializer = self.get_serializer(data=request.data)
+    # serializer.is_valid(raise_exception=True)
+    # user = serializer.save()
 
-    user.is_active = False
-    user.save()
-    
+    # user.is_active = False
+    # user.save()
+
+    try:
+      try:
+        user_exists = User.objects.get(email=request.data.get('email'), is_active=True)
+      except:
+        user_exists = None
+      
+      if not user_exists:
+        fn = request.data.get('first_name').split()
+        ln = request.data.get('last_name').split()
+        name = ((fn[0]+ln[0]).lower())+makeID(4)
+
+        try:
+          user = User.objects.get(email=request.data.get('email'))
+        except:
+          user = None
+        
+        if user:
+          user.username = name
+          user.first_name = request.data.get('first_name')
+          user.last_name = request.data.get('last_name')
+          user.set_password(request.data.get('password'))
+          user.save()
+        
+        else:
+          user = User.objects.create_user(
+            username=name,
+            email=request.data.get('email'),
+            password=request.data.get('password'),
+            first_name=request.data.get('first_name'),
+            last_name=request.data.get('last_name'),
+          )
+          user.is_active=False
+          user.save()
+
+      else:
+        return Response({
+          'status': 'error',
+          'msg': 'Email has already been used'
+        })
+
+    except:
+      return Response({
+        'status': 'error',
+        'msg': 'Something went wrong. Please try again'
+      })
+
     current_site = get_current_site(self.request)
     mail_subject = 'Activate your Trike account'
     message = render_to_string(
@@ -217,13 +267,13 @@ class SingupAPI(GenericAPIView):
     )
     
     email = user.email
-    send_mail(
-      mail_subject,
-      message,
-      'Trike <info@trike.com.ph>',
-      [email],
-      fail_silently=False
-    )
+    # send_mail(
+    #   mail_subject,
+    #   message,
+    #   'Trike <info@trike.com.ph>',
+    #   [email],
+    #   fail_silently=False
+    # )
 
     return Response({'status': 'okay'})
 

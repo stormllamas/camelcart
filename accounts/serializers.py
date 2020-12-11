@@ -33,12 +33,13 @@ class RegisterSerializer(serializers.ModelSerializer):
       'id',
       'first_name',
       'last_name',
-      'email',
+      # 'email',
       'password',
     ]
     extra_kwargs = {'password': {'write_only': True}}
 
   def create(self, validated_data):
+    print(self.data)
     try:
       user_exists = User.objects.get(email=validated_data['email'], is_active=True)
     except:
@@ -51,25 +52,28 @@ class RegisterSerializer(serializers.ModelSerializer):
       name = ((fn[0]+ln[0]).lower())+makeID(4)
 
       try:
-        email = User.objects.get(email=validated_data['email'])
+        email_exists = User.objects.get(email=validated_data['email'])
       except:
-        email = None
+        email_exists = None
       
-      if email:
-        email.delete()
+      if email_exists:
+        email_exists.first_name = validated_data['first_name']
+        email_exists.last_name = validated_data['last_name']
+        email_exists.password = set_password(validated_data['password'])
+        return email_exists
       
-      user = User.objects.create_user(
-        username=name,
-        email=validated_data['email'],
-        password=validated_data['password'],
-        first_name=validated_data['first_name'],
-        last_name=validated_data['last_name'],
-      )
+      else:
+        user = User.objects.create_user(
+          username=name,
+          email=validated_data['email'],
+          password=validated_data['password'],
+          first_name=validated_data['first_name'],
+          last_name=validated_data['last_name'],
+        )
 
-      return user
+        return user
 
     else:
-      print('email exists')
       raise serializers.ValidationError("Email has already been used")
 
 class LoginSerializer(serializers.Serializer):

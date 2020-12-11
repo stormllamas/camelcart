@@ -78,15 +78,21 @@ export const signup = ({first_name, last_name, username, email, password}, histo
       M.toast({
         html: 'Please activate your account',
         displayLength: 3500,
-        classes: 'blue'
+        classes: 'green'
+      });
+    } else {
+      M.toast({
+        html: res.data.msg,
+        displayLength: 3500,
+        classes: 'red'
       });
     }
   } catch (err) {
     dispatch({ type: SIGNUP_FAIL });
     M.toast({
-      html: 'That email is taken',
+      html: 'Somethings went wrong. Please try again',
       displayLength: 3500,
-      classes: 'orange'
+      classes: 'red'
     });
   }
 }

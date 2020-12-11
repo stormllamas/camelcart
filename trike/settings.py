@@ -51,8 +51,8 @@ MIDDLEWARE = [
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'trike.urls'
-ASGI_APPLICATION = "trike.asgi.application"
+ROOT_URLCONF = f'{config("PROJECT_NAME")}.urls'
+ASGI_APPLICATION = f'{config("PROJECT_NAME")}.asgi.application'
 
 TEMPLATES = [
   {
@@ -71,7 +71,7 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = 'trike.wsgi.application'
+WSGI_APPLICATION = f'{config("PROJECT_NAME")}.wsgi.application'
 
 
 # Database
