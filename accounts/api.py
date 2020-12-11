@@ -198,16 +198,8 @@ class SocialAuthAPI(GenericAPIView):
         return response
       
 class SingupAPI(GenericAPIView):
-  # serializer_class = RegisterSerializer
 
   def post(self, request, *args, **kwargs):
-    # serializer = self.get_serializer(data=request.data)
-    # serializer.is_valid(raise_exception=True)
-    # user = serializer.save()
-
-    # user.is_active = False
-    # user.save()
-
     try:
       try:
         user_exists = User.objects.get(email=request.data.get('email'), is_active=True)
@@ -267,13 +259,13 @@ class SingupAPI(GenericAPIView):
     )
     
     email = user.email
-    # send_mail(
-    #   mail_subject,
-    #   message,
-    #   'Trike <info@trike.com.ph>',
-    #   [email],
-    #   fail_silently=False
-    # )
+    send_mail(
+      mail_subject,
+      message,
+      'Trike <info@trike.com.ph>',
+      [email],
+      fail_silently=False
+    )
 
     return Response({'status': 'okay'})
 
