@@ -116,6 +116,7 @@ const Delivered = ({
                           <th>Date Ordered</th>
                           <th>Date Delivered</th>
                           <th>Ref Code</th>
+                          <th>Rider</th>
                           <th className="center">Type</th>
                           <th className="center">Payment Needed</th>
                           <th className="center">Two Way</th>
@@ -135,6 +136,7 @@ const Delivered = ({
                               <td className="mw-medium">{moment(order.date_ordered).format('lll')}</td>
                               <td className="mw-medium">{moment(order.date_delivered).format('lll')}</td>
                               <td><a href="" data-target="ordermodal" className="mw-small modal-trigger fw-6 blue-text text-lighten-2" onClick={() => getOrder({ id:order.id })}>{order.ref_code}</a></td>
+                              <td className="mw-medium center">{order.rider ? order.rider.name : ''}</td>
                               <td className="mw-small center">{order.order_type.replace('_', ' ')}</td>
                               <td className={`fw-6 mw-medium center ${order.rider_payment_needed === true ? 'green-text' : ''}`}>{order.rider_payment_needed === true ? 'Yes' : 'No'}</td>
                               <td className={`fw-6 mw-medium center ${order.two_way === true ? 'green-text' : ''}`}>{order.two_way === true ? 'Yes' : 'No'}</td>

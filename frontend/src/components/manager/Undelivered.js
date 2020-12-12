@@ -58,9 +58,9 @@ const Undelivered = ({
     const centerLatLng = new google.maps.LatLng(13.938080242321387, 121.61336104698454)
 
     const LUCENA_BOUNDS = {
-      north: 13.990870,
-      south: 13.889484,
-      west: 121.554958,
+      north: 14.056553,
+      south: 13.880757,
+      west: 121.511323,
       east: 121.709314,
     }
     // Map options
@@ -288,6 +288,7 @@ const Undelivered = ({
                         <tr className="grey lighten-3">
                           <th>Date Ordered</th>
                           <th>Ref Code</th>
+                          <th>Rider</th>
                           <th className="center">Type</th>
                           <th className="center">Payment Needed</th>
                           <th className="center">Two Way</th>
@@ -306,6 +307,7 @@ const Undelivered = ({
                             <tr key={order.id}>
                               <td className="mw-medium">{moment(order.date_ordered).format('lll')}</td>
                               <td><a href="" data-target="ordermodal" className="mw-small modal-trigger fw-6 blue-text text-lighten-2" onClick={() => getOrder({ id:order.id })}>{order.ref_code}</a></td>
+                              <td className="mw-medium center">{order.rider ? order.rider.name : ''}</td>
                               <td className="mw-small center">{order.order_type.replace('_', ' ')}</td>
                               <td className={`fw-6 mw-medium center ${order.rider_payment_needed === true ? 'green-text' : ''}`}>{order.rider_payment_needed === true ? 'Yes' : 'No'}</td>
                               <td className={`fw-6 mw-medium center ${order.two_way === true ? 'green-text' : ''}`}>{order.two_way === true ? 'Yes' : 'No'}</td>

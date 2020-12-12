@@ -256,6 +256,12 @@ class OrdersAPI(GenericAPIView):
         'id': order.seller.id if order.seller != None else None,
         'name': order.seller.name if order.seller != None else None
       },
+
+      'rider': {
+        'id': order.rider.id if order.rider else None,
+        'name': f'{order.rider.first_name} {order.rider.last_name}' if order.rider else None,
+      } if order.rider != None else None,
+
       'loc1_address': order.loc1_address,
       'loc2_address': order.loc2_address,
       'payment_type': order.payment_type,
