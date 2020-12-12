@@ -99,7 +99,7 @@ class Seller(models.Model):
 
 class Product(models.Model):
   # Basic Details
-  name = models.CharField(max_length=50, unique=True)
+  name = models.CharField(max_length=50)
   seller = models.ForeignKey(Seller, related_name='products', on_delete=models.CASCADE)
   categories = models.ManyToManyField(Category)
   feature = models.BooleanField(default=False)
@@ -143,7 +143,7 @@ class Product(models.Model):
 class ProductVariant(models.Model):
   product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE)
   # Basic Details
-  name = models.CharField(max_length=50)
+  name = models.CharField(max_length=320)
   price = models.DecimalField(max_digits=30, decimal_places=2)
   # Sale
   sale_price = models.DecimalField(max_digits=30, decimal_places=2, null=True, blank=True)
