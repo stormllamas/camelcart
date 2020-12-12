@@ -2,6 +2,8 @@ from django.conf import settings
 
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+
+# Models
 from configuration.models import SiteConfiguration
 try:
   site_config = SiteConfiguration.objects.first()
@@ -285,7 +287,13 @@ class Order(models.Model):
 
   @property
   def count(self):
-    return sum([item.quantity for item in self.order_items.all()])
+    return sum([item.quantity if item.product_variant.product.is_published else 0 for item in self.order_items.all()])
+  @property
+  def checkout_count(self):
+    return sum([item.quantity for item in self.order_items.filter(checkout_validity__gte=timezone.now())])
+  @property
+  def ordered_count(self):
+    return sum([item.quantity*item.ordered_price for item in self.order_items.all()])
 
   @property
   def subtotal(self):
@@ -295,11 +303,11 @@ class Order(models.Model):
     return sum([item.quantity*item.product_variant.final_price for item in self.order_items.filter(checkout_validity__gte=timezone.now())])
   @property
   def ordered_subtotal(self):
-    return sum([item.quantity*item.ordered_price for item in self.order_items.all()])
+    return sum([item.quantity*(item.ordered_price if item.ordered_price else 0) for item in self.order_items.all()])
 
   @property
   def shipping(self):
-    per_km_total = round(((self.distance_value/1000)*(self.vehicle_chosen.per_km_price if self.vehicle_chosen else 0)), 0)
+    per_km_total = round(((self.distance_value/1000)*(self.vehicle_chosen.per_km_price if self.vehicle_chosen else Vehicle.objects.get(name="motorcycle").per_km_price)), 0)
     total = float(site_config.shipping_base)+per_km_total
     if self.two_way:
       total = total*float(site_config.two_way_multiplier)
@@ -310,8 +318,22 @@ class Order(models.Model):
     return float(self.subtotal)+float(self.shipping)
 
   @property
+  def checkout_total(self):
+    return float(self.checkout_subtotal)+float(self.shipping)
+
+
+  @property
   def ordered_total(self):
     return float(self.ordered_subtotal)+float(self.ordered_shipping)
+
+  @property
+  def has_valid_item(self):
+    has_valid_item = False
+    for order_item in self.order_items.all():
+      if order_item.checkout_valid:
+        has_valid_item = True
+
+    return has_valid_item
 
 class OrderItem(models.Model):
   order = models.ForeignKey(Order, related_name='order_items', on_delete=models.CASCADE)
@@ -321,6 +343,8 @@ class OrderItem(models.Model):
   is_ordered = models.BooleanField(default=False)
   date_ordered = models.DateTimeField(null=True, blank=True)
   ordered_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+  checkout_validity = models.DateTimeField(null=True, blank=True)
 
   is_pickedup = models.BooleanField(default=False)
   date_pickedup = models.DateTimeField(null=True, blank=True)
@@ -334,6 +358,13 @@ class OrderItem(models.Model):
   @property
   def price(self):
     return self.product_variant.price * self.quantity
+
+  @property
+  def checkout_valid(self):
+    if self.checkout_validity:
+      return False if self.checkout_validity < timezone.now() else True
+    else:
+      return False
 
 class Favorite(models.Model):
   product = models.ForeignKey(Product, related_name='favorited_by', on_delete=models.CASCADE)

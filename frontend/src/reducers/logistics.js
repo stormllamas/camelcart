@@ -421,11 +421,6 @@ export default (state = initialState, action) => {
         completeOrderLoading: true,
       }
     case COMPLETE_ORDER_SUCCESS:
-      return {
-        ...state,
-        completeOrderLoading: false,
-        currentOrderLoading: false
-      }
     case COMPLETE_ORDER_FAILED:
       return {
         ...state,

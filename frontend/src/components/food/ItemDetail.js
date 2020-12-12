@@ -53,6 +53,7 @@ const ItemDetail = ({
 
   useEffect(() => {
     if (!productLoading) {
+      const itemQuery = query.get('item')
       $('.loader').fadeOut();
       $('.middle-content').fadeIn();
       $('.carousel.carousel-slider').carousel({
@@ -68,7 +69,9 @@ const ItemDetail = ({
       product.variants.length > 0 && (
         setSelectedVariant(product.variants[0].id)
       )
-      !product.is_published && history.push('/food')
+      if (itemQuery === product.name.replace(' ', '-')) {
+        !product.is_published && history.push('/food')
+      }
     } else {
       $('.loader').show();
     }

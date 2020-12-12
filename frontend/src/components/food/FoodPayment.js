@@ -18,8 +18,8 @@ const FoodPayment = ({
 }) => {
   const history = useHistory()
 
-  const [currentMap, setCurrentMap] = useState('');
-  
+  const [loading, setLoading] = useState(true);
+
   const getDateNow = () => {
     let today = new Date();
     let dd = today.getDate();
@@ -104,32 +104,41 @@ const FoodPayment = ({
     } else {
       return false
     }
-
   }
 
   useEffect(() => {
-    isAuthenticated && (
-      getCurrentOrder({
-        type: 'food',
-        query: `?order_seller_name=${match.params.seller}`
-      })
-    )
+    getCurrentOrder({
+      type: 'food',
+      query: `?order_seller_name=${match.params.seller}&for_checkout=true`
+    })
+    setLoading(false)
   }, [])
 
   useEffect(() => {
     if(!currentOrderLoading) {
       if (currentOrder) {
-        if (checkCurrentOrder(currentOrder)) {
-          M.updateTextFields();
-      
-          $('.collapsible').collapsible({
-            accordion: false
-          });
-          // renderPaypalButtons()
+        if (!loading) {
+          if (checkCurrentOrder(currentOrder)) {
+            M.updateTextFields();
+        
+            $('.collapsible').collapsible({
+              accordion: false
+            });
+            // renderPaypalButtons()
+          } else {
+            M.toast({
+              html: 'Checkout session expired',
+              displayLength: 3500,
+              classes: 'red',
+            });
+          }
+          if (!currentOrder.has_valid_item) {
+            history.push(`/food/restaurant?b=${match.params.seller}&course=Meals`)
+          }
         }
       }
     }
-  }, [currentOrderLoading])
+  }, [currentOrderLoading, loading])
   
   useEffect(() => {
     if (!completeOrderLoading) {
@@ -160,7 +169,7 @@ const FoodPayment = ({
                       </div>
                       <div className="col s6 mb-1">
                         <small>Subtotal</small>
-                        <p className="grey lighten-3 p-1 rad-2">₱ {currentOrder.subtotal.toFixed(2)}</p>
+                        <p className="grey lighten-3 p-1 rad-2">₱ {currentOrder.checkout_subtotal.toFixed(2)}</p>
                       </div>
                       <div className="col s6 mb-1">
                         <small>Shipping</small>
@@ -168,7 +177,7 @@ const FoodPayment = ({
                       </div>
                       <div className="col s12 mb-1">
                         <small>Order Total</small>
-                        <h5 className="grey lighten-3 p-1 rad-2 m-0">₱ {currentOrder.total.toFixed(2)}</h5>
+                        <h5 className="grey lighten-3 p-1 rad-2 m-0">₱ {currentOrder.checkout_total.toFixed(2)}</h5>
                       </div>
                     </div>
                     <div className="row">
@@ -185,14 +194,16 @@ const FoodPayment = ({
                             <div className="col s12 mb-1">
                               <ul className="collection">
                                 {currentOrder.order_items.map(orderItem => (
-                                  <li key={orderItem.id} className="collection-item p-0 pt-2 pb-2">
-                                    <p className="title">{orderItem.product.name} - {orderItem.product_variant.name}</p>
-                                    <p className="secondary-content title grey-text text-darken-2">₱ {orderItem.total_price.toFixed(2)}</p>
-                                    <p className="grey-text">{orderItem.quantity} x ₱ {orderItem.product_variant.price.toFixed(2)}</p>
-                                  </li>
+                                  orderItem.checkout_valid && (
+                                    <li key={orderItem.id} className="collection-item p-0 pt-2 pb-2">
+                                      <p className="title">{orderItem.product.name} - {orderItem.product_variant.name}</p>
+                                      <p className="secondary-content title grey-text text-darken-2">₱ {orderItem.total_price.toFixed(2)}</p>
+                                      <p className="grey-text">{orderItem.quantity} x ₱ {orderItem.product_variant.price.toFixed(2)}</p>
+                                    </li>
+                                  )
                                 ))}
                                 <li className="collection-item p-0">
-                                  <h5 className="secondary-content grey-text text-darken-2 mb-0">₱ {currentOrder.subtotal.toFixed(2)}</h5>
+                                  <h5 className="secondary-content grey-text text-darken-2 mb-0">₱ {currentOrder.checkout_subtotal.toFixed(2)}</h5>
                                 </li>
                               </ul>
                             </div>
@@ -265,9 +276,7 @@ const FoodPayment = ({
                 </div>
               </div>
             </section>
-          ) : (
-            <Redirect to='/food'/>
-          )
+          ) : <section className="section section-delivery-payments"></section>
         ) : (
           <Redirect to='/food'/>
         )

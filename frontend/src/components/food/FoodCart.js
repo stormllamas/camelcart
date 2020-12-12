@@ -265,21 +265,21 @@ const FoodCart = ({
                       {currentOrder !== null && (
                         currentOrder.order_items !== undefined && (
                           currentOrder.order_items.map(orderItem => (
-                            <li key={orderItem.id} className="collection-item avatar pr-5">
-                              <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}>contacts</div>
+                            <li key={orderItem.id} className={`collection-item avatar pr-5 relative ${!orderItem.product.is_published ? 'grey lighten-3 grey-text text-lighten-1' : ''}`}>
+                              <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}></div>
                               <p className="title">{orderItem.product.name} - {orderItem.product_variant.name}</p>
 
                               <div className="product-quantity flex-row middle">
                                 <div
-                                  className={`decrease-quantity flex-col center middle ${orderItem.quantity > 1 ? '' : 'disabled grey lighten-3 grey-text text-lighten-1'}`}
-                                  onClick={orderItem.quantity > 1 && !quantityLoading ? (() => changeQuantity({ orderItemID: orderItem.id, sellerID: seller.id, operation: 'subtract' })) : undefined}
+                                  className={`decrease-quantity flex-col center middle ${orderItem.quantity > 1 && orderItem.product.is_published ? '' : 'disabled grey lighten-3 grey-text text-lighten-1'}`}
+                                  onClick={orderItem.quantity > 1 && !quantityLoading && orderItem.product.is_published ? (() => changeQuantity({ orderItemID: orderItem.id, sellerID: seller.id, operation: 'subtract' })) : undefined}
                                 >
                                   <i className="material-icons fs-15 fw-6">remove</i>
                                 </div>
                                 <div className="flex-col center middle quantity">{orderItem.quantity}</div>
                                 <div
-                                  className={`increase-quantity flex-col center middle ${orderItem.quantity < 10 ? '' : 'disabled grey lighten-3 grey-text text-lighten-1'}`}
-                                  onClick={orderItem.quantity < 10 && !quantityLoading ? (() => changeQuantity({ orderItemID: orderItem.id, sellerID: seller.id, operation: 'add' })) : undefined}
+                                  className={`increase-quantity flex-col center middle ${orderItem.quantity < 10 && orderItem.product.is_published ? '' : 'disabled grey lighten-3 grey-text text-lighten-1'}`}
+                                  onClick={orderItem.quantity < 10 && !quantityLoading && orderItem.product.is_published ? (() => changeQuantity({ orderItemID: orderItem.id, sellerID: seller.id, operation: 'add' })) : undefined}
                                 >
                                   <i className="material-icons fs-15 fw-6">add</i>
                                 </div>
@@ -313,11 +313,11 @@ const FoodCart = ({
                       </div>
                     </div>
                     <button className="modal-close btn btn-extended btn-large green mt-5 mobile-btn relative"
-                      disabled={address === '' ? true : false}
+                      disabled={currentOrder.count < 1 || address === '' || !delivery || !lastName || !firstName || !contact || !email || !gender ? true : false}
                       onClick={proceedToPayments}
                     >
-                      <span className="btn-float-text">{!currentOrderLoading && address ? `₱${(parseInt(currentOrder.subtotal)+parseInt(delivery)).toFixed(2)}` : ''}</span>
-                      {address === '' ? 'Provide details above' : 'Checkout'}
+                      <span className="btn-float-text">{currentOrder.count < 1 || address === '' || !delivery || !lastName || !firstName || !contact || !email || !gender ? '' : `₱${(parseFloat(currentOrder.subtotal)+parseFloat(delivery)).toFixed(2)}` }</span>
+                      {currentOrder.count < 1 ? 'No items to checkout' : (address === '' || !delivery || !lastName || !firstName || !contact || !email || !gender ? 'Provide details above' : 'Checkout')}
                     </button>
                   </form>
                 </div>

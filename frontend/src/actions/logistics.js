@@ -359,10 +359,10 @@ export const cancelOrder = ({ id }) => async (dispatch, getState) => {
 
 
 export const foodCheckout = ({ formData, history, orderSeller }) => async (dispatch, getState) => {
-  // dispatch({ type: CURRENT_ORDER_LOADING });
+  // dispatch({ type: CHECKOUT_LOADING })
   try {
     const orderBody = {
-      user: getState().auth.user.id,
+      // user: getState().auth.user.id,
       vehicle_chosen: formData.vehicleChoice,
   
       first_name: formData.firstName,
@@ -382,13 +382,23 @@ export const foodCheckout = ({ formData, history, orderSeller }) => async (dispa
       duration_text: formData.durationText,
       duration_value: formData.durationValue,
     }
-    const currentOrder = await axios.put(`/api/current_order/food/${orderSeller ? `?order_seller=${orderSeller.id}` : ''}`, orderBody, tokenConfig(getState))
-    await dispatch(getCurrentOrder({
-      type: 'food',
-      query: `?order_seller=${orderSeller.id}`,
-      updateOnly: true
-    }));
-    history.push(`/food/order_payment/${orderSeller.name}`)
+    const res = await axios.put(`/api/food_checkout/${orderSeller.id}/`, orderBody, tokenConfig(getState))
+    if (res.data.status === "okay") {
+      // dispatch({ type: CHECKOUT_SUCCESS })
+      history.push(`/food/order_payment/${orderSeller.name}`)
+    } else {
+      // dispatch({ type: CHECKOUT_FAILED })
+      M.toast({
+        html: res.data.msg,
+        displayLength: 3500,
+        classes: 'red',
+      });
+      await dispatch(getCurrentOrder({
+        type: 'food',
+        query: `?order_seller=${orderSeller.id}`,
+        updateOnly: true
+      }));
+    }
   } catch (err) {
     console.log('error', err)
   }
@@ -570,21 +580,31 @@ export const proceedWithCOD = ({ history, type, query }) => async (dispatch, get
   dispatch({ type: COMPLETE_ORDER_LOADING });
   try {
     const res = await axios.put(`/api/complete_order/1/${type}/${query ? query : ''}`, null, tokenConfig(getState))
-    M.toast({
-      html: type === 'food' ? 'Food Ordered': 'Delivery Booked',
-      displayLength: 5000,
-      classes: 'green'
-    });
-    dispatch({ type: COMPLETE_ORDER_SUCCESS });
+    if (res.data.status === 'success') {
+      dispatch({ type: COMPLETE_ORDER_SUCCESS });
+      M.toast({
+        html: type === 'food' ? 'Food Ordered': 'Delivery Booked',
+        displayLength: 5000,
+        classes: 'green'
+      });
+      history.push('/food')
+    } else {
+      dispatch({ type: COMPLETE_ORDER_FAILED });
+      M.toast({
+        html: res.data.msg,
+        displayLength: 5000,
+        classes: 'red'
+      });
+      history.push(`/food/restaurant?b=${res.data.seller_name_to_url}&course=Meals`)
+    }
     $('.loader').fadeOut();
-    history.push('/')
     axios.post('/api/new_order_update/', { 'ref_code': res.data.ref_code }, tokenConfig(getState))
   } catch (error) {
     dispatch({ type: COMPLETE_ORDER_FAILED });
     M.toast({
-      html: 'Something went wrong',
+      html: 'Something went wrong. Please try again',
       displayLength: 5000,
-      classes: 'green'
+      classes: 'red'
     });
   }
 }

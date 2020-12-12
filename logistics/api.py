@@ -30,7 +30,7 @@ from trike.pagination import OctPagination
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.utils import timezone
-from decimal import Decimal
+import datetime
 
 # Exceptions
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
@@ -237,7 +237,8 @@ class ProductAPI(GenericAPIView):
       'photo_2': product.photo_2.url if product.photo_2 else None,
       'photo_3': product.photo_3.url if product.photo_3 else None,
       'total_rating': product.total_rating,
-      'variants': variants
+      'variants': variants,
+      'is_published': product.is_published
     })
 
 class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
@@ -280,10 +281,21 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
   def get(self, request, order_type=None):
     order = self.get_object()
 
+    for order_item in order.order_items.all():
+      if order_item.checkout_valid:
+        if not request.query_params.get('for_checkout', None):
+          order_item.checkout_validity = None
+          order_item.save()
+      else:
+        if order_item.checkout_validity != None:
+          order_item.checkout_validity = None
+          order_item.save()
+
     order_items = [{
       'id': order_item.id,
       'quantity': order_item.quantity,
       'total_price': float(order_item.product_variant.final_price)*order_item.quantity,
+      'checkout_valid': order_item.checkout_valid,
       'order': {
         'id': order_item.order.id,
         'ref_code': order_item.order.ref_code
@@ -293,6 +305,7 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
         'name': order_item.product_variant.product.name,
         'description': order_item.product_variant.product.description,
         'thumbnail': order_item.product_variant.product.thumbnail.url,
+        'is_published': order_item.product_variant.product.is_published,
       },
       'product_variant': {
         'id': order_item.product_variant.id,
@@ -337,8 +350,15 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
       'shipping': order.shipping,
 
       'count': order.count,
+      'checkout_count': order.checkout_count,
+
       'subtotal': order.subtotal,
+      'checkout_subtotal': order.checkout_subtotal,
+
       'total': order.total,
+      'checkout_total': order.checkout_total,
+
+      'has_valid_item': order.has_valid_item,
 
       'order_items': order_items,
     })
@@ -438,7 +458,6 @@ class OrdersAPI(GenericAPIView):
       'results': orders,
     })
 class OrderAPI(RetrieveAPIView):
-  serializer_class = OrderSerializer
   permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def check_object_permissions(self, request, obj):
@@ -721,8 +740,65 @@ class ChangeQuantityAPI(UpdateAPIView):
           'msg': 'Quantity too low'
         })
 
+class CheckoutAPI(UpdateAPIView):
+  serializer_class = OrderSerializer
+  permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
+
+  def get_object(self):
+    seller_id = self.kwargs['seller_id']
+
+    try:
+      seller = Seller.objects.get(id=seller_id)
+
+    except:
+      raise ObjectDoesNotExist('Seller with that id does not exist')
+
+    Orders = Order.objects.filter(user=self.request.user, order_type='food', seller=seller, is_ordered=False)
+
+    return Orders.first()
+
+  def update(self, request, seller_id=None):
+    serializer = self.get_serializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    order = self.get_object()
+
+    order.vehicle_chosen = serializer.validated_data.get('vehicle_chosen')
+
+    order.first_name = serializer.validated_data.get('first_name')
+    order.last_name = serializer.validated_data.get('last_name')
+    order.contact = serializer.validated_data.get('contact')
+    order.gender = serializer.validated_data.get('gender')
+    order.email = serializer.validated_data.get('email')
+
+    order.loc1_latitude = serializer.validated_data.get('loc1_latitude')
+    order.loc1_longitude = serializer.validated_data.get('loc1_longitude')
+    order.loc1_address = serializer.validated_data.get('loc1_address')
+    order.loc2_latitude = serializer.validated_data.get('loc2_latitude')
+    order.loc2_longitude = serializer.validated_data.get('loc2_longitude')
+    order.loc2_address = serializer.validated_data.get('loc2_address')
+    order.distance_text = serializer.validated_data.get('distance_text')
+    order.distance_value = serializer.validated_data.get('distance_value')
+    order.duration_text = serializer.validated_data.get('duration_text')
+    order.duration_value = serializer.validated_data.get('duration_value')
+    
+    if order.order_items.filter(product_variant__product__is_published=True).count() < 1:
+      return Response({
+        'status': 'error',
+        'msg': 'Invalid Checkout. Some products may have become unavailable'
+      })
+    
+    else:
+      order.save()
+      for order_item in order.order_items.filter(product_variant__product__is_published=True):
+        order_item.checkout_validity = timezone.now() + datetime.timedelta(minutes=30)
+        order_item.save()
+
+      return Response({
+        'status': 'okay',
+        'msg': 'Checkout Successful'
+      })
 class CompleteOrderAPI(UpdateAPIView):
-  serializer_class = OrderItemSerializer
   permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
   def get_object(self):
@@ -760,42 +836,83 @@ class CompleteOrderAPI(UpdateAPIView):
 
   def update(self, request, paid=None, order_type=None):
     order = self.get_object()
-    order_valid = False
     carried_order_items = []
 
-    for order_item in order.order_items.all():
-      order_item.is_ordered = True
-      order_item.date_ordered = timezone.now()
-      order_item.ordered_price = order_item.product_variant.final_price
-      order_item.save()
+    if order.order_type == 'food':
+      if order.has_valid_item:
+        # Check first if all items with valid checkout has is_published products upon checkout
+        for order_item in order.order_items.all():
+          if order_item.checkout_valid:
+            if not order_item.product_variant.product.is_published:
+              return Response({
+                'status': 'error',
+                'msg': 'Invalid Checkout. Some products may have become unavailable',
+                'seller_name_to_url': order.seller.name_to_url,
+              })
 
-    order.is_ordered = True
-    order.date_ordered = timezone.now()
-    order.ordered_shipping = order.shipping
-    order.ordered_shipping_commission = order.shipping*float(site_config.rider_commission)
-    if order.seller and order.ordered_subtotal > 0:
-      order.ordered_comission = order.ordered_subtotal*order.seller.commission
+        for order_item in order.order_items.all():
+          if order_item.checkout_valid:
+            order_item.is_ordered = True
+            order_item.date_ordered = timezone.now()
+            order_item.ordered_price = order_item.product_variant.final_price
+            order_item.checkout_validity = None
+            order_item.save()
+          else:
+            carried_order_items.append(order_item)
 
-    order.is_paid = True if paid == 2 else False
-    order.date_paid = timezone.now() if paid == 2 else None
-    order.payment_type = paid
-    order.auth_id = request.data['auth_id'] if paid == 2 else None
-    order.capture_id = request.data['capture_id'] if paid == 2 else None
-    order.save()
-    
-    # Carry invalid order items to new order
-    # if order.order_type == 'food':
-    #   new_order = Order.objects.create(user=self.request.user, order_type='food')
-      
-    #   for order_item in order.order_items.filter(is_ordered=False):
-    #     order_item.order = new_order
-    #     order_item.save()
+        order.is_ordered = True
+        order.date_ordered = timezone.now()
+        order.ordered_shipping = order.shipping
+        order.ordered_shipping_commission = order.shipping*float(site_config.rider_commission)
+        if order.seller and order.ordered_subtotal > 0:
+          order.ordered_comission = order.ordered_subtotal*order.seller.commission
 
-    return Response({
-      'status': 'success',
-      'msg': 'Order Finalized',
-      'ref_code': order.ref_code
-    })
+        order.is_paid = True if paid == 2 else False
+        order.date_paid = timezone.now() if paid == 2 else None
+        order.payment_type = paid
+        order.auth_id = request.data['auth_id'] if paid == 2 else None
+        order.capture_id = request.data['capture_id'] if paid == 2 else None
+        order.save()
+        
+        # Carry invalid order items to new order
+        new_order = Order.objects.create(user=self.request.user, order_type='food', seller=order.seller)
+        
+        for order_item in order.order_items.filter(is_ordered=False):
+          order_item.order = new_order
+          order_item.save()
+
+        return Response({
+          'status': 'success',
+          'msg': 'Order Finalized',
+        })
+
+      else:
+        return Response({
+          'status': 'error',
+          'msg': 'Checkout Session Timed Out',
+          'seller_name_to_url': order.seller.name_to_url,
+        })
+
+    else:
+      order.is_ordered = True
+      order.date_ordered = timezone.now()
+      order.ordered_shipping = order.shipping
+      order.ordered_shipping_commission = order.shipping*float(site_config.rider_commission)
+      if order.seller and order.ordered_subtotal > 0:
+        order.ordered_comission = order.ordered_subtotal*order.seller.commission
+
+      order.is_paid = True if paid == 2 else False
+      order.date_paid = timezone.now() if paid == 2 else None
+      order.payment_type = paid
+      order.auth_id = request.data['auth_id'] if paid == 2 else None
+      order.capture_id = request.data['capture_id'] if paid == 2 else None
+      order.save()
+
+      return Response({
+        'status': 'success',
+        'msg': 'Order Finalized',
+        'ref_code': order.ref_code
+      })
 class NewOrderUpdateAPI(GenericAPIView):
   permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
