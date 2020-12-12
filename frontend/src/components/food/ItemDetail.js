@@ -61,6 +61,7 @@ const ItemDetail = ({
         swipeable: true,
         indicators: true,
       });
+      $('.materialboxed').materialbox();
       $('.modal').modal({
         dismissible: true,
         inDuration: 300,
@@ -124,17 +125,20 @@ const ItemDetail = ({
                       product.variants.length > 0 && !currentOrderLoading && (
                         <form>
                           {product.variants.map((variant, index) => (
-                            <p key={variant.id} className="flex-row separate">
-                              <label>
-                                <input className="with-gap green-text" name="group1" type="radio" value={variant.id} onChange={e => setSelectedVariant(e.target.value)} required/>
-                                <span className="grey-text text-darken-2">{variant.name}</span>
-                              </label>
-                              {variant.sale_price_active ? (
-                                <span className="grey-text text-darken-2 right"><span className="grey-text">₱ { variant.price }</span><span className="grey-text">-{ variant.percent_off }%</span> ₱ {variant.final_price}</span>
-                              ) : (
-                                <span className="grey-text text-darken-2 right">₱ {variant.final_price}</span>
-                              )}
-                            </p>
+                            <Fragment>
+                              <p key={variant.id} className="flex-row separate">
+                                <label>
+                                  <input className="with-gap green-text" name="group1" type="radio" value={variant.id} onChange={e => setSelectedVariant(e.target.value)} required/>
+                                  <span className="grey-text text-darken-2">{variant.name}</span>
+                                </label>
+                                {variant.sale_price_active ? (
+                                  <span className="grey-text text-darken-2 right no-white-space ml-2"><span className="grey-text">₱ { variant.price }</span><span className="grey-text">-{ variant.percent_off }%</span><span className="ml-1 fs-18">₱ {variant.final_price.toFixed(2)}</span></span>
+                                ) : (
+                                  <span className="grey-text text-darken-2 right no-white-space">₱ {variant.final_price}</span>
+                                )}
+                              </p>
+                              <div className="divider"></div>
+                            </Fragment>
                           ))}
                           {!user.groups.includes('rider') && (
                             <button className="btn btn-full btn-large green mt-5" onClick={e => addToOrder(e)}>
