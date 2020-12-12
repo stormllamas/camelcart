@@ -54,7 +54,7 @@ admin.site.register(Seller, SellerAdmin)
 
 class ProductAdmin(admin.ModelAdmin):
   fieldsets = [
-    (None, {'fields': ['name', 'seller', 'categories', 'description']}),
+    (None, {'fields': ['name', 'seller', 'categories', 'description', 'feature']}),
     ('Photos', {'fields': ['thumbnail', 'photo_1', 'photo_2', 'photo_3']}),
     ('Tracking', {'fields': ['date_published', 'is_published']}),
   ]
