@@ -32,7 +32,7 @@ const RestaurantDetailItem = ({ productsLoading, product, products, index, getPr
               {product.cheapest_variant.sale_price_active ? (
                 <span className="badge orange-text"> <span className="sale grey-text">₱ { product.cheapest_variant.price }</span><span className="grey-text">-{ product.cheapest_variant.percent_off }%</span> {product.cheapest_variant.final_price ? `₱ ${product.cheapest_variant.final_price}` : ''}</span>
               ) : (
-                <span className="badge orange-text">{product.cheapest_variant.price ? `₱ ${product.cheapest_variant.price}` : ''}</span>
+                <span className="badge orange-text">{product.cheapest_variant.price ? `₱ ${product.cheapest_variant.price.toFixed(2)}` : ''}</span>
               )}
               {product.name}
             </p>

@@ -166,7 +166,7 @@ const ItemDetail = ({
               <div className="row">
                 <div className="col s12">
                   <h5>Description</h5>
-                  <p>{product.description}</p>
+                  <p className="linebreak">{product.description}</p>
                 </div>
               </div>
               <div id="cartmodal" className="modal bottom-sheet full-height">
