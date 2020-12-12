@@ -81,6 +81,13 @@ const ItemDetail = ({
   return (
     <section className="section section-product pb-1">
       <div className="container">
+        <div className="row m-0 mb-3">
+          <div className="col s12 mt-3">
+            <Link to={!productLoading ? `/food/restaurant?b=${product.seller.name.replaceAll(' ', '-')}`: '/food'} className="grey-text text-darken-1">
+              <span className="m-0 fs-18"><i className="fas fa-arrow-left fs-17 mr-1"></i>Go Back</span>
+            </Link>
+          </div>
+        </div>
         {!currentOrderLoading && currentOrder !== null && (
           currentOrder.order_items.length > 0 && (
             <div className="fixed-action-btn">
@@ -125,16 +132,16 @@ const ItemDetail = ({
                       product.variants.length > 0 && !currentOrderLoading && (
                         <form>
                           {product.variants.map((variant, index) => (
-                            <Fragment>
-                              <p key={variant.id} className="flex-row separate">
+                            <Fragment key={variant.id}>
+                              <p className="flex-row separate">
                                 <label>
                                   <input className="with-gap green-text" name="group1" type="radio" value={variant.id} onChange={e => setSelectedVariant(e.target.value)} required/>
                                   <span className="grey-text text-darken-2">{variant.name}</span>
                                 </label>
                                 {variant.sale_price_active ? (
-                                  <span className="grey-text text-darken-2 right no-white-space ml-2"><span className="grey-text">₱ { variant.price }</span><span className="grey-text">-{ variant.percent_off }%</span><span className="ml-1 fs-18">₱ {variant.final_price.toFixed(2)}</span></span>
+                                  <span className="grey-text text-darken-2 right no-white-space ml-2"><span className="grey-text">₱ { variant.price }</span><span className="grey-text">-{ variant.percent_off }%</span><span className="ml-1 fs-16">₱ {variant.final_price.toFixed(2)}</span></span>
                                 ) : (
-                                  <span className="grey-text text-darken-2 right no-white-space">₱ {variant.final_price}</span>
+                                  <span className="grey-text text-darken-2 right no-white-space ml-2">₱ {variant.final_price}</span>
                                 )}
                               </p>
                               <div className="divider"></div>
