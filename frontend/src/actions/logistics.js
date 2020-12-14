@@ -29,6 +29,7 @@ import {
 
   CANCEL_ORDER,
 
+  FILTER_KEYWORDS, CLEAR_KEYWORDS,
   FILTER_CUISINE, CLEAR_CUISINE,
   FILTER_COURSE,
 
@@ -47,6 +48,14 @@ import {
   PRODUCT_LOADING,
   GET_PRODUCT,
   PRODUCT_ERROR,
+  
+  DELETE_LOADING,
+  DELETE_ORDER_ITEM,
+  DELETE_ERROR,
+
+  CHECKOUT_LOADING,
+  CHECKOUT_SUCCESS,
+  CHECKOUT_FAILED,
 
   COMPLETE_ORDER_LOADING,
   COMPLETE_ORDER_SUCCESS,
@@ -81,14 +90,33 @@ export const getCategories = ({ categoryQueries }) => async (dispatch, getState)
   }
 }
 
+export const updateSellersQuery = history => async (dispatch, getState) => {
+  let cuisinePath = '', keywordsPath = ''
+  const { cuisineFilter, keywordsFilter } = getState().logistics;
 
-export const getSellers = ({ getMore }) => async (dispatch, getState) => {
+  // Set Paths
+  if (cuisineFilter) cuisinePath = `&cuisine=${cuisineFilter.replaceAll(' ', '-').replaceAll('&', 'and')}`
+  if (keywordsFilter) keywordsPath = `&keywords=${keywordsFilter.replaceAll(' ', '-').replaceAll('&', 'and')}`
+
+  history.push({ search: `?${keywordsPath}${cuisinePath}`})
+}
+
+const setSellerQueries = (getState) => {
+  let cuisineQuery = '', keywordsQuery = ''
+  const { cuisineFilter, keywordsFilter } = getState().logistics;
+  
+  // Set Queries
+  if (cuisineFilter) cuisineQuery = `&cuisine=${cuisineFilter}`
+  if (keywordsFilter) keywordsQuery = `&keywords=${keywordsFilter}`
+
+  return {cuisineQuery, keywordsQuery}
+}
+export const getSellers = ({ getMore, keywordsQuery }) => async (dispatch, getState) => {
   try {
     if (!getMore) {
       await dispatch({ type: SELLERS_LOADING });
-      const { sellersCurrentPage, cuisineFilter } = getState().logistics;
-      const sellerQuery = `?page=${sellersCurrentPage}&cuisine=${cuisineFilter ? cuisineFilter : ''}`
-      const res = await axios.get(`/api/sellers/${sellerQuery}`)
+      const { cuisineQuery, keywordsQuery } = setSellerQueries(getState)
+      const res = await axios.get(`/api/sellers/?${cuisineQuery}${keywordsQuery}`)
       dispatch({
         type: GET_SELLERS,
         payload: res.data,
@@ -99,9 +127,10 @@ export const getSellers = ({ getMore }) => async (dispatch, getState) => {
         type: SET_SELLERS_PAGE,
         payload: getState().logistics.sellersCurrentPage + 1,
       })
-      const { sellersCurrentPage, cuisineFilter } = getState().logistics;
-      const sellerQuery = `?page=${sellersCurrentPage}&cuisine=${cuisineFilter ? cuisineFilter : ''}`
-      const res = await axios.get(`/api/sellers/${sellerQuery}`)
+      const { cuisineQuery, keywordsQuery } = setSellerQueries(getState)
+      const { sellersCurrentPage } = getState().logistics;
+      const pageQuery = `?page=${sellersCurrentPage}`
+      const res = await axios.get(`/api/sellers/${pageQuery}${cuisineQuery}${keywordsQuery}`)
       dispatch({
         type: GET_MORE_SELLERS,
         payload: res.data,
@@ -126,6 +155,7 @@ export const getSeller = ({ sellerQuery }) => async (dispatch, getState) => {
     dispatch({ type: AUTH_ERROR});
   }
 }
+
 export const setCuisine = ({ cuisine, history }) => async (dispatch, getState) => {
   dispatch({
     type: FILTER_CUISINE,
@@ -133,8 +163,16 @@ export const setCuisine = ({ cuisine, history }) => async (dispatch, getState) =
   })
   // Updates URL query strings
   const { cuisineFilter } = getState().logistics;
-  history.push({ search: cuisineFilter !== null ? `?cuisine=${cuisineFilter.replaceAll(' ', '-')}`: ''})
+  history.push({ search: cuisineFilter !== null ? `?cuisine=${cuisineFilter.replaceAll(' ', '-').replaceAll('&', 'and')}`: ''})
 }
+export const clearCuisine = () => {return { type: CLEAR_CUISINE }}
+export const setKeywords = text => async dispatch => {
+  dispatch({
+    type: FILTER_KEYWORDS,
+    payload: text,
+  })
+}
+export const clearKeywords = () => {return { type: CLEAR_KEYWORDS }}
 
 
 export const getProducts = ({ getMore }) => async (dispatch, getState) => {
@@ -168,12 +206,10 @@ export const getProducts = ({ getMore }) => async (dispatch, getState) => {
     dispatch({ type: AUTH_ERROR});
   }
 }
-export const clearCuisine = () => {return { type: CLEAR_CUISINE }}
-export const getProduct = ({ productQuery }) => async (dispatch, getState) => {
-
+export const getProduct = ({ productQuery, sellerQuery }) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_LOADING });
-    const res = await axios.get(`/api/product/${productQuery}/`)
+    const res = await axios.get(`/api/product/${productQuery}/${sellerQuery}/`)
     dispatch({
       type: GET_PRODUCT,
       payload: res.data,
@@ -282,15 +318,20 @@ export const addOrderItem = ({ productId, sellerID }) => async (dispatch, getSta
   }
 }
 export const deleteOrderItem = ({ id, sellerID }) => async (dispatch, getState) => {
-  $('.loader').fadeIn();
+  dispatch({ type: DELETE_LOADING });
   try {
-    const res = await axios.delete(`/api/order_item/${id}/`, tokenConfig(getState))
+    await axios.delete(`/api/order_item/${id}/`, tokenConfig(getState))
     await dispatch(getCurrentOrder({
       type: 'food',
       query: `?order_seller=${sellerID}`,
       updateOnly: true
     }));
+    dispatch({
+      type: DELETE_ORDER_ITEM,
+      payload: id
+    })
   } catch (err) {
+    dispatch({ type: DELETE_ERROR });
     dispatch({ type: AUTH_ERROR});
   }
   $('.loader').fadeOut();
@@ -358,8 +399,8 @@ export const cancelOrder = ({ id }) => async (dispatch, getState) => {
 }
 
 
-export const foodCheckout = ({ formData, history, orderSeller }) => async (dispatch, getState) => {
-  // dispatch({ type: CHECKOUT_LOADING })
+export const foodCheckout = ({ formData, orderSeller, history }) => async (dispatch, getState) => {
+  dispatch({ type: CHECKOUT_LOADING })
   try {
     const orderBody = {
       // user: getState().auth.user.id,
@@ -384,10 +425,10 @@ export const foodCheckout = ({ formData, history, orderSeller }) => async (dispa
     }
     const res = await axios.put(`/api/food_checkout/${orderSeller.id}/`, orderBody, tokenConfig(getState))
     if (res.data.status === "okay") {
-      // dispatch({ type: CHECKOUT_SUCCESS })
+      dispatch({ type: CHECKOUT_SUCCESS })
       history.push(`/food/order_payment/${orderSeller.name}`)
     } else {
-      // dispatch({ type: CHECKOUT_FAILED })
+      dispatch({ type: CHECKOUT_FAILED })
       M.toast({
         html: res.data.msg,
         displayLength: 3500,

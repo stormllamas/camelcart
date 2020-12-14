@@ -99,7 +99,7 @@ class Seller(models.Model):
 
 class Product(models.Model):
   # Basic Details
-  name = models.CharField(max_length=50, unique=True)
+  name = models.CharField(max_length=50)
   seller = models.ForeignKey(Seller, related_name='products', on_delete=models.CASCADE)
   categories = models.ManyToManyField(Category)
   feature = models.BooleanField(default=False)

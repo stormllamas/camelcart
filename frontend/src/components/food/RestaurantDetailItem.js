@@ -25,7 +25,7 @@ const RestaurantDetailItem = ({ productsLoading, product, products, index, getPr
       <div className="col s12 m6 l4" key={product.id} ref={products.results.length === index + 1 ? lastProductElement : undefined }>
         <div className="card">
           <div className="card-image">
-            <Link to={`/food/restaurant/product?item=${product.name_to_url}`} style={{ backgroundImage: `url(${product.thumbnail})`}} className="bg-cover blocks-image grey lighten-3"></Link>
+            <Link to={`/food/restaurant/product?item=${product.name_to_url}&b=${product.seller.name_to_url}`} style={{ backgroundImage: `url(${product.thumbnail})`}} className="bg-cover blocks-image grey lighten-3"></Link>
           </div>
           <div className="card-content grey lighten-3 p-5">
             <p className="no-white-space">
@@ -39,7 +39,7 @@ const RestaurantDetailItem = ({ productsLoading, product, products, index, getPr
           </div>
           {!product.is_published && (
             <div className="na-overlay flex-col middle center">
-              <span className="grey-text text-lighten-3 fs-38">OUT OF STOCK</span>
+              <span className="grey-text text-lighten-3 fs-38">NOT AVAILABLE</span>
             </div>
           )}
         </div>

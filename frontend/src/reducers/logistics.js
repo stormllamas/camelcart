@@ -20,6 +20,7 @@ import {
   REVIEW_PRODUCT,
   REVIEW_PRODUCT_ORDER,
 
+  FILTER_KEYWORDS, CLEAR_KEYWORDS,
   FILTER_CUISINE, CLEAR_CUISINE,
   FILTER_COURSE,
   
@@ -38,6 +39,14 @@ import {
   PRODUCT_LOADING,
   GET_PRODUCT,
   PRODUCT_ERROR,
+  
+  DELETE_LOADING,
+  DELETE_ORDER_ITEM,
+  DELETE_ERROR,
+
+  CHECKOUT_LOADING,
+  CHECKOUT_SUCCESS,
+  CHECKOUT_FAILED,
 
   COMPLETE_ORDER_LOADING,
   COMPLETE_ORDER_SUCCESS,
@@ -60,8 +69,9 @@ const initialState = {
   currentOrderLoading: true,
   currentOrder: null,
 
-  cuisineFilter: null,
-  courseFilter: null,
+  keywordsFilter: '',
+  cuisineFilter: '',
+  courseFilter: '',
 
   sellersLoading: true,
   moreSellersLoading: false,
@@ -224,13 +234,22 @@ export default (state = initialState, action) => {
         }
       }
 
+    case FILTER_KEYWORDS:
+      return {
+        ...state,
+        keywordsFilter: action.payload,
+      }
+    case CLEAR_KEYWORDS:
+      return {
+        ...state,
+        keywordsFilter: '',
+      }
     case FILTER_CUISINE:
       return {
         ...state,
         cuisineFilter: action.payload !== state.cuisineFilter ? action.payload : null,
         sellersCurrentPage: 1
       }
-
     case CLEAR_CUISINE:
       return {
         ...state,
@@ -415,6 +434,25 @@ export default (state = initialState, action) => {
         orders: null
       }
 
+
+    case CHECKOUT_LOADING:
+      return {
+        ...state,
+        checkoutLoading: true,
+      }
+    case CHECKOUT_SUCCESS:
+      return {
+        ...state,
+        checkoutLoading: false,
+        currentOrderLoading: true
+      }
+
+    case CHECKOUT_FAILED:
+      return {
+        ...state,
+        checkoutLoading: false,
+      }
+
     case COMPLETE_ORDER_LOADING:
       return {
         ...state,
@@ -438,6 +476,19 @@ export default (state = initialState, action) => {
       return {
         ...state,
         quantityLoading: false,
+      }
+    
+
+    case DELETE_LOADING:
+      return {
+        ...state,
+        deleteLoading: true,
+      }
+    case DELETE_ORDER_ITEM:
+    case DELETE_ERROR:
+      return {
+        ...state,
+        deleteLoading: false,
       }
 
     case CANCEL_ORDER:

@@ -4,7 +4,11 @@ import { withRouter } from 'react-router-dom';
 function ScrollToTop({ history }) {
   useEffect(() => {
     const unlisten = history.listen(() => {
-      window.scrollTo(0, 0);
+      if (!history.location.pathname.includes('/food/restaurant')) {
+        window.scrollTo(0, 0);
+      } else if (history.location.pathname.includes('/food/restaurant/product')) {
+        window.scrollTo(0, 0);
+      }
     });
     return () => {
       unlisten();

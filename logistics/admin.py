@@ -8,10 +8,6 @@ class CategoryInLine(admin.TabularInline):
   extra = 1
   verbose_name_plural = "Categories"
 
-class ProductInLine(admin.TabularInline):
-  model = Product
-  extra = 1
-
 class ProductVariantInLine(admin.TabularInline):
   model = ProductVariant
   extra = 1
@@ -44,7 +40,6 @@ class SellerAdmin(admin.ModelAdmin):
     ('Location', {'fields': ['latitude', 'longitude', 'address']}),
     ('Display', {'fields': ['thumbnail']}),
   ]
-  inlines = [ProductInLine]
   list_display = ('name', 'contact')
   list_display_links = ('name',)
   list_per_page = 50
@@ -59,7 +54,8 @@ class ProductAdmin(admin.ModelAdmin):
     ('Tracking', {'fields': ['date_published', 'is_published']}),
   ]
   inlines = [ProductVariantInLine]
-  list_display = ('name', 'seller', 'is_published', 'date_published')
+  list_display = ('name', 'seller', 'is_published', 'feature', 'date_published')
+  list_editable = ('is_published', 'feature')
   list_filter = ('seller',)
   list_display_links = ('name',)
   list_per_page = 50

@@ -103,7 +103,7 @@ const RestaurantDetail = ({
     !sellerLoading && (
       seller !== null ? (
         <Fragment>
-          <div class="container">
+          <div className="container">
             <div className="row m-0 mt-2">
               <div className="col s12 mt-3">
                 <Link to="/food" className="grey-text text-darken-1">
@@ -158,7 +158,7 @@ const RestaurantDetail = ({
                 <div className="col s12 flex-row wrapper">
                   {seller.features.map(feature => (
                     <div key={feature.id} className="p-1">
-                      <Link to={`restaurant/product?item=${feature.name_to_url}`} className="slider-img bg-cover rad-2 grey lighten-3" style={{ backgroundImage: `url(${feature.thumbnail})`}}/>
+                      <Link to={`restaurant/product?item=${feature.name_to_url}&b=${feature.seller.name_to_url}`} className="slider-img bg-cover rad-2 grey lighten-3" style={{ backgroundImage: `url(${feature.thumbnail})`}}/>
                       <p className="mt-1 mb-0">{feature.name}</p>
                     </div>
                   ))}

@@ -18,7 +18,6 @@ const FoodPayment = ({
 }) => {
   const history = useHistory()
 
-  const [loading, setLoading] = useState(true);
 
   const getDateNow = () => {
     let today = new Date();
@@ -111,34 +110,31 @@ const FoodPayment = ({
       type: 'food',
       query: `?order_seller_name=${match.params.seller}&for_checkout=true`
     })
-    setLoading(false)
   }, [])
 
   useEffect(() => {
     if(!currentOrderLoading) {
       if (currentOrder) {
-        if (!loading) {
-          if (checkCurrentOrder(currentOrder)) {
-            M.updateTextFields();
-        
-            $('.collapsible').collapsible({
-              accordion: false
-            });
-            // renderPaypalButtons()
-          } else {
-            M.toast({
-              html: 'Checkout session expired',
-              displayLength: 3500,
-              classes: 'red',
-            });
-          }
-          if (!currentOrder.has_valid_item) {
-            history.push(`/food/restaurant?b=${match.params.seller}&course=Meals`)
-          }
+        if (checkCurrentOrder(currentOrder)) {
+          M.updateTextFields();
+      
+          $('.collapsible').collapsible({
+            accordion: false
+          });
+          // renderPaypalButtons()
+        } else {
+          M.toast({
+            html: 'Checkout session expired',
+            displayLength: 3500,
+            classes: 'red',
+          });
+        }
+        if (!currentOrder.has_valid_item) {
+          history.push(`/food/restaurant?b=${match.params.seller}&course=Meals`)
         }
       }
     }
-  }, [currentOrderLoading, loading])
+  }, [currentOrderLoading])
   
   useEffect(() => {
     if (!completeOrderLoading) {

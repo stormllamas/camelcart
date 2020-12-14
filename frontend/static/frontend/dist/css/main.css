@@ -1173,21 +1173,6 @@
   background-repeat: no-repeat;
   background-position: center center; }
 
-.list-slider .wrapper {
-  width: calc(100% + 10px) !important;
-  margin-left: -10px !important;
-  overflow: scroll; }
-  .list-slider .wrapper::-webkit-scrollbar {
-    display: none; }
-
-.slider-img {
-  height: 54vw;
-  width: 72vw;
-  max-height: 220px;
-  max-width: 293.333px;
-  position: relative;
-  display: block; }
-
 .blocks-image {
   height: 13vw;
   width: 100%;
@@ -1402,6 +1387,20 @@ tr {
   .site-message {
     top: 56px; } }
 
+.list-slider .wrapper {
+  width: calc(100% + 10px) !important;
+  margin-left: -10px !important;
+  overflow: scroll; }
+  .list-slider .wrapper::-webkit-scrollbar {
+    display: none; }
+  .list-slider .wrapper .slider-img {
+    height: 54vw;
+    width: 72vw;
+    max-height: 220px;
+    max-width: 293.333px;
+    position: relative;
+    display: block; }
+
 .list-slider .flex-row {
   overflow-x: scroll;
   overflow-y: visible; }
@@ -1472,6 +1471,9 @@ tr {
 
 .pulse {
   z-index: 2; }
+
+.dropdown-content {
+  z-index: 5 !important; }
 
 .input-field .select-wrapper {
   width: 100%; }
@@ -1846,40 +1848,6 @@ a {
   position: static; }
   #partner-dropdown::-webkit-scrollbar {
     display: none; }
-
-.section-cuisines .flex-row {
-  overflow-x: scroll;
-  overflow-y: visible; }
-  .section-cuisines .flex-row::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-    border-radius: 5px; }
-    .section-cuisines .flex-row::-webkit-scrollbar-track {
-      background: #f1f1f1; }
-    .section-cuisines .flex-row::-webkit-scrollbar-thumb {
-      background: #4CAF50; }
-    .section-cuisines .flex-row::-webkit-scrollbar-thumb:hover {
-      background: #449d48; }
-  .section-cuisines .flex-row .flex-col {
-    cursor: pointer;
-    min-width: 18%;
-    padding: .50rem 0; }
-    .section-cuisines .flex-row .flex-col .list-img {
-      position: relative;
-      display: block;
-      height: 10vw;
-      width: 10vw;
-      max-height: 120px;
-      max-width: 120px;
-      margin: 0 1.25rem; }
-    .section-cuisines .flex-row .flex-col:hover {
-      background-color: #e6e4e4; }
-      .section-cuisines .flex-row .flex-col:hover div.grey-text {
-        color: #4CAF50 !important; }
-    .section-cuisines .flex-row .flex-col.green div.grey-text {
-      color: #fff !important; }
-    .section-cuisines .flex-row .flex-col.green:hover div.grey-text {
-      color: #fff !important; }
 
 .section-restaurants ul {
   margin: 0 -12px; }

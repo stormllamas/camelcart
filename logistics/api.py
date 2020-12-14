@@ -71,8 +71,13 @@ class SellersAPI(ListAPIView):
   permission_classes = [SiteEnabled]
 
   def get_queryset(self):
+    keywords_query = Q()
     cuisine_query = Q()
+    keywordsQuery = self.request.query_params.get('keywords', None)
     cuisineQuery = self.request.query_params.get('cuisine', None)
+
+    if keywordsQuery:
+      keywords_query.add(Q(name__icontains=keywordsQuery), Q.OR)
 
     if cuisineQuery:
       try:
@@ -81,7 +86,7 @@ class SellersAPI(ListAPIView):
       except:
         pass
 
-    queryset = Seller.objects.filter(cuisine_query).order_by('id')
+    queryset = Seller.objects.filter(keywords_query & cuisine_query).order_by('id')
     return queryset
 class SellerAPI(GenericAPIView):
   serializer_class = SellerSerializer
@@ -99,6 +104,11 @@ class SellerAPI(GenericAPIView):
       'id': feature.id,
       'name': feature.name,
       'name_to_url': feature.name_to_url,
+      'seller': {
+        'id': feature.seller.id,
+        'name': feature.seller.name,
+        'name_to_url': feature.seller.name_to_url
+      },
       'thumbnail': feature.thumbnail.url
     } for feature in Product.objects.filter(seller=seller.id, feature=True)]
 
@@ -172,7 +182,11 @@ class ProductsAPI(GenericAPIView):
     products = [{
       'id': product.id,
       'name': product.name,
-      'seller': product.seller.id,
+      'seller': {
+        'id': product.seller.id,
+        'name': product.seller.name,
+        'name_to_url': product.seller.name_to_url
+      },
       'categories': [{
         'id': category.id
       } for category in product.categories.all()],
@@ -205,9 +219,10 @@ class ProductAPI(GenericAPIView):
   serializer_class = ProductSerializer
   permission_classes = [SiteEnabled]
 
-  def get(self, request, product_name=None):
-    pn = product_name.replace('-',' ')
-    product = Product.objects.get(name=pn)
+  def get(self, request, product_name=None, seller_name=None):
+    pn = product_name.replace('-',' ').replace('and', '&')
+    sn = seller_name.replace('-',' ').replace('and', '&')
+    product = Product.objects.get(name=pn, seller__name=sn)
 
     categories = [category.name for category in product.categories.all()]
 

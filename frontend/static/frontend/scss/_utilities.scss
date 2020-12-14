@@ -480,30 +480,6 @@
   }
 }
 
-
-.list-slider {
-
-  .wrapper {
-    width: calc(100% + 10px) !important;
-    margin-left: -10px !important;
-    overflow: scroll;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-
-}
-
-.slider-img {
-  height: 54vw;
-  width: 72vw;
-  max-height: 220px;
-  max-width: 293.333px;
-  position: relative;
-  display: block;
-}
-
 .blocks-image {
   height: 13vw;
   width: 100%;
@@ -806,6 +782,24 @@ tr {
 }
 
 .list-slider {
+  .wrapper {
+    width: calc(100% + 10px) !important;
+    margin-left: -10px !important;
+    overflow: scroll;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slider-img {
+      height: 54vw;
+      width: 72vw;
+      max-height: 220px;
+      max-width: 293.333px;
+      position: relative;
+      display: block;
+    }
+  }
 
   .flex-row {
     overflow-x: scroll;

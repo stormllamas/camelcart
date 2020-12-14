@@ -402,68 +402,6 @@ a {
   }
 }
 
-.section-cuisines {
-
-  .flex-row {
-    overflow-x: scroll;
-    overflow-y: visible;
-  
-    &::-webkit-scrollbar {
-      width: 12px;
-      height: 12px;
-      border-radius: 5px;
-    
-      &-track {
-        background: #f1f1f1; 
-      }
-    
-      &-thumb {
-        background: $green; 
-      }
-    
-      &-thumb:hover {
-        background: darken($green, 5); 
-      }
-    }
-
-    .flex-col {
-      cursor: pointer;
-      min-width: 18%;
-      padding: .50rem 0;
-
-      .list-img {
-        position: relative;
-        display: block;
-        height: 10vw;
-        width: 10vw;
-        max-height: 120px;
-        max-width: 120px;
-        margin: 0 1.25rem;
-      }
-
-      &:hover {
-        background-color: #e6e4e4;
-
-        div.grey-text {
-          color: $green !important;
-        }
-      }
-
-      &.green {
-        div.grey-text {
-          color: #fff !important;
-        }
-
-        &:hover {
-          div.grey-text {
-            color: #fff !important;
-          }
-        }
-      }
-    }
-  }
-}
-
 .section-restaurants {
   ul {
     margin: 0 -12px;

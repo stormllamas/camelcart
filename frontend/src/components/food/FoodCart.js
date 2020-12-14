@@ -20,7 +20,9 @@ const FoodCart = ({
   logistics: {
     currentOrderLoading,
     currentOrder,
-    quantityLoading
+    quantityLoading,
+    deleteLoading,
+    checkoutLoading
   },
   getCurrentOrder,
   changeQuantity,
@@ -160,12 +162,12 @@ const FoodCart = ({
   }, [currentOrderLoading, currentOrder]);
   
   useEffect(() => {
-    if (!quantityLoading) {
+    if (!quantityLoading && !deleteLoading && !checkoutLoading) {
       $('.loader').fadeOut();
     } else {
       $('.loader').fadeIn();
     }
-  }, [quantityLoading]);
+  }, [quantityLoading, deleteLoading, checkoutLoading]);
   
   return (
     isAuthenticated && !user.groups.includes('rider') && (

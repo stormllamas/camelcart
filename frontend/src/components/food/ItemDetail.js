@@ -24,7 +24,7 @@ const ItemDetail = ({
   addOrderItem
 }) => {
   const history = useHistory()
-  const query = new URLSearchParams(history.location.search);
+  const querySearch = new URLSearchParams(history.location.search);
 
   const [selectedVariant, setSelectedVariant] = useState('')
 
@@ -45,15 +45,17 @@ const ItemDetail = ({
   }
   
   useEffect(() => {
-    const itemQuery = query.get('item')
+    const productQuery = querySearch.get('item')
+    const sellerQuery = querySearch.get('b')
     getProduct({
-      productQuery: itemQuery
+      productQuery,
+      sellerQuery
     })
   }, []);
 
   useEffect(() => {
     if (!productLoading) {
-      const itemQuery = query.get('item')
+      const productQuery = querySearch.get('item')
       $('.loader').fadeOut();
       $('.middle-content').fadeIn();
       $('.carousel.carousel-slider').carousel({
@@ -67,10 +69,7 @@ const ItemDetail = ({
         inDuration: 300,
         outDuration: 200,
       });
-      product.variants.length > 0 && (
-        setSelectedVariant(product.variants[0].id)
-      )
-      if (itemQuery === product.name.replace(' ', '-')) {
+      if (productQuery === product.name.replace(' ', '-')) {
         !product.is_published && history.push('/food')
       }
     } else {

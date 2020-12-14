@@ -28,15 +28,15 @@ const Home = ({
     $('.scrollspy').scrollSpy({
       scrollOffset: '100'
     });
-    $('.modal').modal({
-      dismissible: true,
-      inDuration: 300,
-      outDuration: 200,
-    });
-    $('[data-target="advertisement-modal"]').hide()
-    let ad_elem = $('#advertisement-modal')[0]
-    let instance = M.Modal.getInstance(ad_elem);
-    instance.open()
+    // $('.modal').modal({
+    //   dismissible: true,
+    //   inDuration: 300,
+    //   outDuration: 200,
+    // });
+    // $('[data-target="advertisement-modal"]').hide()
+    // let ad_elem = $('#advertisement-modal')[0]
+    // let instance = M.Modal.getInstance(ad_elem);
+    // instance.open()
     
   }, [])
 
@@ -50,7 +50,7 @@ const Home = ({
         <div className="container">
           <div className="row mb-2">
             <div className="col s12">
-              <h5 className="fw-6">Our Services</h5>
+              <h5 className="fw-6">Click a Booking Type Below</h5>
             </div>
           </div>
           <div className="row mt-1 mb-1">
@@ -60,7 +60,7 @@ const Home = ({
                 <div className="center">
                   <img src="static/frontend/img/Trike_food_logo.png" className="scale-pop" alt=""/>
                 </div>
-                <h5>Food</h5>
+                <h5 className="fw-6 fs-22">Food</h5>
                 <p className="hide-on-med-and-down">Order your favorite local food and have it delivered to you</p>
               </div>
             </div>
@@ -69,7 +69,7 @@ const Home = ({
                 <div className="center">
                   <img src="static/frontend/img/Trike_motor_logo.png" className="scale-pop" alt=""/>
                 </div>
-                <h5>Delivery</h5>
+                <h5 className="fw-6 fs-22">Delivery</h5>
                 <p className="hide-on-med-and-down">Schedule an item for pickup and delivery by our trusted riders</p>
               </Link>
             </div>
@@ -79,7 +79,7 @@ const Home = ({
                 <div className="center">
                   <img src="static/frontend/img/Trike_hail_logo.png" className="scale-pop" alt=""/>
                 </div>
-                <h5>Ride Hailing</h5>
+                <h5 className="fw-6 fs-22">Ride</h5>
                 <p className="hide-on-med-and-down">Get a ride from one our our riders</p>
               </div>
             </div>
@@ -230,7 +230,7 @@ const Home = ({
         </div>
       </section>
 
-      <button data-target="advertisement-modal" className="btn modal-trigger">Modal</button>
+      {/* <button data-target="advertisement-modal" className="btn modal-trigger">Modal</button>
       <div id="advertisement-modal" className="modal advertisement">
         <div className="modal-content full-height orange darken-2">
           <div className="full-height full-width bg-cover" style={{ backgroundImage: `url(/static/frontend/img/kenny_rogers_ad_fav_four.jpg)` }}></div>
@@ -238,7 +238,7 @@ const Home = ({
         <a className="modal-action modal-close ad orange darken-2 rad-5 flex-col center middle">
           <i className="material-icons white-text">close</i>
         </a>
-      </div>
+      </div> */}
     </Fragment>
   )
 }
