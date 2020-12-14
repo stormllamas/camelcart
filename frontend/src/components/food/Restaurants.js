@@ -106,9 +106,9 @@ const Restaurants = ({
   
   return (
     <Fragment>
-      <section className="section section-cuisines list-slider">
+      <section className="section-seller-search mb-0">
         <div className="container">
-          <div className="row">
+          <div className="row mb-0">
             <div className="col s12">
               <form noValidate onSubmit={onSubmit}>
                 <div className="input-field">
@@ -118,8 +118,13 @@ const Restaurants = ({
               </form>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section section-cuisines list-slider pt-0">
+        <div className="container">
           <div className="row">
-            <h5 className="mb-4">Food Categories</h5>
+            <h5 className="mb-4 mt-0">Food Categories</h5>
             <div className="flex-row">
               {!categoriesLoading ? (
                 categories.map(category => (
