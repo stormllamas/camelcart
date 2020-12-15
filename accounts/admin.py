@@ -28,7 +28,7 @@ class MyUserAdmin(UserAdmin):
     list_display_links = ('email',)
     list_filter = ('is_active', 'is_staff', 'is_superuser')
     list_per_page = 25
-    search_fields = ('username', 'first_name', 'last_name')
+    search_fields = ('username', 'first_name', 'last_name', 'email')
 
     inlines = [FavoritesInLine, AddressInLine, CommissionPaymentInLine]
 
