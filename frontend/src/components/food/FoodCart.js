@@ -54,6 +54,8 @@ const FoodCart = ({
   const [durationText, setDurationText] = useState("");
   const [durationValue, setDurationValue] = useState("");
   
+  const [description, setDescription] = useState('');
+  
 
   const addressSelected = async () => {
     $('.loader').fadeIn();
@@ -107,7 +109,7 @@ const FoodCart = ({
   const proceedToPayments = async e => {
     e.preventDefault();
     $('.loader').fadeIn();
-    if(pickupLat && pickupLng && pickupAddress && deliveryLat && deliveryLng && distanceText && distanceValue && durationText && durationValue && firstName && lastName && contact && email && gender ? true : false) {
+    if(currentOrder.count < 1 || address === '' || !delivery || !lastName || !firstName || !contact || !email || !gender ? false : true) {
       const formData = {
         vehicleChoice: siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].id,
         firstName, lastName, contact, email, gender,
@@ -147,11 +149,11 @@ const FoodCart = ({
       if (currentOrder.order_type === 'food') {
         $('.loader').fadeOut();
         $('.middle-content').fadeIn();
+        $('.form-notification').attr('style', 'opacity: 1')
         $('select').formSelect();
         $('.collapsible').collapsible({
           accordion: false
         });
-        $('.form-notification').attr('style', 'opacity: 1')
         M.updateTextFields();
       } else {
         $('.loader').show();
@@ -244,6 +246,7 @@ const FoodCart = ({
                     <div className="collapsible-body white p-4">
                       <div className="row">
                         <div className="col s12">
+                          <p className="grey-text text-darken-2 fs-18 mb-0">Pick an address</p>
                           <div className="input-field m-0">
                             <select id="address" className="text-grey validate grey-text text-darken-2" value={address} onChange={e => setAddress(e.target.value)} required>
                               <option value="" disabled>Select an address</option>
@@ -254,6 +257,15 @@ const FoodCart = ({
                               )}
                             </select>
                             <Link to="/profile" className="title green-text">Add a new address to your account</Link>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col s12">
+                          <div className="input-field relative">
+                            <textarea id="delivery-details" className="materialize-textarea validate grey-text text-darken-2" placeholder="Put notes for you order here" value={description} onChange={e => setDescription(e.target.value)} required></textarea>
+                            <label htmlFor="delivery-details" className="grey-text text-darken-2 fs-22">Order Notes</label>
+                            <span className="helper-text" data-error="This field is required"></span>
                           </div>
                         </div>
                       </div>
@@ -314,7 +326,7 @@ const FoodCart = ({
                         <p className="secondary-content grey-text text-darken-2">{delivery ? `₱ ${delivery.toFixed(2)}` : '-'}</p>
                       </div>
                     </div>
-                    <button className="modal-close btn btn-extended btn-large green mt-5 mobile-btn relative"
+                    <button className='btn btn-extended btn-large green mt-5 mobile-btn relative modal-close'
                       disabled={currentOrder.count < 1 || address === '' || !delivery || !lastName || !firstName || !contact || !email || !gender ? true : false}
                       onClick={proceedToPayments}
                     >

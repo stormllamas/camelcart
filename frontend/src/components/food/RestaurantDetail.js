@@ -63,13 +63,13 @@ const RestaurantDetail = ({
           })
         }
       }
+      $('.tabs').tabs();
     }
   }, [sellerLoading, courseFilter, seller]);
 
   useEffect(() => {
     const sellerQuery = querySearch.get('b')
     if (!sellerLoading) {
-      $('.tabs').tabs();
       $('.loader').fadeOut();
       $('.middle-content').fadeIn();
       $('.modal').modal({
