@@ -113,7 +113,7 @@ const Restaurants = ({
               <form noValidate onSubmit={onSubmit}>
                 <div className="input-field">
                   <i className="material-icons prefix">search</i>
-                  <input type="text" id="autocomplete-input" placeholder="Search a Restaurant" value={search} className="autocomplete" onChange={e => setSearch(e.target.value)}/>
+                  <input type="text" id="autocomplete-input" autoComplete="off" placeholder="Search a Restaurant" value={search} className="autocomplete" onChange={e => setSearch(e.target.value)}/>
                 </div>
               </form>
             </div>
