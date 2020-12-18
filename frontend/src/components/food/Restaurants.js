@@ -7,18 +7,22 @@ import { connect } from 'react-redux';
 import RestaurantItem from '../food/RestaurantItem'
 import Preloader from '../../components/common/Preloader'
 
-import { getSellers, getCategories, updateSellersQuery, setCuisine, clearCuisine, setKeywords, clearKeywords } from '../../actions/logistics'
+import { getAllSellers, getSellers, getCategories, updateSellersQuery, setCuisine, clearCuisine, setKeywords, clearKeywords } from '../../actions/logistics'
 
 
 const Restaurants = ({
   logistics: {
     categoriesLoading, categories,
+
+    allSellers, allSellersLoading,
+
     sellersLoading, moreSellersLoading,
     sellers,
 
     cuisineFilter, keywordsFilter
   },
   updateSellersQuery,
+  getAllSellers,
   getSellers, getCategories,
   setCuisine, clearCuisine,
   setKeywords, clearKeywords
@@ -67,20 +71,19 @@ const Restaurants = ({
       clearCuisine();
     }
     if (keywordsQuery) {
-      setSearch(keywordsQuery)
-      setKeywords(keywordsQuery)
+      setSearch(keywordsQuery.replaceAll('-', ' ').replaceAll('and', '&'))
+      setKeywords(keywordsQuery.replaceAll('-', ' ').replaceAll('and', '&'))
     } else {
       clearKeywords();
     }
   }, []);
   
   useEffect(() => {
-    if (!sellersLoading, !categoriesLoading) {
+    if (!sellersLoading, !categoriesLoading, !allSellersLoading) {
       $('.loader').fadeOut();
       $('.middle-content').fadeIn();
-
       const autoCompleteData = {}
-      sellers.results.forEach(seller => {
+      allSellers.forEach(seller => {
         autoCompleteData[`${seller.name}`] = null
       })
       $('input.autocomplete').autocomplete({
@@ -95,9 +98,10 @@ const Restaurants = ({
       $('.loader').show();
       $('.middle-content').hide();
     }
-  }, [sellersLoading, categoriesLoading]);
+  }, [sellersLoading, categoriesLoading, allSellersLoading]);
   
   useEffect(() => {
+    getAllSellers()
     getSellers({
       getMore: false,
     })
@@ -128,7 +132,10 @@ const Restaurants = ({
             <div className="flex-row">
               {!categoriesLoading ? (
                 categories.map(category => (
-                  <div key={category.id} className={`flex-col center mb-2 waves-effect waves-grey rad-2 ${activeCuisine(category.name) && 'green'}`} onClick={() => setCuisine({ cuisine: category.name, history })}>
+                  <div key={category.id} className={`flex-col center mb-2 waves-effect waves-grey rad-2 ${activeCuisine(category.name) && 'green'}`} onClick={() => {
+                      setCuisine({ cuisine: category.name })
+                      updateSellersQuery(history);
+                    }}>
                     <div to="/" className="list-img circle bg-cover grey" style={{ backgroundImage: `url(${category.thumbnail})` }}></div>
                     <div to="/" className={`grey-text mt-1`}>{category.name}</div>
                   </div>
@@ -161,6 +168,7 @@ const Restaurants = ({
 }
 
 Restaurants.propTypes = {
+  getAllSellers: PropTypes.func.isRequired,
   getSellers: PropTypes.func.isRequired,
   getCategories: PropTypes.func.isRequired,
   updateSellersQuery: PropTypes.func.isRequired,
@@ -174,4 +182,4 @@ const mapStateToProps = state => ({
   logistics: state.logistics,
 });
 
-export default connect(mapStateToProps, { getSellers, getCategories, updateSellersQuery, setCuisine, clearCuisine, setKeywords, clearKeywords })(Restaurants);
+export default connect(mapStateToProps, { getAllSellers, getSellers, getCategories, updateSellersQuery, setCuisine, clearCuisine, setKeywords, clearKeywords })(Restaurants);

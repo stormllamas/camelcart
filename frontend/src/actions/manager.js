@@ -69,22 +69,26 @@ export const renderRevenueGraph = data => (dispatch, getState) => {
       dockInsidePlotArea: true,
       itemclick: toogleDataSeries
     },
-    data: [{
-      type: "line",
-      showInLegend: true,
-      name: "Food",
-      markerType: "square",
-      xValueFormatString: "DD MMM, YYYY",
-      color: "#F08080",
-      dataPoints: data.foodOrders
-    },
-    {
-      type: "line",
-      showInLegend: true,
-      name: "Delivery",
-      lineDashType: "dash",
-      dataPoints: data.deliveryOrders
-    }]
+    data: [
+      {
+        type: "line",
+        showInLegend: true,
+        name: "Food",
+        markerType: "square",
+        xValueFormatString: "DD MMM, YYYY",
+        color: "#FFC442",
+        dataPoints: data.foodOrders
+      },
+      {
+        type: "line",
+        showInLegend: true,
+        name: "Delivery",
+        lineDashType: "dash",
+        xValueFormatString: "DD MMM, YYYY",
+        color: "#3DD598",
+        dataPoints: data.deliveryOrders
+      }
+    ]
   });
   chart.render();
   

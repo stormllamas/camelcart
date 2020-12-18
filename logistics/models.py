@@ -61,7 +61,7 @@ class Category(models.Model):
 class Seller(models.Model):
   user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='seller', on_delete=models.CASCADE, blank=True, null=True)
   name = models.CharField(max_length=50, unique=True)
-  contact = models.CharField(max_length=50)
+  # contact = models.CharField(max_length=50)
   description = models.TextField(max_length=4000, default='')
   latitude = models.CharField(max_length=25, blank=True, null=True)
   longitude = models.CharField(max_length=25, blank=True, null=True)

@@ -24,6 +24,7 @@ import {
   FILTER_CUISINE, CLEAR_CUISINE,
   FILTER_COURSE,
   
+  ALL_SELLERS_LOADING, GET_ALL_SELLERS, ALL_SELLERS_ERROR,
   SELLERS_LOADING, MORE_SELLERS_LOADING,
   GET_SELLERS, GET_MORE_SELLERS, SET_SELLERS_PAGE,
   SELLERS_ERROR,
@@ -72,6 +73,9 @@ const initialState = {
   keywordsFilter: '',
   cuisineFilter: '',
   courseFilter: '',
+
+  allSellers: [],
+  allSellersLoading: true,
 
   sellersLoading: true,
   moreSellersLoading: false,
@@ -274,10 +278,29 @@ export default (state = initialState, action) => {
         moreSellersLoading: true,
       }
 
+      
+    case ALL_SELLERS_LOADING:
+      return {
+        ...state,
+        allSellersLoading: true,
+      }
+    case GET_ALL_SELLERS:
+      return {
+        ...state,
+        allSellers: action.payload,
+        allSellersLoading: false,
+      }
+    case ALL_SELLERS_ERROR:
+      return {
+        ...state,
+        allSellersLoading: false,
+      }
+
     case GET_SELLERS:
       return {
         ...state,
         sellersLoading: false,
+        sellersCurrentPage: 1,
         sellers: action.payload
       }
 

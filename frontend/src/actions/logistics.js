@@ -33,6 +33,7 @@ import {
   FILTER_CUISINE, CLEAR_CUISINE,
   FILTER_COURSE,
 
+  ALL_SELLERS_LOADING, GET_ALL_SELLERS, ALL_SELLERS_ERROR,
   SELLERS_LOADING, MORE_SELLERS_LOADING,
   GET_SELLERS, GET_MORE_SELLERS, SET_SELLERS_PAGE,
   SELLERS_ERROR,
@@ -67,8 +68,6 @@ import {
 } from './types'
 
 import { tokenConfig } from './auth';
-import { bindActionCreators } from 'redux';
-
 
 export const getCategories = ({ categoryQueries }) => async (dispatch, getState) => {
   dispatch({ type: CATEGORIES_LOADING });
@@ -110,6 +109,19 @@ const setSellerQueries = (getState) => {
   if (keywordsFilter) keywordsQuery = `&keywords=${keywordsFilter}`
 
   return {cuisineQuery, keywordsQuery}
+}
+export const getAllSellers = () => async (dispatch, getState) => {
+  try {
+    await dispatch({ type: ALL_SELLERS_LOADING });
+    const res = await axios.get('/api/all_sellers/')
+    dispatch({
+      type: GET_ALL_SELLERS,
+      payload: res.data,
+    })
+  } catch (err) {
+    dispatch({ type: ALL_SELLERS_ERROR });
+    dispatch({ type: AUTH_ERROR});
+  }
 }
 export const getSellers = ({ getMore, keywordsQuery }) => async (dispatch, getState) => {
   try {
@@ -156,14 +168,11 @@ export const getSeller = ({ sellerQuery }) => async (dispatch, getState) => {
   }
 }
 
-export const setCuisine = ({ cuisine, history }) => async (dispatch, getState) => {
+export const setCuisine = ({ cuisine }) => async (dispatch, getState) => {
   dispatch({
     type: FILTER_CUISINE,
     payload: cuisine,
   })
-  // Updates URL query strings
-  const { cuisineFilter } = getState().logistics;
-  history.push({ search: cuisineFilter !== null ? `?cuisine=${cuisineFilter.replaceAll(' ', '-').replaceAll('&', 'and')}`: ''})
 }
 export const clearCuisine = () => {return { type: CLEAR_CUISINE }}
 export const setKeywords = text => async dispatch => {

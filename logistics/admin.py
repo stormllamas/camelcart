@@ -36,11 +36,11 @@ admin.site.register(Order, OrderAdmin)
 
 class SellerAdmin(admin.ModelAdmin):
   fieldsets = [
-    (None, {'fields': ['user', 'name', 'contact', 'categories', 'commission']}),
+    (None, {'fields': ['user', 'name', 'categories', 'commission']}),
     ('Location', {'fields': ['latitude', 'longitude', 'address']}),
     ('Display', {'fields': ['thumbnail']}),
   ]
-  list_display = ('name', 'contact')
+  list_display = ('name',)
   list_display_links = ('name',)
   list_per_page = 50
   search_fields = ('name',)

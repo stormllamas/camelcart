@@ -28,11 +28,18 @@ class OrderItemSerializer(serializers.ModelSerializer):
     model = OrderItem
     fields = ['id', 'order', 'product_variant', 'quantity', 'is_ordered', 'date_ordered', 'ordered_price']
 
+class AllSellerSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Seller
+    fields = [
+      'name'
+    ]
+
 class SellerSerializer(serializers.ModelSerializer):
   class Meta:
     model = Seller
     fields = [
-      'id', 'name', 'contact', 'description',
+      'id', 'name', 'description',
       'latitude', 'longitude',
       'thumbnail', 'categories',
       'name_to_url', 'total_rating', 'total_rating_unrounded', 'review_count'

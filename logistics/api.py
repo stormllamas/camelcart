@@ -18,7 +18,7 @@ except:
   site_config = None
 
 # Serializers
-from .serializers import OrderSerializer, OrderItemSerializer, SellerSerializer, CategoryGroupSerializer, CategorySerializer, ProductSerializer, ProductReviewSerializer, OrderReviewSerializer
+from .serializers import OrderSerializer, OrderItemSerializer, AllSellerSerializer, SellerSerializer, CategoryGroupSerializer, CategorySerializer, ProductSerializer, ProductReviewSerializer, OrderReviewSerializer
 
 # For Email
 from django.core.mail import send_mail
@@ -65,6 +65,13 @@ class CategoryAPI(ListAPIView):
 
     return categories
 
+class AllSellersAPI(ListAPIView):
+  serializer_class = AllSellerSerializer
+  permission_classes = [SiteEnabled]
+
+  def get_queryset(self):
+    return Seller.objects.all().order_by('id')
+    
 class SellersAPI(ListAPIView):
   serializer_class = SellerSerializer
   pagination_class = OctPagination
@@ -115,7 +122,7 @@ class SellerAPI(GenericAPIView):
     return Response({
       'id': seller.id,
       'name': seller.name,
-      'contact': seller.contact,
+      # 'contact': seller.contact,
       'description': seller.description,
       'latitude': seller.latitude,
       'longitude': seller.longitude,

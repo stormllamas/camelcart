@@ -44,7 +44,6 @@ class DashboardAPI(GenericAPIView):
     top_brands = [{
       'id': seller.id,
       'name': seller.name,
-      'contact': seller.contact,
       'thumbnail': seller.thumbnail.url,
       'sales': sum(order.total for order in seller.orders.filter(is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))),
     } for seller in sorted(Seller.objects.all(), key=lambda a: a.orders.count(), reverse=True)[:5]]

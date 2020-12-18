@@ -63,7 +63,6 @@ const RestaurantDetail = ({
           })
         }
       }
-      $('.tabs').tabs();
     }
   }, [sellerLoading, courseFilter, seller]);
 
