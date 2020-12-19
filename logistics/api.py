@@ -122,7 +122,6 @@ class SellerAPI(GenericAPIView):
     return Response({
       'id': seller.id,
       'name': seller.name,
-      # 'contact': seller.contact,
       'description': seller.description,
       'latitude': seller.latitude,
       'longitude': seller.longitude,

@@ -663,7 +663,7 @@ export const proceedWithCOD = ({ history, type, query }) => async (dispatch, get
 export const getOrderItem = ({ orderItemID }) => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDER_ITEM_LOADING });
-    const res = await axios.get(`/api/order_item/${orderItemID}`, tokenConfig(getState))
+    const res = await axios.get(`/api/order_item/${orderItemID}/`, tokenConfig(getState))
     dispatch({
       type: GET_ORDER_ITEM,
       payload: res.data,
