@@ -246,8 +246,8 @@ const FoodPayment = ({
                             <div className="col s12">
                               <div id="paypal-button-container" className="center"></div>
                             </div>
-                          </div> */}
-                          {/* <div className="row valign-wrapper">
+                          </div>
+                          <div className="row valign-wrapper">
                             <div className="or-divider">
                               <hr/>
                               <p>OR</p>
