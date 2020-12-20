@@ -83,9 +83,9 @@ const ItemDetail = ({
       <div className="container">
         <div className="row m-0 mb-3">
           <div className="col s12 mt-3">
-            <Link to={!productLoading && product !== null ? `/food/restaurant?b=${product.seller.name.replaceAll(' ', '-')}`: '/food'} className="grey-text text-darken-1">
+            {/* <Link to={!productLoading && product !== null ? `/food/restaurant?b=${product.seller.name.replaceAll(' ', '-')}`: '/food'} className="grey-text text-darken-1">
               <span className="m-0 fs-18"><i className="fas fa-arrow-left fs-17 mr-1"></i>Go Back</span>
-            </Link>
+            </Link> */}
           </div>
         </div>
         {!currentOrderLoading && currentOrder !== null ? (
