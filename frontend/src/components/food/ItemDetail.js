@@ -87,7 +87,7 @@ const ItemDetail = ({
             </Link>
           </div>
         </div>
-        {!currentOrderLoading && currentOrder !== null && (
+        {!currentOrderLoading && currentOrder !== null ? (
           currentOrder.order_items.length > 0 && (
             <div className="fixed-action-btn">
               <a className="btn-floating btn-large green modal-trigger waves-effect" data-target="cartmodal">
@@ -95,7 +95,7 @@ const ItemDetail = ({
               </a>
             </div>
           )
-        )}
+        ) : undefined}
         {!productLoading && (
           product !== null ? (
             <Fragment>
