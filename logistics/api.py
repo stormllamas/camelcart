@@ -251,6 +251,7 @@ class ProductAPI(GenericAPIView):
         'latitude': product.seller.latitude,
         'longitude': product.seller.longitude,
         'address': product.seller.address,
+        'name_to_url': product.seller.name_to_url,
       },
       'categories': categories,
       'thumbnail': product.thumbnail.url,
