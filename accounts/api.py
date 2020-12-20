@@ -80,7 +80,7 @@ def get_user_data(user) :
     'rider_info': {
       'plate_number': user.plate_number,
       'review_total': user.rider_rating,
-      'accounts_payable': sum([((order.ordered_commission if order.ordered_commission else 0))+order.ordered_shipping_commission for order in Order.objects.filter(rider=user, is_canceled=False, is_delivered=True)]) - sum([float(payment.amount) for payment in CommissionPayment.objects.filter(rider=user)]),
+      'accounts_payable': float(sum([((order.ordered_commission if order.ordered_commission else 0))+order.ordered_shipping_commission for order in Order.objects.filter(rider=user, is_canceled=False, is_delivered=True)])) - float(sum([payment.amount for payment in CommissionPayment.objects.filter(rider=user)])),
       'commission_payments': [{
         'id': payment.id,
         'ref_code': payment.ref_code,
