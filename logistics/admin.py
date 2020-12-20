@@ -59,7 +59,7 @@ class ProductAdmin(admin.ModelAdmin):
   list_filter = ('seller',)
   list_display_links = ('name',)
   list_per_page = 50
-  search_fields = ('name', 'seller')
+  search_fields = ('name',)
 
 admin.site.register(Product, ProductAdmin)
 
