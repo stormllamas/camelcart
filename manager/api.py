@@ -69,7 +69,7 @@ class DashboardAPI(GenericAPIView):
       'name': f'{rider.first_name} {rider.last_name}',
       'review_total': rider.rider_rating,
       'picture': rider.picture.url if rider.picture else None,
-      'accounts_payable': sum([((order.ordered_commission if order.ordered_commission else 0))+order.ordered_shipping_commission for order in Order.objects.filter(rider=rider, is_canceled=False, is_delivered=True)]) - sum([int(payment.amount) for payment in CommissionPayment.objects.filter(rider=rider)]),
+      'accounts_payable': sum([((order.ordered_commission if order.ordered_commission else 0))+order.ordered_shipping_commission for order in Order.objects.filter(rider=rider, is_canceled=False, is_delivered=True)]) - sum([float(payment.amount) for payment in CommissionPayment.objects.filter(rider=rider)]),
     } for rider in sorted(User.objects.filter(groups__name__in=['rider']), key=lambda a: sum([((order.ordered_commission if order.ordered_commission else 0))+order.ordered_shipping_commission for order in Order.objects.filter(rider=a, is_canceled=False, is_delivered=True)]) - sum([int(payment.amount) for payment in CommissionPayment.objects.filter(rider=a)]), reverse=True)]
     
     return Response({
