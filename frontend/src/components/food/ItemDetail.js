@@ -55,6 +55,7 @@ const ItemDetail = ({
 
   useEffect(() => {
     if (!productLoading) {
+      console.log(product)
       const productQuery = querySearch.get('item')
       $('.loader').fadeOut();
       $('.middle-content').fadeIn();
