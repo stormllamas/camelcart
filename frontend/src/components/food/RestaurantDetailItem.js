@@ -28,7 +28,7 @@ const RestaurantDetailItem = ({ productsLoading, product, products, index, getPr
             <Link to={`/food/restaurant/product?item=${product.name_to_url}&b=${product.seller.name_to_url}`} style={{ backgroundImage: `url(${product.thumbnail})`}} className="bg-cover blocks-image grey lighten-3"></Link>
           </div>
           <div className="card-content grey lighten-3 p-5">
-            <p className="no-white-space">
+            <p className="no-white-space truncate">
               {product.cheapest_variant.sale_price_active ? (
                 <span className="badge orange-text"> <span className="sale grey-text">₱ { product.cheapest_variant.price }</span><span className="grey-text">-{ product.cheapest_variant.percent_off }%</span> {product.cheapest_variant.final_price ? `₱ ${product.cheapest_variant.final_price}` : ''}</span>
               ) : (

@@ -40,7 +40,7 @@ const RestaurantItem = ({ sellersLoading, seller, sellers, index, getSellers }) 
             <i className="m-0 grey lighten-2 rad-1 p-1">Unrated</i>
           )}
           <div className="col s12 p-0">
-            <p className="m-0 truncate">123 Magdiwang St. Delway, Lucena</p>
+            <p className="m-0 truncate">{seller.address}</p>
           </div>
         </div>
       </li>

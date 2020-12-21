@@ -40,7 +40,7 @@ class SellerSerializer(serializers.ModelSerializer):
     model = Seller
     fields = [
       'id', 'name', 'description',
-      'latitude', 'longitude',
+      'latitude', 'longitude', 'address',
       'thumbnail', 'categories',
       'name_to_url', 'total_rating', 'total_rating_unrounded', 'review_count'
     ]
