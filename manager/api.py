@@ -700,6 +700,11 @@ class DeliverOrderAPI(UpdateAPIView):
       order.date_paid = timezone.now()
       order.save()
 
+      # print('payment_type', order.payment_type)
+      # print('payment_type == 2', order.payment_type == 2)
+      # if order.payment_type == 2:
+      #   CommissionPayment.objects.create(ref_code=order.capture_id, description="Paypal payment", amount=-float(order.shipping - order.shipping*float(site_config.rider_commission)))
+
       return Response(AdminOrderSerializer(order, context=self.get_serializer_context()).data)
 
 class IsPublishedAPI(UpdateAPIView):

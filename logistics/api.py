@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from trike.permissions import SiteEnabled, UserNotRider
 
 # Models
-from .models import Order, OrderItem, Seller, CategoryGroup, Category, Product, ProductReview, OrderReview
+from .models import Order, OrderItem, Seller, CategoryGroup, Category, Product, ProductReview, OrderReview, CommissionPayment
 
 from django.contrib.auth import get_user_model
 User = get_user_model()

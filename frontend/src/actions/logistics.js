@@ -637,7 +637,7 @@ export const proceedWithCOD = ({ history, type, query }) => async (dispatch, get
         displayLength: 5000,
         classes: 'green'
       });
-      history.push('/food')
+      history.push('/bookings')
     } else {
       dispatch({ type: COMPLETE_ORDER_FAILED });
       M.toast({
@@ -645,7 +645,11 @@ export const proceedWithCOD = ({ history, type, query }) => async (dispatch, get
         displayLength: 5000,
         classes: 'red'
       });
-      history.push(`/food/restaurant?b=${res.data.seller_name_to_url}&course=Meals`)
+      if (type === 'food') {
+        history.push(`/food/restaurant?b=${res.data.seller_name_to_url}&course=Meals`)
+      } else {
+        history.push('/bookings')
+      }
     }
     $('.loader').fadeOut();
     axios.post('/api/new_order_update/', { 'ref_code': res.data.ref_code }, tokenConfig(getState))
