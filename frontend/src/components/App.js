@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
+import { Notifications } from 'react-push-notification';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from '../store';
@@ -77,6 +78,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
+        <Notifications/>
         <ScrollToTop/>
         <Switch>
           <AccountsRoute exact path="/login" component={Login} />
