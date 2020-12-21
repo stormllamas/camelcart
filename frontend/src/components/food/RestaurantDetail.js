@@ -187,9 +187,16 @@ const RestaurantDetail = ({
                 <div className="col s12 active-tab">
                   <div className="row pt-2">
                   {!productsLoading && (
-                    products.results.map((product, index) => (
-                      <RestaurantDetailItem key={product.id} product={product} products={products} index={index} productsLoading={productsLoading} />
-                    ))
+                    products.results.length > 0 ? (
+                      products.results.map((product, index) => (
+                        <RestaurantDetailItem key={product.id} product={product} products={products} index={index} productsLoading={productsLoading} />
+                      ))
+                    ) : (
+                      <div className="col s12 flex-col center mt-5">
+                        <img src="/static/frontend/img/Trike_no_products.svg" alt="No Products" style={{ height:"150px" }}/>
+                        <h4 className="uppercase fw-6 orange-text fs-22">No Products Found</h4>
+                      </div>
+                    )
                   )}
                   {moreProductsLoading || productsLoading ? (
                     <div className="flex-col center middle relative preloader-wrapper">

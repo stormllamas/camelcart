@@ -103,19 +103,28 @@ const Bookings = ({
               <span className="lever"></span>
             </label>
           </div>
-          <ul>
             {!ordersLoading ? (
               orders !== null && (
-                orders.results.map((order, index) => (
-                  <BookingItem key={order.id} order={order} orders={orders} index={index} ordersLoading={ordersLoading} setOrder={setOrder} setOrderToDelete={setOrderToDelete}/>
-                ))
+                orders.results.length > 0 ? (
+                  <ul>
+                    {orders.results.map((order, index) => (
+                      <BookingItem key={order.id} order={order} orders={orders} index={index} ordersLoading={ordersLoading} setOrder={setOrder} setOrderToDelete={setOrderToDelete}/>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="row">
+                    <div className="col s12 flex-col center mt-5">
+                      <img src="/static/frontend/img/Trike_no_bookings.svg" alt="No Bookings" style={{ height:"200px" }}/>
+                      <h4 className="uppercase fw-6 grey-text">No Bookings</h4>
+                    </div>
+                  </div>
+                )
               )
             ) : (
               <div className="flex-col center relative preloader-wrapper">
                 <Preloader color="green" size="small" adds=""/>
               </div>
             )}
-          </ul>
         </div>
         <div id="ordermodal" className="modal modal-fixed-footer supermodal">
           {order === '' ? (

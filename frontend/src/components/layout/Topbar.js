@@ -110,7 +110,7 @@ const Topbar = ({
         </li>
         {!userLoading && isAuthenticated ? (
           <Fragment>
-            {!user.groups.includes('partner') && (
+            {!user.groups.includes('rider') && (
               <li className={history.location.pathname.includes('bookings') ? "active" : ''}>
                 <Link to="/bookings" className="sidenav-close waves-effect" ><i className="material-icons">assignment</i>My Bookings</Link>
               </li>
