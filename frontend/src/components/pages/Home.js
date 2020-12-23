@@ -93,7 +93,7 @@ const Home = ({
                   <img src="static/frontend/img/Trike_hail_logo.png" className="scale-pop" alt=""/>
                 </div>
                 <h5 className="fw-6 fs-22">Ride</h5>
-                <p className="hide-on-med-and-down">Get a ride from one our our riders</p>
+                <p className="hide-on-med-and-down">Get a ride from one of our riders</p>
               </div>
             </div>
           </div>
