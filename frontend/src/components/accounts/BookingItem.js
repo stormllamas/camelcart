@@ -101,9 +101,17 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
               </div>
               <div className="col s12 mb-1">
                 <small>Description</small>
-                <p className="grey lighten-4 p-1 rad-2 summary">{order.description}</p>
+                <p className="grey lighten-4 p-1 rad-2 summary linebreak">{order.description}</p>
               </div>
             </div>
+          )}
+          {order.order_type === 'food' && (
+            <li className="collection-item">
+              <div className="col s12 mb-1">
+                <small>Description</small>
+                <p className="grey lighten-4 p-1 rad-2 summary linebreak m-0">{order.description}</p>
+              </div>
+            </li>
           )}
           <li className="collection-item">
               <Fragment>
