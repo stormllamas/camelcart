@@ -233,6 +233,10 @@ const FoodPayment = ({
                               <small>Gender</small>
                               <p className="grey lighten-4 p-1 rad-2">{currentOrder.gender}</p>
                             </div>
+                            <div className="col s12 mb-1">
+                              <small>Description</small>
+                              <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.description}</p>
+                            </div>
                           </div>
                         </div>
                       </li>

@@ -108,6 +108,7 @@ const FoodCart = ({
 
   const proceedToPayments = async e => {
     e.preventDefault();
+    console.log(description)
     $('.loader').fadeIn();
     if(currentOrder.count < 1 || address === '' || !delivery || !lastName || !firstName || !contact || !email || !gender ? false : true) {
       const formData = {
@@ -116,6 +117,7 @@ const FoodCart = ({
         pickupLat, pickupLng, pickupAddress,
         deliveryLat, deliveryLng, deliveryAddress,
         distanceText, distanceValue, durationText, durationValue,
+        description
       }
       await foodCheckout({
         formData,
@@ -158,6 +160,8 @@ const FoodCart = ({
       } else {
         $('.loader').show();
       }
+
+      setDescription(currentOrder.description ? currentOrder.description : "")
     } else {
       $('.loader').show();
     }

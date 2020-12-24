@@ -793,6 +793,8 @@ class CheckoutAPI(UpdateAPIView):
     order.gender = serializer.validated_data.get('gender')
     order.email = serializer.validated_data.get('email')
 
+    order.description = serializer.validated_data.get('description')
+
     order.loc1_latitude = serializer.validated_data.get('loc1_latitude')
     order.loc1_longitude = serializer.validated_data.get('loc1_longitude')
     order.loc1_address = serializer.validated_data.get('loc1_address')

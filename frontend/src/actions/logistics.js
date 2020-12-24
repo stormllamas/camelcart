@@ -420,6 +420,8 @@ export const foodCheckout = ({ formData, orderSeller, history }) => async (dispa
       contact: formData.contact,
       email: formData.email,
       gender: formData.gender,
+
+      description: formData.description,
   
       loc1_latitude: parseFloat(formData.pickupLat),
       loc1_longitude: parseFloat(formData.pickupLng),
