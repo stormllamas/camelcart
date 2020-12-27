@@ -57,9 +57,19 @@ const Delivery = ({
       if (status === "OK") {
         if (results[0]) {
           if (mode === 'pickup') {
-            setPickupAddress(results[0].formatted_address)
+            for (let i=0; i < results.length; i++) {
+              if (!results[i].formatted_address.includes('Unnamed Road')) {
+                setPickupAddress(results[i].formatted_address)
+                break
+              }
+            }
           } else if (mode === 'delivery') {
-            setDeliveryAddress(results[0].formatted_address)
+            for (let i=0; i < results.length; i++) {
+              if (!results[i].formatted_address.includes('Unnamed Road')) {
+                setDeliveryAddress(results[i].formatted_address)
+                break
+              }
+            }
           }
         } else {
           window.alert("No results found");
@@ -178,14 +188,7 @@ const Delivery = ({
           return;
         }
         
-        addMarker(event, mode)
-        // const icon = {
-        //   url: place.icon,
-        //   size: new google.maps.Size(71, 71),
-        //   origin: new google.maps.Point(0, 0),
-        //   anchor: new google.maps.Point(17, 34),
-        //   scaledSize: new google.maps.Size(25, 25)
-        // };
+        addMarker(event, mode, place.formatted_address)
   
         if (place.geometry.viewport) {
           // Only geocodes have viewport.
@@ -211,7 +214,7 @@ const Delivery = ({
   let pickupMarkerDown;
   let deliveryMarkerDown;
 
-  const addMarker = (e, mode) => {
+  const addMarker = (e, mode, customAddress) => {
     if (mode === 'pickup') {
       // Deletes previous marker from both confirmed and current sessions
       pickupMarker !== '' && pickupMarker.setMap(null)
@@ -241,8 +244,12 @@ const Delivery = ({
         setPickupLng(newPickupMarker.getPosition().lng())
       });
 
-      const locationLatLng = new google.maps.LatLng(newPickupMarker.getPosition().lat(), newPickupMarker.getPosition().lng())
-      locationGeocode(locationLatLng, mode);
+      if (!customAddress) {
+        const locationLatLng = new google.maps.LatLng(newPickupMarker.getPosition().lat(), newPickupMarker.getPosition().lng())
+        locationGeocode(locationLatLng);
+      } else {
+        setPickupAddress(customAddress)
+      }
 
     } else if (mode === 'delivery') {
       // Deletes previous marker from both confirmed and current sessions
@@ -273,8 +280,12 @@ const Delivery = ({
         setDeliveryLng(newDeliveryMarker.getPosition().lng())
       });
 
-      const locationLatLng = new google.maps.LatLng(newDeliveryMarker.getPosition().lat(), newDeliveryMarker.getPosition().lng())
-      locationGeocode(locationLatLng, mode);
+      if (!customAddress) {
+        const locationLatLng = new google.maps.LatLng(newDeliveryMarker.getPosition().lat(), newDeliveryMarker.getPosition().lng())
+        locationGeocode(locationLatLng);
+      } else {
+        setDeliveryAddress(customAddress)
+      }
     }
   }
 

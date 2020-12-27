@@ -126,7 +126,7 @@ const Profile = ({
           return;
         }
         
-        addMarker(event)
+        addMarker(event, place.formatted_address)
   
         if (place.geometry.viewport) {
           // Only geocodes have viewport.
@@ -155,7 +155,7 @@ const Profile = ({
   
   let addressMarkerDown;
 
-  const addMarker = (e) => {
+  const addMarker = (e, customAddress) => {
     // Deletes previous marker from both confirmed and current sessions
     marker !== '' && marker.setMap(null)
     addressMarkerDown && addressMarkerDown.setMap(null)
@@ -186,8 +186,12 @@ const Profile = ({
       setLongitude(newMarker.getPosition().lng())
     });
 
-    const locationLatLng = new google.maps.LatLng(newMarker.getPosition().lat(), newMarker.getPosition().lng())
-    locationGeocode(locationLatLng);
+    if (!customAddress) {
+      const locationLatLng = new google.maps.LatLng(newMarker.getPosition().lat(), newMarker.getPosition().lng())
+      locationGeocode(locationLatLng);
+    } else {
+      setAddress(customAddress)
+    }
   }
 
   const addNewAddress = () => {
