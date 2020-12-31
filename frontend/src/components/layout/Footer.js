@@ -71,7 +71,7 @@ const Footer = ({
               <h5 className="grey-text text-lighten-3">Connect with Us</h5>
               <ul>
                 <li>
-                  <Link to="" className="white-text">Facebook</Link>
+                  <Link to="https://www.facebook.com/trike.com.ph" className="white-text">Facebook</Link>
                 </li>
                 <li>
                   <Link to="" className="white-text">Instagram</Link>
