@@ -110,7 +110,7 @@ const Delivery = ({
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       center: centerLatLng,
     }
-
+    
     // Create and set map
     const map = new google.maps.Map(document.getElementById('googlemap'), mapOptions)
     setCurrentMap(map);
