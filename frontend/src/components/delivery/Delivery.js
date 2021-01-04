@@ -235,9 +235,6 @@ const Delivery = ({
       pickupMarkerDown = newPickupMarker
       newPickupMarker.setMap(currentMap)
 
-      console.log(newPickupMarker.getPosition().lat())
-      console.log(newPickupMarker.getPosition().lng())
-
       setPickupLat(newPickupMarker.getPosition().lat())
       setPickupLng(newPickupMarker.getPosition().lng())
       
@@ -249,7 +246,6 @@ const Delivery = ({
       });
 
       if (!customAddress) {
-        console.log('no custom address')
         const locationLatLng = new google.maps.LatLng(newPickupMarker.getPosition().lat(), newPickupMarker.getPosition().lng())
         locationGeocode(locationLatLng, mode);
       } else {
