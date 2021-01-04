@@ -215,6 +215,7 @@ const Delivery = ({
   let deliveryMarkerDown;
 
   const addMarker = (e, mode, customAddress) => {
+    console.log(customAddress)
     if (mode === 'pickup') {
       // Deletes previous marker from both confirmed and current sessions
       pickupMarker !== '' && pickupMarker.setMap(null)
@@ -234,6 +235,9 @@ const Delivery = ({
       pickupMarkerDown = newPickupMarker
       newPickupMarker.setMap(currentMap)
 
+      console.log(newPickupMarker.getPosition().lat())
+      console.log(newPickupMarker.getPosition().lng())
+
       setPickupLat(newPickupMarker.getPosition().lat())
       setPickupLng(newPickupMarker.getPosition().lng())
       
@@ -245,8 +249,9 @@ const Delivery = ({
       });
 
       if (!customAddress) {
+        console.log('no custom address')
         const locationLatLng = new google.maps.LatLng(newPickupMarker.getPosition().lat(), newPickupMarker.getPosition().lng())
-        locationGeocode(locationLatLng);
+        locationGeocode(locationLatLng, mode);
       } else {
         setPickupAddress(customAddress)
       }
@@ -282,7 +287,7 @@ const Delivery = ({
 
       if (!customAddress) {
         const locationLatLng = new google.maps.LatLng(newDeliveryMarker.getPosition().lat(), newDeliveryMarker.getPosition().lng())
-        locationGeocode(locationLatLng);
+        locationGeocode(locationLatLng, mode);
       } else {
         setDeliveryAddress(customAddress)
       }
@@ -445,7 +450,6 @@ const Delivery = ({
     
           const locationLatLng = new google.maps.LatLng(newDeliveryMarker.getPosition().lat(), newDeliveryMarker.getPosition().lng())
           locationGeocode(locationLatLng, 'delivery');
-
         }
 
         setDeliveryLat(currentOrder.loc2_latitude ? currentOrder.loc2_latitude : "")
