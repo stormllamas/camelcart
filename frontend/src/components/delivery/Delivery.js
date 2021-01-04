@@ -215,7 +215,6 @@ const Delivery = ({
   let deliveryMarkerDown;
 
   const addMarker = (e, mode, customAddress) => {
-    console.log(customAddress)
     if (mode === 'pickup') {
       // Deletes previous marker from both confirmed and current sessions
       pickupMarker !== '' && pickupMarker.setMap(null)
