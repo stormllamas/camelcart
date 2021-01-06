@@ -40,7 +40,8 @@ class SellerAdmin(admin.ModelAdmin):
     ('Location', {'fields': ['latitude', 'longitude', 'address']}),
     ('Display', {'fields': ['thumbnail']}),
   ]
-  list_display = ('name',)
+  list_display = ('name', 'latitude', 'longitude', 'address', 'commission')
+  list_editable = ('latitude', 'longitude', 'address', 'commission')
   list_display_links = ('name',)
   list_per_page = 50
   search_fields = ('name',)
