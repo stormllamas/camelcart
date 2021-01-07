@@ -256,7 +256,7 @@ const FoodCart = ({
                               <option value="" disabled>Select an address</option>
                               {user && (
                                 user.addresses.map(address => (
-                                  <option key={address.id} value={address.id}>{address.name ? address.name+':' : 'Unnamed Address:'} {address.address}</option>
+                                  <option key={address.id} value={address.id}>{address.name ? address.name : `Unnamed Address: ${address.address}`}</option>
                                 ))
                               )}
                             </select>

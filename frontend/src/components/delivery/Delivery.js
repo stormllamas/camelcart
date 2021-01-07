@@ -340,6 +340,11 @@ const Delivery = ({
     if (pickupAddress && deliveryAddress) {
       const origin = new google.maps.LatLng(pickupLat, pickupLng);
       const destination =  new google.maps.LatLng(deliveryLat, deliveryLng);
+
+      console.log(origin.lat())
+      console.log(origin.lng())
+      console.log(destination.lat())
+      console.log(destination.lng())
     
       try {
         const distanceService = new google.maps.DistanceMatrixService();
@@ -350,6 +355,7 @@ const Delivery = ({
         }, async (response, status) => {
           if (status === 'OK' && response.rows[0].elements[0].distance) {
             let distanceValue = response.rows[0].elements[0].distance.value
+            console.log(parseInt(distanceValue)/1000)
             let perKmTotal = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price)
             let total = siteInfo.shipping_base+perKmTotal
             if (twoWay) total = total*siteInfo.two_way_multiplier

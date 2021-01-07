@@ -26,7 +26,6 @@ const Profile = ({
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [address, setAddress] = useState('');
-
   const [addressName, setAddressName] = useState('');
 
   const [firstName, setFirstName] = useState(user ? (user.first_name ? user.first_name : '') : '');
@@ -375,7 +374,6 @@ const Profile = ({
                     <ul className="collection">
                       {user.addresses.map(address => (
                         <li key={address.id} className="collection-item pr-5 relative">
-                          {/* <div>Address 1</div> */}
                           <p className="m-0 grey-text text-darken-1 fw-6">{address.name ? address.name : 'Unnamed Address'}</p>
                           <div>{address.address}</div>
                           <Link to="" className="secondary-content top-right" onClick={e => {e.preventDefault(), deleteAddress(address.id)}}>
