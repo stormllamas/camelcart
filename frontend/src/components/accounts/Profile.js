@@ -27,6 +27,8 @@ const Profile = ({
   const [longitude, setLongitude] = useState('');
   const [address, setAddress] = useState('');
 
+  const [addressName, setAddressName] = useState('');
+
   const [firstName, setFirstName] = useState(user ? (user.first_name ? user.first_name : '') : '');
   const [lastName, setLastName] = useState(user ? (user.last_name ? user.last_name : '') : '');
   const [contact, setContact] = useState(user ? (user.contact ? user.contact : '') : '');
@@ -52,10 +54,10 @@ const Profile = ({
 
     // Map options
     const LUCENA_BOUNDS = {
-      north: 14.056553,
-      south: 13.880757,
-      west: 121.511323,
-      east: 121.709314,
+      north: 14.064176315019349,
+      south: 13.87847842331748,
+      west: 121.39448686001403,
+      east: 121.7682355093625,
     }
 
     // Map options
@@ -91,12 +93,12 @@ const Profile = ({
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
-        if (pos.lat <= LUCENA_BOUNDS.north && pos.lat >= LUCENA_BOUNDS.south && pos.lng >= LUCENA_BOUNDS.west && pos.lng >= LUCENA_BOUNDS.east) {
+        if (pos.lat <= LUCENA_BOUNDS.north && pos.lat >= LUCENA_BOUNDS.south && pos.lng >= LUCENA_BOUNDS.west && pos.lng <= LUCENA_BOUNDS.east) {
           infoWindow.setPosition(pos);
           infoWindow.setContent('You');
           infoWindow.open(map);
         }
-        // map.setCenter(centerLatLng);
+        map.setCenter(centerLatLng);
       }, function() {
       });
     }
@@ -196,13 +198,22 @@ const Profile = ({
   }
 
   const addNewAddress = () => {
-    const body = {
-      user: user.id,
-      latitude,
-      longitude,
-      address
+    if (addressName) {
+      const body = {
+        user: user.id,
+        latitude,
+        longitude,
+        address,
+        name: addressName
+      }
+      addAddress(body)
+    } else {
+      M.toast({
+        html: 'Label this Address',
+        displayLength: 5500,
+        classes: 'orange'
+      });
     }
-    addAddress(body)
   }
 
   const saveUserChanges = () => {
@@ -365,6 +376,7 @@ const Profile = ({
                       {user.addresses.map(address => (
                         <li key={address.id} className="collection-item pr-5 relative">
                           {/* <div>Address 1</div> */}
+                          <p className="m-0 grey-text text-darken-1 fw-6">{address.name ? address.name : 'Unnamed Address'}</p>
                           <div>{address.address}</div>
                           <Link to="" className="secondary-content top-right" onClick={e => {e.preventDefault(), deleteAddress(address.id)}}>
                             <i className="material-icons red-text">delete_forever</i>
@@ -430,9 +442,13 @@ const Profile = ({
             setLongitude('');
           }}
         />
+        <input type="text" placeholder="Give this place a name" className="addressmodal-name-input open"
+          value={addressName}
+          onChange={e => setAddressName(e.target.value)}
+        />
         <div className="modal-footer">
           <a className="modal-action modal-close cancel-fixed"><i className="material-icons grey-text">close</i></a>
-          <a className="modal-action modal-close waves-effect waves-blue btn center blue btn-large btn-extended" onClick={() => addNewAddress()} disabled={!latitude || !longitude || !address ? true : false}>Add New Address</a>
+          <a className={`${addressName && 'modal-action modal-close'} waves-effect waves-blue btn center blue btn-large btn-extended`} onClick={() => addNewAddress()} disabled={!latitude || !longitude || !address ? true : false}>Add New Address</a>
         </div>
       </div>
 

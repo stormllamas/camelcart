@@ -256,11 +256,11 @@ const FoodCart = ({
                               <option value="" disabled>Select an address</option>
                               {user && (
                                 user.addresses.map(address => (
-                                  <option key={address.id} value={address.id}>{address.address}</option>
+                                  <option key={address.id} value={address.id}>{address.name ? address.name+':' : 'Unnamed Address:'} {address.address}</option>
                                 ))
                               )}
                             </select>
-                            <Link to="/profile" className="title green-text">Add a new address to your account</Link>
+                            <Link to="/profile" className="title green-text modal-close">Add a new address to your account</Link>
                           </div>
                         </div>
                       </div>

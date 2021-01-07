@@ -17,7 +17,7 @@ const Delivery = ({
 }) => {
   const history = useHistory()
 
-  const [delivery, setDelivery] = useState("");
+  const [delivery, setDelivery] = useState('');
   
   const [currentMap, setCurrentMap] = useState('');
   const [pickupSearchBox, setPickupSearchBox] = useState(''); 
@@ -85,10 +85,10 @@ const Delivery = ({
 
     // Map options
     const LUCENA_BOUNDS = {
-      north: 14.056553,
-      south: 13.880757,
-      west: 121.511323,
-      east: 121.709314,
+      north: 14.064176315019349,
+      south: 13.87847842331748,
+      west: 121.39448686001403,
+      east: 121.7682355093625,
     }
 
     // Map options
@@ -105,7 +105,7 @@ const Delivery = ({
       fullscreenControlOptions: {
         position: google.maps.ControlPosition.RIGHT_BOTTOM
       },
-      streetViewControl: false,
+      // streetViewControl: false,
       scaleControl: true,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       center: centerLatLng,
@@ -124,7 +124,7 @@ const Delivery = ({
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
-        if (pos.lat <= LUCENA_BOUNDS.north && pos.lat >= LUCENA_BOUNDS.south && pos.lng >= LUCENA_BOUNDS.west && pos.lng >= LUCENA_BOUNDS.east) {
+        if (pos.lat <= LUCENA_BOUNDS.north && pos.lat >= LUCENA_BOUNDS.south && pos.lng >= LUCENA_BOUNDS.west && pos.lng <= LUCENA_BOUNDS.east) {
           infoWindow.setPosition(pos);
           infoWindow.setContent('You');
           infoWindow.open(map);
@@ -176,13 +176,12 @@ const Delivery = ({
       if (places) if (places.length == 0) {
         return;
       }
-      
+
       // For each place, get the icon, name and location.
       const bounds = new google.maps.LatLngBounds();
       places.forEach(place => {
         event = {
           latLng: place.geometry.location,
-          placeId: place.place_id
         }
         if (!place.geometry) {
           console.log("Returned place contains no geometry");
@@ -230,6 +229,7 @@ const Delivery = ({
         draggable: true,
         animation: google.maps.Animation.DROP
       });
+      newPickupMarker.setPosition(newPickupMarker.position)
 
       setPickupMarker(newPickupMarker);
       pickupMarkerDown = newPickupMarker
@@ -543,7 +543,7 @@ const Delivery = ({
                   <div className="collection">
                     <a href="#" data-target="addressmodal" className="collection-item grey-text text-darken-2 modal-trigger" onClick={() => setUpAddress('pickup')}>
                       <span className="badge">
-                        <i className="material-icons green-text darken-2">house</i>
+                        <i className="fas fa-box fs-20 green-text darken-2"></i>
                       </span>
                       Pickup Address: ({pickupLat && pickupLng ? (pickupAddress ? pickupAddress : `${pickupLat}, ${pickupLng}`) : 'Please set a pickup address'})
                     </a>
