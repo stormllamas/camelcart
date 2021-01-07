@@ -2024,6 +2024,8 @@ a {
 
 @media (max-width: 700px) {
   .addressmodal-input {
+    width: 92% !important; }
+  .addressmodal-name-input {
     width: 92% !important; } }
 
 @media (max-width: 600px) {
