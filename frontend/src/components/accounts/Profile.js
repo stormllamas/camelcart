@@ -75,7 +75,8 @@ const Profile = ({
       streetViewControl: false,
       scaleControl: true,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
-      center: centerLatLng
+      center: centerLatLng,
+      gestureHandling: "greedy",
     }
 
     // Create and set map

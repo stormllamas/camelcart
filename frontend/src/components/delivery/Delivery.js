@@ -109,6 +109,7 @@ const Delivery = ({
       scaleControl: true,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       center: centerLatLng,
+      gestureHandling: "greedy",
     }
     
     // Create and set map
