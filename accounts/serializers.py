@@ -25,6 +25,9 @@ class AddressSerializer(serializers.ModelSerializer):
   class Meta:
     model = Address
     fields = ['id', 'user', 'latitude', 'longitude', 'address', 'name']
+    extra_kwargs = {
+      'id': {'read_only': True},
+    }
 
 class RegisterSerializer(serializers.ModelSerializer):
   class Meta:

@@ -214,7 +214,7 @@ const DeliveryPayments = ({
                           </div>
                           <div className="col s12 mb-1">
                             <small>Description</small>
-                            <p className="grey lighten-4 p-1 rad-2 summary">{currentOrder.description}</p>
+                            <p className="grey lighten-4 p-1 rad-2 summary linebreak">{currentOrder.description}</p>
                           </div>
                         </div>
                       </div>

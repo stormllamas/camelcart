@@ -4,7 +4,7 @@ import {
 
   USER_LOADED, USER_LOADING,
   PASSWORD_UPDATE,
-  ADDRESS_ADDED, ADDRESS_DELETED,
+  ADDRESS_ADDED, ADDRESS_DELETED, ADDRESS_UPDATED,
   
   UPDATE_ERROR, AUTH_ERROR,
 
@@ -124,6 +124,27 @@ export default function(state=initialState, action) {
       state.user.addresses = reducedArray
       return {
         ...state,
+        userLoading: false
+      }
+
+    case ADDRESS_UPDATED:
+      // const updatedArray = state.user.addresses.map(address => {
+      //   if (address.id === action.payload.id) {
+      //     address.name = action.payload.name
+      //   }
+      //   return address
+      // })
+      return {
+        ...state,
+        user : {
+          ...state.user,
+          addresses: state.user.addresses.map(address => {
+            if (address.id === action.payload.id) {
+              address.name = action.payload.name
+            }
+            return address
+          })
+        },
         userLoading: false
       }
 

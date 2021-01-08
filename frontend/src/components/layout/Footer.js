@@ -85,9 +85,19 @@ const Footer = ({
         </div>
         <div className="footer-copyright orange darken-2">
           <div className="container center">
-            Copyright &copy; 2020
-            <Link to="#" className="grey-text text-lighten-3 right">Terms & Conditions</Link>
-            <Link to="#" className="grey-text text-lighten-3 left">Privacy Policy</Link>
+            <div className="row">
+              <div className="col s12 m4 l4">
+                <Link to="#" className="grey-text text-lighten-3">Terms & Conditions</Link>
+              </div>
+              <div className="col s12 m4 l4">
+                <p className="center">
+                  Copyright &copy; 2020
+                </p>
+              </div>
+              <div className="col s12 m4 l4">
+                <Link to="#" className="grey-text text-lighten-3">Privacy Policy</Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

@@ -1,7 +1,7 @@
 # Packages
 from rest_framework import viewsets
 from rest_framework.generics import GenericAPIView, RetrieveAPIView, UpdateAPIView, CreateAPIView, DestroyAPIView
-from rest_framework.mixins import RetrieveModelMixin, DestroyModelMixin, CreateModelMixin
+from rest_framework.mixins import RetrieveModelMixin, DestroyModelMixin, CreateModelMixin, UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer, ResetPasswordSerializer, SocialAuthSerializer, AddressSerializer
 
@@ -410,7 +410,7 @@ class UserAPI(RetrieveAPIView, UpdateAPIView):
   def get(self, request):
     return Response(get_user_data(request.user))
 
-class AddressAPI(CreateModelMixin, DestroyModelMixin, RetrieveModelMixin,viewsets.GenericViewSet):
+class AddressAPI(CreateModelMixin, DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin, viewsets.GenericViewSet):
   serializer_class = AddressSerializer
   permission_classes = [IsAuthenticated]
 
