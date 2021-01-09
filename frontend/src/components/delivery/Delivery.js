@@ -340,11 +340,6 @@ const Delivery = ({
     if (pickupAddress && deliveryAddress) {
       const origin = new google.maps.LatLng(pickupLat, pickupLng);
       const destination =  new google.maps.LatLng(deliveryLat, deliveryLng);
-
-      console.log(origin.lat())
-      console.log(origin.lng())
-      console.log(destination.lat())
-      console.log(destination.lng())
     
       try {
         const distanceService = new google.maps.DistanceMatrixService();

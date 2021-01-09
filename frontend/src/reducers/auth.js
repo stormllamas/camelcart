@@ -128,12 +128,6 @@ export default function(state=initialState, action) {
       }
 
     case ADDRESS_UPDATED:
-      // const updatedArray = state.user.addresses.map(address => {
-      //   if (address.id === action.payload.id) {
-      //     address.name = action.payload.name
-      //   }
-      //   return address
-      // })
       return {
         ...state,
         user : {

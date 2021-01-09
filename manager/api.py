@@ -272,6 +272,7 @@ class OrdersAPI(GenericAPIView):
       'two_way': order.two_way,
       'subtotal': sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]),
       'date_ordered': order.date_ordered,
+      'date_delivered': order.date_delivered,
     } for order in queryset.order_by('-date_delivered','-date_claimed','-date_ordered')[from_item:to_item]]
 
     return Response({
