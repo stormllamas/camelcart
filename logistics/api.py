@@ -100,7 +100,7 @@ class SellerAPI(GenericAPIView):
   permission_classes = [SiteEnabled]
 
   def get(self, request, seller_name=None):
-    sn = seller_name.replace('-',' ').replace('and', '&')
+    sn = seller_name.replace('-and-', '-&-').replace('-',' ')
     seller = Seller.objects.get(name=sn)
 
     categories = [{
@@ -226,8 +226,8 @@ class ProductAPI(GenericAPIView):
   permission_classes = [SiteEnabled]
 
   def get(self, request, product_name=None, seller_name=None):
-    pn = product_name.replace('-',' ').replace('and', '&')
-    sn = seller_name.replace('-',' ').replace('and', '&')
+    pn = product_name.replace('-and-', '-&-').replace('-',' ')
+    sn = seller_name.replace('-and-', '-&-').replace('-',' ')
     product = Product.objects.get(name=pn, seller__name=sn)
 
     categories = [category.name for category in product.categories.all()]
