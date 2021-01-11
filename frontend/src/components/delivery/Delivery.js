@@ -25,6 +25,9 @@ const Delivery = ({
   const [pickupMarker, setPickupMarker] = useState('');
   const [deliveryMarker, setDeliveryMarker] = useState('');
 
+  const [pickupClickListener, setPickupClickListener] = useState('');
+  const [deliveryClickListener, setDeliveryClickListener] = useState('');
+
   const [activeModal, setActiveModal] = useState('');
 
   const [riderPaymentNeeded, setRiderPaymentNeeded] = useState(false);
@@ -203,12 +206,18 @@ const Delivery = ({
     
   const setUpAddress = mode => {
     setActiveModal(mode)
-    google.maps.event.clearInstanceListeners(currentMap);
-    currentMap.addListener('click', e => addMarker(e, mode));
+    // google.maps.event.clearInstanceListeners(currentMap);
+    if (mode === 'pickup') {
+      google.maps.event.removeListener(deliveryClickListener);
+      setPickupClickListener(currentMap.addListener('click', e => addMarker(e, mode)));
+    } else if (mode === 'delivery') {
+      google.maps.event.removeListener(pickupClickListener);
+      setDeliveryClickListener(currentMap.addListener('click', e => addMarker(e, mode)));
+    }
 
     // Listen for the event fired when the user selects a prediction and retrieve
     // more details for that place.
-    addSearchListener(mode);
+    addSearchListener(mode, currentMap);
   }
 
   let pickupMarkerDown;
@@ -229,7 +238,7 @@ const Delivery = ({
         draggable: true,
         animation: google.maps.Animation.DROP
       });
-      newPickupMarker.setPosition(newPickupMarker.position)
+      // newPickupMarker.setPosition(newPickupMarker.position)
 
       setPickupMarker(newPickupMarker);
       pickupMarkerDown = newPickupMarker
@@ -350,7 +359,6 @@ const Delivery = ({
         }, async (response, status) => {
           if (status === 'OK' && response.rows[0].elements[0].distance) {
             let distanceValue = response.rows[0].elements[0].distance.value
-            console.log(parseInt(distanceValue)/1000)
             let perKmTotal = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price)
             let total = siteInfo.shipping_base+perKmTotal
             if (twoWay) total = total*siteInfo.two_way_multiplier

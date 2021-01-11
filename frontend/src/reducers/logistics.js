@@ -515,41 +515,39 @@ export default (state = initialState, action) => {
       }
 
     case CANCEL_ORDER:
-      const canceledOrders = state.orders.results.map(order => {
-        if (order.id === action.payload) {
-          order.is_canceled = true
-        }
-        return order
-      })
       return {
         ...state,
         orders: {
           ...state.orders,
-          results: canceledOrders,
+          results: state.orders.results.map(order => {
+            if (order.id === action.payload) {
+              order.is_canceled = true
+            }
+            return order
+          }),
         },
       }
 
     case SYNC_ORDER:
-      const syncedOrder = state.orders.results.map(order => {
-        if (order.id === action.payload.order.id) {
-          if (action.payload.mark === 'claim') {
-            order.rider = action.payload.order.rider
-            order.is_claimed = true
-          }
-          if (action.payload.mark === 'pickup') {
-            order.is_pickedup = true
-          }
-          if (action.payload.mark === 'deliver') {
-            order.is_delivered = true
-          }
-        }
-        return order
-      })
       return {
         ...state,
         orders: {
           ...state.orders,
-          results: syncedOrder,
+          results: state.orders.results.map(order => {
+            if (order.id === action.payload.order.id) {
+              if (action.payload.mark === 'claim') {
+                order.rider = action.payload.order.rider
+                order.is_claimed = true
+              }
+              if (action.payload.mark === 'pickup') {
+                order.is_pickedup = true
+              }
+              if (action.payload.mark === 'deliver') {
+                order.is_delivered = true
+              }
+            }
+            return order
+          }),
         },
       }
     

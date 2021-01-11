@@ -112,19 +112,26 @@ export default function(state=initialState, action) {
       }
 
     case ADDRESS_ADDED:
-      const newArray = [...state.user.addresses, action.payload]
-      state.user.addresses = newArray
       return {
         ...state,
-        userLoading: false
+        userLoading: false,
+        user: {
+          ...state.user,
+          addresses: [
+            ...state.user.addresses,
+            action.payload
+          ]
+        }
       }
 
     case ADDRESS_DELETED:
-      const reducedArray = state.user.addresses.filter(address => address.id !== action.payload)
-      state.user.addresses = reducedArray
       return {
         ...state,
-        userLoading: false
+        userLoading: false,
+        user: {
+          ...state.user,
+          addresses: state.user.addresses.filter(address => address.id !== action.payload)
+        }
       }
 
     case ADDRESS_UPDATED:

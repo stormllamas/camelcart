@@ -125,32 +125,30 @@ export default (state = initialState, action) => {
       }
 
     case PICKUP_ORDER_ITEM:
-      const newPickedupItems = state.order.order_items.map(orderItem => {
-        if (orderItem.id === action.payload) {
-          orderItem.is_pickedup = true
-        }
-        return orderItem
-      })
       return {
         ...state,
         order: {
           ...state.order,
-          order_items: newPickedupItems,
+          order_items: state.order.order_items.map(orderItem => {
+            if (orderItem.id === action.payload) {
+              orderItem.is_pickedup = true
+            }
+            return orderItem
+          }),
         }
       }
 
     case DELIVER_ORDER_ITEM:
-      const newOrderItems = state.order.order_items.map(orderItem => {
-        if (orderItem.id === action.payload) {
-          orderItem.is_delivered = true
-        }
-        return orderItem
-      })
       return {
         ...state,
         order: {
           ...state.order,
-          order_items: newOrderItems,
+          order_items: state.order.order_items.map(orderItem => {
+            if (orderItem.id === action.payload) {
+              orderItem.is_delivered = true
+            }
+            return orderItem
+          }),
         }
       }
 
@@ -161,12 +159,6 @@ export default (state = initialState, action) => {
       }
 
     case TOGGLED_IS_PUBLISHED:
-      // const newOrderItems = state.order.order_items.map(orderItem => {
-      //   if (orderItem.id === action.payload.id) {
-      //     orderItem.is_delivered = true
-      //   }
-      //   return orderItem
-      // })
       return {
         ...state,
         togglingIsPublished: false,
