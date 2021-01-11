@@ -122,6 +122,7 @@ class SellerDashboardDataAPI(RetrieveAPIView):
       'rider_payment_needed': order.rider_payment_needed,
       'subtotal': sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]),
       'date_ordered': order.date_ordered,
+      'date_paid': order.date_paid,
     } for order in Order.objects.filter(seller=user_seller, is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2])))).order_by('-date_paid')]
 
     recent_orders = [{
@@ -149,7 +150,7 @@ class SellerDashboardDataAPI(RetrieveAPIView):
       'is_published': product.is_published,
       'name': product.name,
       'thumbnail': product.thumbnail.url,
-      'final_price': product.cheapest_variant_price,
+      'final_price': product.cheapest_variant.price,
       'total_orders': product.total_orders,
     } for product in sorted(Product.objects.filter(seller=user_seller), key=lambda a: (a.total_orders, -a.id), reverse=True)]
 

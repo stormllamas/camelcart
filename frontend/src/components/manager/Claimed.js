@@ -230,6 +230,7 @@ const Claimed = ({
       port = ':8001'
     }
     let endpoint = wsStart + window.location.host + port
+    console.log(endpoint)
     setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
   }, []);
 

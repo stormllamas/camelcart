@@ -69,7 +69,7 @@ const SellerDashboard = ({
     rangedList.forEach((info, infoIndex) => {
       orders.forEach((order, index) => {
         if (moment(info.x, "YYYY-MM-DD").format("YYYY-MM-DD") === moment(order.date_paid, "YYYY-MM-DD").format("YYYY-MM-DD")) {
-          info.y += (order.ordered_price*order.quantity)
+          info.y += (order.subtotal)
         }
       })
     })
@@ -83,14 +83,14 @@ const SellerDashboard = ({
   useEffect(() => {
     getSellerDashboardData({
       fromDate: moment(fromDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
-      toDate: moment(toDate, "YYYY-MM-DD").format("YYYY-MM-DD")
+      toDate: moment(toDate, "YYYY-MM-DD").add(1, 'days').format("YYYY-MM-DD")
     })
   }, [fromDate, toDate]);
 
   useEffect(() => {
     if (!dashboardLoading) {
       const dashboardOrders = createChartData(dashboardData.orders, ((toDate-fromDate)/1000/60/60/24))
-      renderRevenueGraph({orders:dashboardOrders})
+      renderRevenueGraph({deliveryOrders:dashboardOrders})
 
       $('.count').each(function () {
         $(this).prop('Counter', 0).animate({

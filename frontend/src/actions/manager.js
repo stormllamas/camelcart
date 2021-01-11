@@ -160,6 +160,7 @@ export const getSellerDashboardData = ({ fromDate, toDate }) => async (dispatch,
 
 export const getOrders = ({ page, claimed, prepared, pickedup, delivered, keywords, range }) => async (dispatch, getState) => {
   $('.loader').fadeIn();
+  console.log(delivered)
   try {
     let res;
     if (range) {
