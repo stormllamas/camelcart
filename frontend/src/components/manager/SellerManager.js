@@ -32,6 +32,10 @@ const SellerManager = ({
 
   const [keywords, setKeywords] = useState('')
   const [page, setPage] = useState(1)
+  
+  const [socket, setSocket] = useState('')
+
+  const [newOrder, setNewOrder] = useState(false)
 
   const onSubmit = () => {
     const checkedBoxes = $('.check:checked:not([disabled])')
@@ -86,6 +90,43 @@ const SellerManager = ({
     }
   }, [keywords, page]);
   
+  useEffect(() => {
+    let wsStart = 'ws://'
+    let port = ''
+    if (window.location.protocol === 'https:') {
+      wsStart = 'wss://'
+      port = ':8001'
+    }
+    let endpoint = wsStart + window.location.host + port
+    setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.onmessage = function(e){
+        console.log('message', e)
+        const data = JSON.parse(e.data)
+        console.log(data)
+        // const data = JSON.parse(e.data)
+        // syncOrder({ data })
+        if (data.mark === 'claim') {
+          if (data.order.seller.id == user.seller.id) {
+            setNewOrder(true)
+          }
+        }
+      }
+      socket.onopen = function(e){
+        console.log('open', e)
+      }
+      socket.onerror = function(e){
+        console.log('error', e)
+      }
+      socket.onclose = function(e){
+        console.log('close', e)
+      }
+    }
+  }, [socket]);
+  
   return (
     !ordersLoading && (
       <Fragment>
@@ -105,7 +146,12 @@ const SellerManager = ({
           </nav>
         </div>
         <SellerBreadcrumbs/>
-        <section className="section section-unclaimed admin">
+        <section className="section section-new-orders admin">
+          {newOrder && (
+            <div className="reload-alert red flex-col center middle waves-effect" onClick={() => window.location.reload()}>
+              <p className="fs-2 white-text fw-6 flow-text uppercase flex-row middle">New Order - Click To Refresh</p>
+            </div>
+          )}
           <div className="container widen">
             <div className="row mt-3">
               <div className="col flex-row middle s12">
@@ -114,7 +160,7 @@ const SellerManager = ({
                 </a>
                 {!userLoading && user && (
                   <div className="flex-col">
-                    <h4 className="m-0 flex-row middle flow">New Orders</h4>
+                    <h4 className="m-0 flex-row middle">New Orders</h4>
                     <p className="m-0 grey-text">for {user.seller.name}</p>
                   </div>
                 )}

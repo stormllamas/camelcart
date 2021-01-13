@@ -178,6 +178,17 @@ export default (state = initialState, action) => {
         ...state,
         togglingIsPublished: false,
       }
+
+    // case NEW_ORDER_UPDATE:
+    //   return {
+    //     ...state,
+    //     orders: {
+    //       ...state.orders,
+    //       results: [
+    //         ...state.order.results,
+    //       ]
+    //     }
+    //   }
     
     default:
       return state

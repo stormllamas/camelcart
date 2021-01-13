@@ -628,7 +628,7 @@ export const finalizeTransaction = ({ authID, currentOrder, history, type, query
     });
   }
 }
-export const proceedWithCOD = ({ history, type, query }) => async (dispatch, getState) => {
+export const proceedWithCOD = ({ history, type, query, socket }) => async (dispatch, getState) => {
   dispatch({ type: COMPLETE_ORDER_LOADING });
   try {
     const res = await axios.put(`/api/complete_order/1/${type}/${query ? query : ''}`, null, tokenConfig(getState))
@@ -654,8 +654,9 @@ export const proceedWithCOD = ({ history, type, query }) => async (dispatch, get
       }
     }
     $('.loader').fadeOut();
-    axios.post('/api/new_order_update/', { 'ref_code': res.data.ref_code }, tokenConfig(getState))
+    // axios.post('/api/new_order_update/', { 'ref_code': res.data.ref_code }, tokenConfig(getState))
   } catch (error) {
+    console.log(error)
     dispatch({ type: COMPLETE_ORDER_FAILED });
     M.toast({
       html: 'Something went wrong. Please try again',

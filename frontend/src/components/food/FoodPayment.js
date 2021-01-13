@@ -18,6 +18,7 @@ const FoodPayment = ({
 }) => {
   const history = useHistory()
 
+  const [socket, setSocket] = useState('')
 
   const getDateNow = () => {
     let today = new Date();
@@ -264,7 +265,8 @@ const FoodPayment = ({
                                 proceedWithCOD({
                                   history,
                                   type: 'food',
-                                  query: `?order_seller=${currentOrder.seller.id}`
+                                  query: `?order_seller=${currentOrder.seller.id}`,
+                                  socket: socket,
                                 })
                               }}>Proceed with COD</button>
                             </div>

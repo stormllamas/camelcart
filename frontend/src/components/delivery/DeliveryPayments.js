@@ -20,8 +20,7 @@ const DeliveryPayments = ({
 }) => {
   const history = useHistory()
 
-  const [currentMap, setCurrentMap] = useState('');
-
+  const [socket, setSocket] = useState('')
   
   const getDateNow = () => {
     let today = new Date();
@@ -243,6 +242,7 @@ const DeliveryPayments = ({
                               proceedWithCOD({
                                 history,
                                 type: 'delivery',
+                                socket: socket,
                               })
                             }}>Proceed with COD</button>
                           </div>

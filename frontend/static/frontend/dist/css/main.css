@@ -1451,6 +1451,20 @@ tr {
       height: 18vw;
       width: 18vw; } }
 
+.reload-alert {
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  width: 70%;
+  height: 120px;
+  border-radius: 20px;
+  opacity: 85%; }
+
+@media (max-width: 800px) {
+  .reload-alert {
+    left: 5%;
+    width: 90%; } }
+
 .sidenav .collapsible-header {
   padding: 0 32px; }
   .sidenav .collapsible-header i {
