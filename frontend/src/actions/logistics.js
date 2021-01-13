@@ -654,7 +654,7 @@ export const proceedWithCOD = ({ history, type, query, socket }) => async (dispa
       }
     }
     $('.loader').fadeOut();
-    // axios.post('/api/new_order_update/', { 'ref_code': res.data.ref_code }, tokenConfig(getState))
+    axios.post('/api/new_order_update/', { 'ref_code': res.data.ref_code }, tokenConfig(getState))
   } catch (error) {
     console.log(error)
     dispatch({ type: COMPLETE_ORDER_FAILED });
