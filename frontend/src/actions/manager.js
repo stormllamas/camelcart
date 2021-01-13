@@ -205,7 +205,7 @@ export const toggleIsPublished = ({ id }) => async (dispatch, getState) => {
   }
 }
 
-export const claimOrder = ({ id, socket, rider_id }) => async (dispatch, getState) => {
+export const claimOrder = ({ id, socket }) => async (dispatch, getState) => {
   $('.loader').fadeIn();
   try {
     const res = await axios.put(`/api/manager/claim_order/${id}/`, null, tokenConfig(getState))
@@ -236,7 +236,6 @@ export const claimOrder = ({ id, socket, rider_id }) => async (dispatch, getStat
       socket.send(JSON.stringify({
         'mark' : 'claim',
         'order_id' : id,
-        'rider_id' : rider_id
       }))
     }
     $('.loader').fadeOut();

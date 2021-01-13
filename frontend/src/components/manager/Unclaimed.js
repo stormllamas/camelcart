@@ -45,7 +45,6 @@ const Unclaimed = ({
     checkedBoxes.each(async (index, checkedBox) => {
       claimOrder({
         id: checkedBox.value,
-        rider_id: user.id,
         socket: socket,
       })
     })
