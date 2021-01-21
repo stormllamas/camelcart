@@ -63,10 +63,10 @@ const Claimed = ({
     const centerLatLng = new google.maps.LatLng(13.938080242321387, 121.61336104698454)
 
     const LUCENA_BOUNDS = {
-      north: 14.056553,
-      south: 13.880757,
-      west: 121.511323,
-      east: 121.709314,
+      north: 14.064176315019349,
+      south: 13.87847842331748,
+      west: 121.39448686001403,
+      east: 121.7682355093625,
     }
     // Map options
     const mapOptions = {
