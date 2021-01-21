@@ -277,7 +277,7 @@ class OrdersAPI(GenericAPIView):
     } for order in queryset.order_by('-date_delivered','-date_claimed','-date_ordered')[from_item:to_item]]
 
     return Response({
-      'count': len(results_full_length),
+      'count': results_full_length,
       'next': next_path,
       'previous': previous_path,
       'results': orders,
