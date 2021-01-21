@@ -38,6 +38,7 @@ import {
 import { tokenConfig } from './auth';
 import { getCurrentOrder } from './logistics';
 
+
 export const renderRevenueGraph = data => (dispatch, getState) => {
   var chart = new CanvasJS.Chart("revenue_chart_container", {
     animationEnabled: true,
