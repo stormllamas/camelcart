@@ -12,6 +12,7 @@ const Pagination = ({ data, setPage, pageSize, currentPage, updateQuery }) => {
   // Array of pages
   const pageRange = [...Array(pageTotal).keys()]
 
+
   return (
     <ul className="pagination">
       <li className={`${parseInt(currentPage) === 1 ? 'active' : ''} ${parseInt(currentPage) > 1 || parseInt(currentPage) === 1 && 'waves-effect'}`}>
@@ -31,7 +32,8 @@ const Pagination = ({ data, setPage, pageSize, currentPage, updateQuery }) => {
         if (pageNum > (parseInt(currentPage)-6) === true && pageNum < (parseInt(currentPage)+6) === true) {
           return (
             <li key={`page-${pageNum}`} className={`waves-effect ${pageNum === parseInt(currentPage) && 'active'}`}>
-              <Link to={`?page=${pageNum}`} onClick={() => {setPage(pageNum), updateQuery(history)}} >{pageNum}</Link>
+              {/* <Link to={`?page=${pageNum}`} onClick={() => {setPage(pageNum), history.push({ search: `?page=${pageNum}`})}} >{pageNum}</Link> */}
+              <Link to={`?page=${pageNum}`} onClick={() => setPage(pageNum)} >{pageNum}</Link>
             </li>
           )
         }
@@ -41,7 +43,7 @@ const Pagination = ({ data, setPage, pageSize, currentPage, updateQuery }) => {
         {data.next == null ? (
           <a>&raquo;</a>
         ) : (
-          <Link to={`?page=${parseInt(currentPage)+1}`} onClick={() => {setPage(parseInt(currentPage)+1), updateQuery(history)}} >&raquo;</Link>
+          <Link to={`?page=${parseInt(currentPage)+1}`} onClick={() => setPage(parseInt(currentPage)+1)} >&raquo;</Link>
         )}
       </li>
 
@@ -49,7 +51,7 @@ const Pagination = ({ data, setPage, pageSize, currentPage, updateQuery }) => {
         {parseInt(currentPage) == pageTotal ? (
           <a>Last</a>
         ) : (
-          <Link to={`?page=${pageTotal}`} onClick={() => {setPage(pageTotal), updateQuery(history)}} >Last</Link>
+          <Link to={`?page=${pageTotal}`} onClick={() => setPage(pageTotal)} >Last</Link>
         )}
       </li>
     </ul>
