@@ -211,6 +211,7 @@ class ProductsAPI(GenericAPIView):
         'final_price': product.cheapest_variant.final_price,
         'percent_off': product.cheapest_variant.percent_off
       },
+      'review_count': product.review_count,
       'total_rating': product.total_rating
 
     } for product in queryset[from_item:to_item]]

@@ -48,23 +48,6 @@ const RestaurantDetail = ({
       sellerQuery
     })
   }, []);
-  
-  useEffect(() => {
-    const sellerQuery = querySearch.get('b')
-    if (!sellerLoading && courseFilter && seller !== null) {
-      if (products.results.length < 1) {
-        getProducts({
-          getMore: false
-        })
-      } else {
-        if (sellerQuery === seller.name_to_url) {
-          getProducts({
-            getMore: false
-          })
-        }
-      }
-    }
-  }, [sellerLoading, courseFilter, seller]);
 
   useEffect(() => {
     const sellerQuery = querySearch.get('b')
@@ -91,6 +74,23 @@ const RestaurantDetail = ({
       $('.middle-content').hide();
     }
   }, [sellerLoading]);
+  
+  useEffect(() => {
+    const sellerQuery = querySearch.get('b')
+    if (!sellerLoading && courseFilter && seller !== null) {
+      if (products.results.length < 1) {
+        getProducts({
+          getMore: false
+        })
+      } else {
+        if (sellerQuery === seller.name_to_url) {
+          getProducts({
+            getMore: false
+          })
+        }
+      }
+    }
+  }, [sellerLoading, courseFilter, seller]);
 
   useEffect(() => {
     if (!productsLoading) {

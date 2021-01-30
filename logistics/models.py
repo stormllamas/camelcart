@@ -129,6 +129,10 @@ class Product(models.Model):
     return ProductVariant.objects.filter(product=self).order_by('price', 'id').first()
 
   @property
+  def review_count(self):
+    return ProductReview.objects.filter(product_variant__product=self).count()
+
+  @property
   def total_rating(self):
     try:
       rating = normal_round(sum([int(review.rating) for review in ProductReview.objects.filter(product_variant__product=self)])/ProductReview.objects.filter(product_variant__product=self).count())
