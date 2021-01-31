@@ -64,7 +64,7 @@ const RestaurantDetail = ({
         setQuery(courseQuery, courseFilter, setCourse)
       } else {
         setCourse({
-          course: 'Meals',
+          course: 'Main',
           history,
           sellerQuery
         })
