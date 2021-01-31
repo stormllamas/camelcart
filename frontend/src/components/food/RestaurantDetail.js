@@ -174,13 +174,13 @@ const RestaurantDetail = ({
                       <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Meals' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Meals', history})}>Meals</a>
                     </li>
                     <li className="tab col s3">
-                      <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Soup' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Soup', history})}>Soup</a>
-                    </li>
-                    <li className="tab col s3">
                       <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Sides' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Sides', history})}>Sides</a>
                     </li>
                     <li className="tab col s3">
-                      <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Dessert' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Dessert', history})}>Dessert</a>
+                      <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Drinks' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Drinks', history})}>Drinks</a>
+                    </li>
+                    <li className="tab col s3">
+                      <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Desserts' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Desserts', history})}>Dessert</a>
                     </li>
                   </ul>
                 </div>
