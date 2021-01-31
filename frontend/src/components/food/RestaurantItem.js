@@ -23,11 +23,11 @@ const RestaurantItem = ({ sellersLoading, seller, sellers, index, getSellers }) 
     <Fragment>
       <li className="restaurant-item" ref={sellers.results.length === index + 1 ? lastProductElement : undefined }>
         <div className="restaurant-img">
-          <Link to={`/food/restaurant?b=${seller.name_to_url}&course=Meals`} className="bg-cover" style={{ backgroundImage: `url(${seller.thumbnail})`}}></Link>
+          <Link to={`/food/restaurant?b=${seller.name_to_url}&course=Main`} className="bg-cover" style={{ backgroundImage: `url(${seller.thumbnail})`}}></Link>
         </div>
         <div className="row mt-1">
           <div className="col s12 p-0">
-            <Link to={`/food/restaurant?b=${seller.name_to_url}&course=Meals`} className="product-title truncate m-0">{seller.name}</Link>
+            <Link to={`/food/restaurant?b=${seller.name_to_url}&course=Main`} className="product-title truncate m-0">{seller.name}</Link>
           </div>
           {seller.review_count > 0 ? (
             <div className="col s12 flex-row p-0 ml-n1">
