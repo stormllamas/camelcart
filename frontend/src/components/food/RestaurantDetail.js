@@ -171,7 +171,7 @@ const RestaurantDetail = ({
                 <div className="col s12">
                   <ul className="tabs">
                     <li className="tab col s3">
-                      <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Meals' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Meals', history})}>Meals</a>
+                      <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Main' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Main', history})}>Main</a>
                     </li>
                     <li className="tab col s3">
                       <a className={`grey-text text-darken-2 waves-effect waves-grey p-0 ${courseFilter === 'Sides' ? 'active' : ''}`} onClick={() => setCourse({ course: 'Sides', history})}>Sides</a>
