@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import FoodCart from './FoodCart'
 
-import { getSeller, getProduct, addOrderItem } from '../../actions/logistics'
+import { getProduct, addOrderItem } from '../../actions/logistics'
 
 
 const ItemDetail = ({
@@ -206,4 +206,4 @@ const mapStateToProps = state => ({
   logistics: state.logistics,
 });
 
-export default connect(mapStateToProps, { getSeller, getProduct, addOrderItem })(ItemDetail);
+export default connect(mapStateToProps, { getProduct, addOrderItem })(ItemDetail);
