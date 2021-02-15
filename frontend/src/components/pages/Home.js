@@ -28,15 +28,15 @@ const Home = ({
     $('.scrollspy').scrollSpy({
       scrollOffset: '100'
     });
-    $('.modal').modal({
-      dismissible: true,
-      inDuration: 300,
-      outDuration: 200,
-    });
-    $('[data-target="advertisement-modal"]').hide()
-    let ad_elem = $('#advertisement-modal')[0]
-    let instance = M.Modal.getInstance(ad_elem);
-    instance.open()
+    // $('.modal').modal({
+    //   dismissible: true,
+    //   inDuration: 300,
+    //   outDuration: 200,
+    // });
+    // $('[data-target="advertisement-modal"]').hide()
+    // let ad_elem = $('#advertisement-modal')[0]
+    // let instance = M.Modal.getInstance(ad_elem);
+    // instance.open()
     
   }, [])
 
@@ -243,7 +243,7 @@ const Home = ({
         </div>
       </section>
 
-      <button data-target="advertisement-modal" className="btn modal-trigger">Modal</button>
+      {/* <button data-target="advertisement-modal" className="btn modal-trigger">Modal</button>
       <div id="advertisement-modal" className="modal advertisement">
         <div className="modal-content full-height orange darken-2">
           <div className="full-height full-width bg-contain" style={{ backgroundImage: `url(/static/frontend/img/valentrike.jpg)` }}></div>
@@ -251,7 +251,7 @@ const Home = ({
         <a className="modal-action modal-close ad orange darken-2 rad-5 flex-col center middle">
           <i className="material-icons white-text">close</i>
         </a>
-      </div>
+      </div> */}
     </Fragment>
   )
 }
