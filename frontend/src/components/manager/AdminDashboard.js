@@ -298,11 +298,10 @@ const AdminDashboard = ({
                   </div>
                 </div>
               </div>
-              <div className="col l7 s12">
+              <div className="col l6 s12">
                 <div className="card-panel white rad-3 no-shadow height-530">
-                  <h5 className="m-0 mb-3">Recent Orders</h5>
+                  <h5 className="m-0 mb-3">Rider Balance</h5>
                   <div className="row m-0 overflow-scroll height-438">
-                    
                   <table className="bordered highlight">
                       <thead>
                         <tr className="grey lighten-3">
@@ -315,15 +314,40 @@ const AdminDashboard = ({
                         {dashboardData.riders.map(rider => (
                           <tr key={rider.id} className="collection-item avatar pr-5 relative mt-3">
                             <td className="title flex-row valign-wrapper">
-                              <div className="grey lighten-2 circle bg-cover mr-2" style={{ backgroundImage: `url(${rider.picture})`, height: "50px", width: "50px"}}></div>
+                              <div className="grey lighten-2 circle bg-cover mr-2" style={{ backgroundImage: `url(${rider.picture})`, minHeight: "50px", minWidth: "50px"}}></div>
                               {rider.name}
                             </td>
                             <td className="title mw-medium">₱ {(rider.accounts_payable).toFixed(2)}</td>
-                            <td className="title">
+                            <td className="title no-white-space">
                               {[...Array(parseInt(rider.review_total)).keys()].map(star => <i key={star} className="material-icons yellow-text text-darken-2">star</i>)}
                               {[...Array(Math.max(5-parseInt(rider.review_total), 0)).keys()].map(star => <i key={star} className="material-icons grey-text text-lighten-2">star</i>)}
                             </td>
-                            {/* <td className="title mw-medium">₱ {(rider.accounts_payable).toFixed(2)}</td> */}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div className="col l6 s12">
+                <div className="card-panel white rad-3 no-shadow height-530">
+                  <h5 className="m-0 mb-3">Affiliates</h5>
+                  <div className="row m-0 overflow-scroll height-438">
+                  <table className="bordered highlight">
+                      <thead>
+                        <tr className="grey lighten-3">
+                          <th>Name</th>
+                          <th>Receivables</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {dashboardData.affiliates.map(affiliate => (
+                          <tr key={affiliate.id} className="collection-item avatar pr-5 relative mt-3">
+                            <td className="title flex-row valign-wrapper">
+                              <div className="grey lighten-2 circle bg-cover mr-2" style={{ backgroundImage: `url(${affiliate.picture})`, minHeight: "50px", minWidth: "50px"}}></div>
+                              {affiliate.name}
+                            </td>
+                            <td className="title mw-medium">₱ {(affiliate.accounts_receivable).toFixed(2)}</td>
                           </tr>
                         ))}
                       </tbody>

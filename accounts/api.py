@@ -50,6 +50,8 @@ def get_user_data(user) :
 
   groups = [group.name for group in user.groups.all()]
 
+  promo_codes_used = [promo_code_used.code for promo_code_used in user.promo_codes_used.all()]
+
   menu_notification = False
 
   if 'rider' in [group.name for group in user.groups.all()]:
@@ -70,6 +72,7 @@ def get_user_data(user) :
 
     'addresses': addresses,
     'groups': groups,
+    'promo_codes_used': promo_codes_used,
     
     'date_joned': user.date_joined,
 
@@ -81,14 +84,14 @@ def get_user_data(user) :
     'rider_info': {
       'plate_number': user.plate_number,
       'review_total': user.rider_rating,
-      'accounts_payable': float(sum([((order.ordered_commission if order.ordered_commission else 0))+order.ordered_shipping_commission for order in Order.objects.filter(rider=user, is_canceled=False, is_delivered=True)])) - float(sum([payment.amount for payment in CommissionPayment.objects.filter(rider=user)])),
+      'accounts_payable': float(sum([((order.ordered_commission if order.ordered_commission else 0))+order.ordered_shipping_commission for order in Order.objects.filter(rider=user, is_canceled=False, is_delivered=True)])) - float(sum([payment.amount for payment in CommissionPayment.objects.filter(partner=user)])),
       'commission_payments': [{
         'id': payment.id,
         'ref_code': payment.ref_code,
         'description': payment.description,
         'date_paid': payment.date_paid,
         'amount': payment.amount
-      } for payment in CommissionPayment.objects.filter(rider=user)]
+      } for payment in CommissionPayment.objects.filter(partner=user)]
     } if 'rider' in groups or user.is_superuser else None,
 
     'seller': {

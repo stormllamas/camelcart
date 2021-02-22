@@ -110,7 +110,8 @@ const DeliveryPayments = ({
   useEffect(() => {
     isAuthenticated && (
       getCurrentOrder({
-        type: 'delivery'
+        type: 'delivery',
+        query: `?for_checkout=true`
       })
     )
   }, [])

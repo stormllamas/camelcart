@@ -71,7 +71,7 @@ const App = () => {
   useEffect(() => {
     $('#middle-content').hide();
     $('.loader').show();
-    store.dispatch(loadUser());
+    store.dispatch(loadUser({ updateOnly: false }));
     store.dispatch(loadSite());
   });
 

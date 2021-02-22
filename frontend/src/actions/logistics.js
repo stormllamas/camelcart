@@ -433,6 +433,8 @@ export const foodCheckout = ({ formData, orderSeller, history }) => async (dispa
       distance_value: formData.distanceValue,
       duration_text: formData.durationText,
       duration_value: formData.durationValue,
+
+      promo_code: formData.promoCode
     }
     const res = await axios.put(`/api/food_checkout/${orderSeller.id}/`, orderBody, tokenConfig(getState))
     if (res.data.status === "okay") {
@@ -497,6 +499,8 @@ export const confirmDelivery = ({ formData, history }) => async (dispatch, getSt
           width: formData.width ? formData.width : 0,
           length: formData.length ? formData.length : 0,
           description: formData.description,
+          
+          promo_code: formData.promoCode,
 
           loc1_latitude: parseFloat(formData.pickupLat),
           loc1_longitude: parseFloat(formData.pickupLng),
@@ -632,6 +636,7 @@ export const proceedWithCOD = ({ history, type, query, socket }) => async (dispa
   dispatch({ type: COMPLETE_ORDER_LOADING });
   try {
     const res = await axios.put(`/api/complete_order/1/${type}/${query ? query : ''}`, null, tokenConfig(getState))
+    console.log(res.data)
     if (res.data.status === 'success') {
       dispatch({ type: COMPLETE_ORDER_SUCCESS });
       M.toast({

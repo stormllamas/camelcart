@@ -1202,6 +1202,18 @@
 .summary {
   min-height: 27.8px; }
 
+@media (max-width: 450px) {
+  .card.summary .card-content {
+    padding: 0px 3.25rem 0px 0px; }
+    .card.summary .card-content .title {
+      font-size: 16px; }
+    .card.summary .card-content .secondary-content {
+      position: absolute;
+      top: 0px;
+      right: 22px; }
+      .card.summary .card-content .secondary-content.larger {
+        font-size: 18px; } }
+
 .mw-small {
   min-width: 50px; }
 
@@ -2001,6 +2013,21 @@ a {
     color: #fff;
     background: #66BB6A;
     border: 3px #66BB6A solid; }
+
+.simple-input {
+  background-color: #ffffff !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  border-radius: 5px !important;
+  border-bottom: none !important;
+  font-size: 1rem !important;
+  box-shadow: none !important;
+  font-weight: 600; }
+
+.promo-button {
+  position: absolute;
+  right: 1.5rem;
+  top: 2.75px; }
 
 @media (max-width: 1150px) {
   .section-restaurants .restaurant-item {

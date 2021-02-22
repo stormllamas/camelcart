@@ -26,7 +26,7 @@ const RestaurantDetail = ({
   },
   getSeller,
   getProducts,
-  setCourse
+  setCourse,
 }) => {
   const history = useHistory()
   const querySearch = new URLSearchParams(history.location.search);

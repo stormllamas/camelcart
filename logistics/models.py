@@ -68,7 +68,7 @@ class Seller(models.Model):
   address = models.CharField(max_length=225, blank=True, null=True)
   thumbnail = models.ImageField(upload_to='photos/sellers/%Y/%m/%d/', blank=True)
   categories = models.ManyToManyField(Category)
-  commission = models.DecimalField(max_digits=5, decimal_places=5, default=0, validators=[MaxValueValidator(1)])
+  commission = models.DecimalField(max_digits=5, decimal_places=5, default=0.00, validators=[MaxValueValidator(1)])
 
   def __str__(self):
     return self.name
@@ -207,6 +207,58 @@ class ProductVariant(models.Model):
     except:
       rating = None
     return rating
+
+    
+
+class PromoCode(models.Model):
+  affiliate = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='promo_codes', on_delete=models.CASCADE, null=True, blank=True)
+  code = models.CharField(max_length=15, unique=True)
+  reusable = models.BooleanField(default=False)
+  delivery_discount = models.DecimalField(max_digits=30, decimal_places=2, default=0.00, null=True, blank=True)
+  # order_discount = models.DecimalField(max_digits=30, decimal_places=2, default=0.00, null=True, blank=True)
+  start_date = models.DateTimeField(default=None, blank=True, null=True)
+  end_date = models.DateTimeField(default=None, blank=True, null=True)
+
+  def __str__(self):
+    return f'{self.code}'
+
+  @property
+  def promo_code_active(self):
+    if self.delivery_discount or self.order_discount:
+      if self.start_date:
+        if self.start_date < timezone.now() or self.start_date == None:
+          if self.end_date:
+            if self.end_date > timezone.now() or self.end_date == None:
+              return True
+            else:
+              return False
+          else:
+            return True
+        else:
+          return False
+      elif self.end_date:
+        if self.end_date > timezone.now() or self.end_date == None:
+          return True
+        else:
+          return False
+      else:
+        return True
+    else:
+      return False
+
+  @property
+  def final_delivery_discount(self):
+    if self.promo_code_active:
+      return self.delivery_discount
+    else:
+      return float(0)
+
+  # @property
+  # def final_order_discount(self):
+  #   if self.promo_code_active:
+  #     return self.order_discount
+  #   else:
+  #     return float(0)
       
 class Order(models.Model):
   # Basic Details
@@ -268,6 +320,8 @@ class Order(models.Model):
   date_paid = models.DateTimeField(null=True, blank=True)
   payment_type = models.PositiveIntegerField(default=1) # (1) for COD (2) for Card or Detail
 
+  promo_code = models.ForeignKey(PromoCode, related_name='orders', on_delete=models.SET_NULL, blank=True, null=True)
+
   is_pickedup = models.BooleanField(default=False)
   date_pickedup = models.DateTimeField(null=True, blank=True)
 
@@ -315,7 +369,11 @@ class Order(models.Model):
     total = float(site_config.shipping_base)+per_km_total
     if self.two_way:
       total = total*float(site_config.two_way_multiplier)
-    return round(total, 0)
+
+    if self.promo_code:
+      return round(total*(1-float(self.promo_code.delivery_discount)), 0)
+    else:
+      return round(total, 0)
 
   @property
   def total(self):
@@ -408,7 +466,7 @@ class CommissionPayment(models.Model):
   # Get GCash ref code and paste here
   ref_code = models.CharField(max_length=15, blank=True, null=True)
   description = models.TextField(max_length=4000, default='Insert About Text Here')
-  rider = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='commission_payments', on_delete=models.CASCADE)
+  partner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='commission_payments', on_delete=models.CASCADE)
   amount = models.DecimalField(max_digits=30, decimal_places=2)
   date_paid = models.DateTimeField(default=timezone.now)
 

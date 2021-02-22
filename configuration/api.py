@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 # Models
 from django.conf import settings
 from .models import SiteConfiguration
-from logistics.models import Order, Vehicle
+from logistics.models import Order, Vehicle, PromoCode
 
 # Serializers
 from rest_framework import viewsets, mixins
@@ -36,6 +36,16 @@ class SiteInformationAPI(GenericAPIView):
         'name': vehicle.name,
         'per_km_price': vehicle.per_km_price
       } for vehicle in Vehicle.objects.all()],
+
+      'promo_code_list': [{
+        'id': promo_code.id,
+        'code': promo_code.code,
+        'reusable': promo_code.reusable,
+        'delivery_discount': promo_code.delivery_discount,
+        'promo_code_active': promo_code.promo_code_active,
+        'final_delivery_discount': promo_code.final_delivery_discount,
+        # 'final_order_discount': promo_code.final_order_discount,
+      } for promo_code in PromoCode.objects.all()],
     })
     
 class PayPalKeysAPI(GenericAPIView):

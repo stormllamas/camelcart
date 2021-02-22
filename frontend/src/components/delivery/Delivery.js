@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import AuthPrompt from '../layout/AuthPrompt'
 
+import { loadUser } from '../../actions/auth'
 import { confirmDelivery, getCurrentOrder } from '../../actions/logistics'
 
 const Delivery = ({
@@ -13,7 +14,8 @@ const Delivery = ({
   siteConfig: { siteInfo },
   logistics: { currentOrder, currentOrderLoading },
   confirmDelivery,
-  getCurrentOrder
+  getCurrentOrder,
+  loadUser
 }) => {
   const history = useHistory()
 
@@ -53,6 +55,12 @@ const Delivery = ({
   const [width, setWidth] = useState('');
   const [length, setLength] = useState('');
   const [description, setDescription] = useState('');
+
+  const [promoCode, setPromoCode] = useState('');
+  const [promoCodeSet, setPromoCodeSet] = useState(false);
+  const [distanceValue, setDistanceValue] = useState("");
+
+  const [userUpdated, setUserUpdated] = useState(false);
   
   const locationGeocode = (latLng, mode) => {
     const geocoder = new google.maps.Geocoder();
@@ -336,12 +344,63 @@ const Delivery = ({
         firstName, lastName, contact, email, gender,
         pickupLat, pickupLng, pickupAddress,
         deliveryLat, deliveryLng, deliveryAddress,
-        unit, weight, height, width, length, description,
+        unit, weight, height, width, length, description, promoCode: promoCodeSet
       }
       confirmDelivery({
         formData,
         history
       })
+    }
+  }
+
+  const promoCodeButtonClicked = (e) => {
+    e.preventDefault()
+    if (promoCodeSet) {
+      setPromoCodeSet(false)
+      setPromoCode('')
+    } else {
+      // Check if Promo code exists
+      if(siteInfo.promo_code_list.map(promo_code => promo_code.code.toLowerCase()).includes(promoCode.toLowerCase())) {
+        let promoCodeUsed = siteInfo.promo_code_list.filter(promo_code => promo_code.code.toLowerCase() === promoCode.toLowerCase())[0]
+        // Check if active
+        if (promoCodeUsed.promo_code_active) {
+          if (promoCodeUsed.reusable) {
+            setPromoCodeSet(promoCodeUsed.id)
+            M.toast({
+              html: 'Promo Code Set!',
+              displayLength: 3500,
+              classes: 'green',
+            });
+          } else {
+            if (!user.promo_codes_used.includes(promoCodeUsed.code)) {
+              setPromoCodeSet(promoCodeUsed.id)
+              M.toast({
+                html: 'Promo Code Set!',
+                displayLength: 3500,
+                classes: 'green',
+              });
+            } else {
+              M.toast({
+                html: 'Code already used',
+                displayLength: 3500,
+                classes: 'red',
+              });
+            }
+          }
+        } else {
+          M.toast({
+            html: 'Invalid Promo Code',
+            displayLength: 3500,
+            classes: 'red',
+          });
+        }
+      } else {
+        M.toast({
+          html: 'Invalid Promo Code',
+          displayLength: 3500,
+          classes: 'red',
+        });
+      }
     }
   }
   
@@ -358,7 +417,9 @@ const Delivery = ({
           travelMode: 'DRIVING',
         }, async (response, status) => {
           if (status === 'OK' && response.rows[0].elements[0].distance) {
-            let distanceValue = response.rows[0].elements[0].distance.value
+            const distanceValue = response.rows[0].elements[0].distance.value
+            setDistanceValue(distanceValue);
+
             let perKmTotal = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price)
             let total = siteInfo.shipping_base+perKmTotal
             if (twoWay) total = total*siteInfo.two_way_multiplier
@@ -477,6 +538,25 @@ const Delivery = ({
     $('select').formSelect();
     M.updateTextFields();
   }, [gender, unit]);
+
+  // Promocode UseEffects
+  useEffect(() => {
+    if (promoCodeSet) {
+      let promoCodeUsed = siteInfo.promo_code_list.filter(promo_code => promo_code.code.toLowerCase() === promoCode.toLowerCase())[0]
+      setDelivery(Math.round(delivery*(1-promoCodeUsed.delivery_discount)))
+    } else {
+      let perKmTotal = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.name === 'motorcycle')[0].per_km_price)
+      let total = siteInfo.shipping_base+perKmTotal
+      setDelivery(Math.round(total))
+    }
+  }, [promoCodeSet]);
+
+  useEffect(() => {
+    if (!userUpdated) {
+      loadUser({ updateOnly: true })
+      setUserUpdated(true)
+    }
+  }, []);
 
   return (
     isAuthenticated && !user.groups.includes('rider') === true ? (
@@ -660,6 +740,16 @@ const Delivery = ({
               </div>
             </li>
           </ul>
+          <div className="card transparent summary no-shadow mt-2 mb-0">
+            <div className="card-content relative">
+              <input type="text" id="promo_code" maxLength={15} disabled={promoCodeSet || !delivery} placeholder="Enter a promo code" className={`${promoCodeSet || !delivery ? 'grey lighten-3' : ''} simple-input grey-text text-darken-4`} onChange={e => setPromoCode(e.target.value.toUpperCase())} value={promoCode}/>
+              <button disabled={!delivery} className={`btn ${promoCodeSet ? 'red' : !delivery ? 'grey' : 'green'} promo-button`}
+                onClick={e => promoCodeButtonClicked(e)}
+              >
+                {promoCodeSet ? 'REMOVE' : 'APPLY'}
+              </button>
+            </div>
+          </div>
           <button className="btn btn-large btn-extended green lighten-1 bold mt-5 mb-2 mobile-btn waves-effect waves-green" onClick={proceedToPayment}>
             <span className="btn-float-text">{delivery && vehicleChoice ? `₱${(parseFloat(delivery)).toFixed(2)}` : ''}</span>
             Confirm Booking
@@ -698,6 +788,7 @@ const Delivery = ({
 }
 
 Delivery.propTypes = {
+  loadUser: PropTypes.func.isRequired,
   confirmDelivery: PropTypes.func.isRequired,
   getCurrentOrder: PropTypes.func.isRequired,
 }
@@ -708,4 +799,4 @@ const mapStateToProps = state => ({
   logistics: state.logistics,
 });
 
-export default connect(mapStateToProps, { confirmDelivery, getCurrentOrder })(Delivery);
+export default connect(mapStateToProps, { loadUser, confirmDelivery, getCurrentOrder })(Delivery);

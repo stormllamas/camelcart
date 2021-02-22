@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from trike.permissions import SiteEnabled, UserNotRider
 
 # Models
-from .models import Order, OrderItem, Seller, CategoryGroup, Category, Product, ProductReview, OrderReview, CommissionPayment
+from .models import Order, OrderItem, Seller, CategoryGroup, Category, Product, ProductReview, OrderReview, CommissionPayment, PromoCode
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -303,6 +303,11 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
 
   def get(self, request, order_type=None):
     order = self.get_object()
+    
+    print('for_checkout', request.query_params.get('for_checkout', None))
+    if not request.query_params.get('for_checkout', None):
+      order.promo_code = None
+      order.save()
 
     for order_item in order.order_items.all():
       if order_item.checkout_valid:
@@ -385,7 +390,57 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
 
       'order_items': order_items,
     })
+  
+  def update(self, request, order_type=None):
+    serializer = self.get_serializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    order = self.get_object()
+
+    try:
+      PromoCode.objects.get(id=request.data.get('promo_code'))
+      order.promo_code = PromoCode.objects.get(id=request.data.get('promo_code'))
+    except:
+      promo_code = None
+
+    print(order.promo_code)
+
+    order.rider_payment_needed = serializer.validated_data.get('rider_payment_needed')
+    order.two_way = serializer.validated_data.get('two_way')
+    order.vehicle_chosen = serializer.validated_data.get('vehicle_chosen')
+
+    order.first_name = serializer.validated_data.get('first_name')
+    order.last_name = serializer.validated_data.get('last_name')
+    order.contact = serializer.validated_data.get('contact')
+    order.email = serializer.validated_data.get('email')
+    order.gender = serializer.validated_data.get('gender')
+
+    order.unit = serializer.validated_data.get('unit')
+    order.weight = serializer.validated_data.get('weight')
+    order.height = serializer.validated_data.get('height')
+    order.width = serializer.validated_data.get('width')
+    order.length = serializer.validated_data.get('length')
+    order.description = serializer.validated_data.get('description')
+
+    order.loc1_latitude = serializer.validated_data.get('loc1_latitude')
+    order.loc1_longitude = serializer.validated_data.get('loc1_longitude')
+    order.loc1_address = serializer.validated_data.get('loc1_address')
+    order.loc2_latitude = serializer.validated_data.get('loc2_latitude')
+    order.loc2_longitude = serializer.validated_data.get('loc2_longitude')
+    order.loc2_address = serializer.validated_data.get('loc2_address')
+    order.distance_text = serializer.validated_data.get('distance_text')
+    order.distance_value = serializer.validated_data.get('distance_value')
+    order.duration_text = serializer.validated_data.get('duration_text')
+    order.duration_value = serializer.validated_data.get('duration_value')
     
+    order.save()
+
+    return Response({
+      'status': 'okay',
+      'msg': 'Current order update successful'
+    })
+
+
 class OrdersAPI(GenericAPIView):
   permission_classes = [IsAuthenticated, SiteEnabled, UserNotRider]
 
@@ -786,6 +841,12 @@ class CheckoutAPI(UpdateAPIView):
 
     order = self.get_object()
 
+    try:
+      PromoCode.objects.get(id=request.data.get('promo_code'))
+      order.promo_code = PromoCode.objects.get(id=request.data.get('promo_code'))
+    except:
+      promo_code = None
+
     order.vehicle_chosen = serializer.validated_data.get('vehicle_chosen')
 
     order.first_name = serializer.validated_data.get('first_name')
@@ -863,6 +924,9 @@ class CompleteOrderAPI(UpdateAPIView):
     order = self.get_object()
     carried_order_items = []
 
+    if order.promo_code:
+      request.user.promo_codes_used.add(order.promo_code)
+
     if order.order_type == 'food':
       if order.has_valid_item:
         # Check first if all items with valid checkout has is_published products upon checkout
@@ -888,7 +952,12 @@ class CompleteOrderAPI(UpdateAPIView):
         order.is_ordered = True
         order.date_ordered = timezone.now()
         order.ordered_shipping = order.shipping
-        order.ordered_shipping_commission = order.shipping*float(site_config.rider_commission)
+        
+        if order.promo_code:
+          order.ordered_shipping_commission = (order.shipping/(1-float(order.promo_code.delivery_discount)))*float(site_config.rider_commission)
+        else:
+          order.ordered_shipping_commission = order.shipping*float(site_config.rider_commission)
+
         if order.seller and order.ordered_subtotal > 0:
           order.ordered_comission = order.ordered_subtotal*order.seller.commission
 
@@ -909,6 +978,7 @@ class CompleteOrderAPI(UpdateAPIView):
         return Response({
           'status': 'success',
           'msg': 'Order Finalized',
+          'ref_code': order.ref_code
         })
 
       else:
@@ -943,7 +1013,7 @@ class NewOrderUpdateAPI(GenericAPIView):
 
   def post(self, request, *args, **kwargs):
     try:
-      for rider in User.objects.filter(groups__name__in=['rider'], is_active=True).exclude(groups__name__in=['test']):
+      for rider in User.objects.filter(Q(groups__name__in=['rider'], is_active=True) | Q(is_staff=True, is_active=True)).exclude(groups__name__in=['test']):
         current_site = get_current_site(request)
         mail_subject = 'New Order'
         message = render_to_string(

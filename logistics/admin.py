@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Order, OrderItem, Seller, Category, CategoryGroup, Product, ProductVariant, ProductReview, OrderReview, Vehicle
+from .models import Order, OrderItem, Seller, Category, CategoryGroup, Product, ProductVariant, ProductReview, OrderReview, Vehicle, PromoCode
 
 
 class CategoryInLine(admin.TabularInline):
@@ -22,7 +22,7 @@ class OrderAdmin(admin.ModelAdmin):
     ('Personal Details', {'fields': ['first_name', 'last_name', 'contact', 'email', 'gender']}),
     ('Delivery Details', {'fields': ['unit', 'weight', 'height', 'width', 'length', 'description']}),
     ('Delivery Points', {'fields': ['seller', 'loc1_latitude', 'loc1_longitude', 'loc1_address', 'loc2_latitude', 'loc2_longitude', 'loc2_address', 'distance_value', 'distance_text', 'duration_value', 'duration_text']}),
-    ('Payments', {'fields': ['payment_type', 'auth_id', 'capture_id']}),
+    ('Payments', {'fields': ['payment_type', 'auth_id', 'capture_id', 'promo_code']}),
     ('Status', {'fields': ['rider_payment_needed', 'two_way', 'vehicle_chosen', 'is_ordered', 'date_ordered', 'ordered_shipping', 'ordered_commission', 'ordered_shipping_commission', 'is_paid', 'date_paid', 'rider', 'date_claimed', 'is_prepared', 'date_prepared', 'is_canceled', 'date_canceled', 'is_pickedup', 'date_pickedup', 'is_delivered', 'date_delivered']}),
   ]
   inlines = [OrderItemInLine]
@@ -101,3 +101,15 @@ class CategoryGroupAdmin(admin.ModelAdmin):
 admin.site.register(CategoryGroup, CategoryGroupAdmin)
 
 admin.site.register(Vehicle)
+
+class PromoCodeAdmin(admin.ModelAdmin):
+  fieldsets = [
+    (None, {'fields': ['code', 'affiliate', 'reusable', 'delivery_discount']}),
+  ]
+  list_display = ('code', 'affiliate', 'reusable', 'delivery_discount')
+  list_editable = ('affiliate', 'reusable', 'delivery_discount')
+  list_display_links = ('code',)
+  list_per_page = 50
+  search_fields = ('code',)
+
+admin.site.register(PromoCode,PromoCodeAdmin)

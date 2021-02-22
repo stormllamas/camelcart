@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 # Models
-from logistics.models import OrderReview, Vehicle
+from logistics.models import OrderReview, Vehicle, PromoCode
 
 # Custom User
 from django.contrib.auth.models import UserManager, AbstractUser
@@ -26,6 +26,7 @@ class User(AbstractUser):
   picture = models.ImageField(upload_to='photos/profile_pictures/%Y/%m/%d/', blank=True, null=True)
   vehicle = models.ForeignKey(Vehicle, related_name='users', on_delete=models.SET_NULL, blank=True, null=True)
   plate_number = models.CharField(max_length=55, unique=True, blank=True, null=True)
+  promo_codes_used = models.ManyToManyField(PromoCode, blank=True, null=True)
 
   objects = UserManager()
   USERNAME_FIELD = 'email'

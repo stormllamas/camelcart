@@ -201,8 +201,8 @@ export const getServerToken = async () => {
 }
 
 // Check Token and Load User
-export const loadUser = () => async (dispatch, getState) => {
-  dispatch({ type: USER_LOADING });
+export const loadUser = ({ updateOnly }) => async (dispatch, getState) => {
+  !updateOnly && dispatch({ type: USER_LOADING });
   const token = await getServerToken()
   if (token) {
     try {

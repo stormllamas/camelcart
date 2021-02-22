@@ -518,9 +518,30 @@
     }
   }
 }
-
 .summary {
   min-height: 27.8px;
+}
+@media (max-width: 450px) {
+  .card.summary {
+
+    .card-content {
+      padding: 0px 3.25rem 0px 0px;
+    
+      .title {
+        font-size: 16px;
+      }
+    
+      .secondary-content{
+        position: absolute;
+        top: 0px;
+        right: 22px;
+  
+        &.larger {
+          font-size: 18px;
+        }
+      }
+    }
+  }
 }
 
 .mw {
