@@ -87,15 +87,13 @@ const Footer = ({
           <div className="container center">
             <div className="row">
               <div className="col s12 m4 l4">
-                <Link to="#" className="grey-text text-lighten-3">Terms & Conditions</Link>
+                <Link to="/terms_and_conditions" className="grey-text text-lighten-3">Terms & Conditions</Link>
               </div>
               <div className="col s12 m4 l4">
-                <p className="center">
-                  Copyright &copy; 2020
-                </p>
+                Copyright &copy; 2020
               </div>
               <div className="col s12 m4 l4">
-                <Link to="#" className="grey-text text-lighten-3">Privacy Policy</Link>
+                <Link to="/privacy_policy" className="grey-text text-lighten-3">Privacy Policy</Link>
               </div>
             </div>
           </div>

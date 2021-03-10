@@ -61,9 +61,9 @@ const ArticleNav = ({}) => {
               </div>
               <div className="collapsible-body pt-1 pb-1">
                 <p><Link to="/about" className="modal-close sidenav-close grey-text text-darken-1">About Trike</Link></p>
-                <p><Link to="/about" className="sidenav-close grey-text text-darken-1">Terms & Conditions</Link></p>
-                <p><Link to="/about" className="sidenav-close grey-text text-darken-1">Privacy Policy</Link></p>
-                <p><Link to="/about" className="sidenav-close grey-text text-darken-1">Our partners</Link></p>
+                <p><Link to="/terms_and_conditions" className="modal-close sidenav-close grey-text text-darken-1">Terms & Conditions</Link></p>
+                <p><Link to="/privacy_policy" className="modal-close sidenav-close grey-text text-darken-1">Privacy Policy</Link></p>
+                <p><Link to="/about" className="modal-close sidenav-close grey-text text-darken-1">Our partners</Link></p>
               </div>
             </li>
           </ul>

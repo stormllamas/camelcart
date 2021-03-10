@@ -89,7 +89,7 @@ const Profile = ({
       gestureHandling: "greedy",
     }
 
-    // Create and set map
+    // Create, display, and set map
     const map = new google.maps.Map(document.getElementById('googlemap'), mapOptions)
     setCurrentMap(map);
 

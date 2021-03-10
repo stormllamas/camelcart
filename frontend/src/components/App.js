@@ -38,6 +38,8 @@ import Home from './pages/Home'
 import Contact from './pages/Contact'
 import RiderInquiry from './pages/RiderInquiry'
 import About from './pages/questions/AboutUs/About'
+import TermsAndConditions from './pages/questions/AboutUs/TermsAndConditions'
+import PrivacyPolicy from './pages/questions/AboutUs/PrivacyPolicy'
 import FoodGuide from './pages/questions/Guide/FoodGuide'
 import DeliveryGuide from './pages/questions/Guide/DeliveryGuide'
 import RideGuide from './pages/questions/Guide/RideGuide'
@@ -96,6 +98,8 @@ const App = () => {
           <PublicRoute exact path="/contact" component={Contact} />
           <PublicRoute exact path="/rider_inquiry" component={RiderInquiry} />
           <PublicRoute exact path="/about" component={About} />
+          <PublicRoute exact path="/terms_and_conditions" component={TermsAndConditions} />
+          <PublicRoute exact path="/privacy_policy" component={PrivacyPolicy} />
           <PublicRoute exact path="/questions/food" component={FoodGuide} />
           <PublicRoute exact path="/questions/delivery_guide" component={DeliveryGuide} />
           <PublicRoute exact path="/questions/ride_guide" component={RideGuide} />

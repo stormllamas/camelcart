@@ -14,9 +14,11 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from .serializers import SiteConfigurationSerializer
 
+
     
 class SiteInformationAPI(GenericAPIView):
   def get(self, request, pk=None):
+
     site_config = SiteConfiguration.objects.first()
     return Response({
       'maintenance_mode': site_config.maintenance_mode,
