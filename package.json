@@ -25,8 +25,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack --mode development --watch ./frontend/src/index.js --output ./frontend/static/frontend/main.js",
-    "build": "webpack --mode production ./frontend/src/index.js --output ./frontend/static/frontend/main.js",
+    "dev": "webpack --mode development --watch ./frontend/src/index.js -o ./frontend/static/frontend/main.js",
+    "build": "webpack --mode production ./frontend/src/index.js -o ./frontend/static/frontend/main.js",
     "sass": "node-sass -w ./frontend/static/frontend/scss/ -o ./frontend/static/frontend/dist/css --recursive",
     "admin-sass": "node-sass -w ./frontend/static/frontend/scss-admin/ -o ./frontend/static/frontend/dist/css/admin --recursive"
   },
@@ -54,7 +54,7 @@
     "babel-loader": "^8.1.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "node-sass": "^4.13.0",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^4.5.0"
   },
   "keywords": [],
   "author": "",

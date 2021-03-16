@@ -33,6 +33,5 @@ pywin32==300
 service-identity==18.1.0
 six==1.15.0
 sqlparse==0.3.1
-Twisted @ file:///C:/Users/storm/OneDrive/Documents/_Dev/trike_project/Twisted-20.3.0-cp39-cp39-win_amd64.whl
 txaio==20.4.1
 zope.interface==5.2.0
