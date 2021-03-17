@@ -106,7 +106,7 @@ class PromoCodeAdmin(admin.ModelAdmin):
   fieldsets = [
     (None, {'fields': ['code', 'affiliate', 'reusable', 'delivery_discount']}),
   ]
-  list_display = ('code', 'affiliate', 'reusable', 'delivery_discount')
+  list_display = ('code', 'affiliate', 'reusable', 'delivery_discount', 'affiliate_commission', 'rider_commission')
   list_editable = ('affiliate', 'reusable', 'delivery_discount')
   list_display_links = ('code',)
   list_per_page = 50
