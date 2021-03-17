@@ -26,7 +26,7 @@ class User(AbstractUser):
   picture = models.ImageField(upload_to='photos/profile_pictures/%Y/%m/%d/', blank=True, null=True)
   vehicle = models.ForeignKey(Vehicle, related_name='users', on_delete=models.SET_NULL, blank=True, null=True)
   plate_number = models.CharField(max_length=55, unique=True, blank=True, null=True)
-  promo_codes_used = models.ManyToManyField(PromoCode)
+  promo_codes_used = models.ManyToManyField(PromoCode, blank=True)
 
   objects = UserManager()
   USERNAME_FIELD = 'email'
