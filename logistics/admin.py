@@ -104,7 +104,7 @@ admin.site.register(Vehicle)
 
 class PromoCodeAdmin(admin.ModelAdmin):
   fieldsets = [
-    (None, {'fields': ['code', 'affiliate', 'reusable', 'delivery_discount']}),
+    (None, {'fields': ['code', 'affiliate', 'reusable', 'delivery_discount', 'affiliate_commission', 'rider_commission']}),
   ]
   list_display = ('code', 'affiliate', 'reusable', 'delivery_discount', 'affiliate_commission', 'rider_commission')
   list_editable = ('affiliate', 'reusable', 'delivery_discount', 'affiliate_commission', 'rider_commission')
