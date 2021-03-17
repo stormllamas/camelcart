@@ -76,8 +76,8 @@ class DashboardAPI(GenericAPIView):
       'id': affiliate.id,
       'name': f'{affiliate.first_name} {affiliate.last_name}',
       'picture': affiliate.picture.url if affiliate.picture else None,
-      'accounts_receivable': float(sum([float(order.ordered_shipping)*float(order.promo_code.delivery_discount) for order in Order.objects.filter(promo_code__affiliate=affiliate, is_canceled=False, is_delivered=True)])) - float(sum([payment.amount for payment in CommissionPayment.objects.filter(partner=affiliate)])),
-    } for affiliate in sorted(User.objects.filter(groups__name__in=['affiliate']), key=lambda a: float(sum([float(order.ordered_shipping)*float(order.promo_code.delivery_discount) for order in Order.objects.filter(promo_code__affiliate=a, is_canceled=False, is_delivered=True)])) - float(sum([payment.amount for payment in CommissionPayment.objects.filter(partner=a)])), reverse=True)]
+      'accounts_receivable': float(sum([(order.shipping/(1-float(order.promo_code.delivery_discount)))*float(order.promo_code.affiliate_commission) for order in Order.objects.filter(promo_code__affiliate=affiliate, is_canceled=False, is_delivered=True)])) - float(sum([payment.amount for payment in CommissionPayment.objects.filter(partner=affiliate)])),
+    } for affiliate in sorted(User.objects.filter(groups__name__in=['affiliate']), key=lambda a: float(sum([(order.shipping/(1-float(order.promo_code.delivery_discount)))*float(order.promo_code.affiliate_commission) for order in Order.objects.filter(promo_code__affiliate=a, is_canceled=False, is_delivered=True)])) - float(sum([payment.amount for payment in CommissionPayment.objects.filter(partner=a)])), reverse=True)]
     
     return Response({
       'shipping_commission_total': shipping_commission_total,

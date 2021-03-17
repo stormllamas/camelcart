@@ -958,7 +958,7 @@ class CompleteOrderAPI(UpdateAPIView):
         order.ordered_shipping = order.shipping
         
         if order.promo_code:
-          order.ordered_shipping_commission = (order.shipping/(1-float(order.promo_code.delivery_discount)))*float(site_config.rider_commission)
+          order.ordered_shipping_commission = (order.shipping/(1-float(order.promo_code.delivery_discount)))*float(order.promo_code.rider_commission)
         else:
           order.ordered_shipping_commission = order.shipping*float(site_config.rider_commission)
 

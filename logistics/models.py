@@ -219,8 +219,13 @@ class PromoCode(models.Model):
   affiliate = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='promo_codes', on_delete=models.CASCADE, null=True, blank=True)
   code = models.CharField(max_length=15, unique=True)
   reusable = models.BooleanField(default=False)
-  delivery_discount = models.DecimalField(max_digits=30, decimal_places=2, default=0.00, null=True, blank=True)
-  # order_discount = models.DecimalField(max_digits=30, decimal_places=2, default=0.00, null=True, blank=True)
+
+  delivery_discount = models.DecimalField(max_digits=30, decimal_places=2, default=0.10)
+  # order_discount = models.DecimalField(max_digits=30, decimal_places=2, default=0.00)
+
+  affiliate_commission = models.DecimalField(max_digits=30, decimal_places=2, default=0.10)
+  rider_commission = models.DecimalField(max_digits=30, decimal_places=2, default=0.10)
+
   start_date = models.DateTimeField(default=None, blank=True, null=True)
   end_date = models.DateTimeField(default=None, blank=True, null=True)
 
