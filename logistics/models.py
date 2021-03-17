@@ -69,6 +69,7 @@ class Seller(models.Model):
   thumbnail = models.ImageField(upload_to='photos/sellers/%Y/%m/%d/', blank=True)
   categories = models.ManyToManyField(Category)
   commission = models.DecimalField(max_digits=5, decimal_places=5, default=0.00, validators=[MaxValueValidator(1)])
+  is_published = models.BooleanField(default=True)
 
   def __str__(self):
     return self.name
@@ -96,6 +97,10 @@ class Seller(models.Model):
   @property
   def review_count(self):
     return ProductReview.objects.filter(product_variant__product__seller=self).count()
+
+  @property
+  def total_orders(self):
+    return sum([int(product.total_orders) for product in self.products.all()])
 
 class Product(models.Model):
   # Basic Details

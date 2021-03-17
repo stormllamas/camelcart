@@ -93,7 +93,8 @@ class SellersAPI(ListAPIView):
       except:
         pass
 
-    queryset = Seller.objects.filter(keywords_query & cuisine_query).order_by('id')
+    queryset = sorted(Seller.objects.filter(Q(is_published=True) & keywords_query & cuisine_query).order_by('id'), key=lambda a: a.total_orders, reverse=True)
+
     return queryset
 class SellerAPI(GenericAPIView):
   serializer_class = SellerSerializer
@@ -240,7 +241,7 @@ class ProductAPI(GenericAPIView):
       'sale_price_active': variant.sale_price_active,
       'final_price': variant.final_price,
       'percent_off': variant.percent_off
-    } for variant in product.variants.all()]
+    } for variant in product.variants.filter(is_published=True)]
 
     return Response({
       'name': product.name,
@@ -946,6 +947,9 @@ class CompleteOrderAPI(UpdateAPIView):
             order_item.ordered_price = order_item.product_variant.final_price
             order_item.checkout_validity = None
             order_item.save()
+
+            order_item.product_variant.orders += order_item.quantity
+            order_item.product_variant.save()
           else:
             carried_order_items.append(order_item)
 

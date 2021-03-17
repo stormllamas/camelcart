@@ -36,7 +36,7 @@ admin.site.register(Order, OrderAdmin)
 
 class SellerAdmin(admin.ModelAdmin):
   fieldsets = [
-    (None, {'fields': ['user', 'name', 'categories', 'commission']}),
+    (None, {'fields': ['user', 'name', 'categories', 'commission', 'is_published']}),
     ('Location', {'fields': ['latitude', 'longitude', 'address']}),
     ('Display', {'fields': ['thumbnail']}),
   ]
