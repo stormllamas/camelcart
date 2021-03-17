@@ -228,6 +228,7 @@ class PromoCode(models.Model):
 
   start_date = models.DateTimeField(default=None, blank=True, null=True)
   end_date = models.DateTimeField(default=None, blank=True, null=True)
+  is_published = models.BooleanField(default=True)
 
   def __str__(self):
     return f'{self.code}'

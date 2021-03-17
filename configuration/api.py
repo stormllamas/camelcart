@@ -47,7 +47,7 @@ class SiteInformationAPI(GenericAPIView):
         'promo_code_active': promo_code.promo_code_active,
         'final_delivery_discount': promo_code.final_delivery_discount,
         # 'final_order_discount': promo_code.final_order_discount,
-      } for promo_code in PromoCode.objects.all()],
+      } for promo_code in PromoCode.objects.filter(is_published=True)],
     })
     
 class PayPalKeysAPI(GenericAPIView):
