@@ -131,7 +131,7 @@ const ProductReview = ({
                     <ul className="collection no-shadow">
                       <li className="row collection-item">
                         <div className="col s12 p-0 flex-col center">
-                          <div className="reviewed-product grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}></div>
+                          <div className="reviewed-product grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail ? orderItem.product.thumbnail : '/static/frontend/img/no-image.jpg'})` }}></div>
                           <p className="fw-6 fs-18 mb-0 mt-1 grey-text text-darken-2">How was the {orderItem.product.name}?</p>
                           <p className="grey-text m-0">Order #{orderItem.order.ref_code}</p>
                         </div>
@@ -168,7 +168,7 @@ const ProductReview = ({
                     <ul className="collection no-shadow">
                       <li className="row collection-item">
                         <div className="col s12 p-0 flex-col center">
-                          <div className="reviewed-product grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}></div>
+                          <div className="reviewed-product grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail ? orderItem.product.thumbnail : '/static/frontend/img/no-image.jpg'})` }}></div>
                           <p className="fw-6 fs-18 mb-0 mt-1 amber-text">Item Reviewed</p>
                           <p className="m-0">{orderItem.product.name} ({orderItem.product_variant.name}) - Order #{orderItem.order.ref_code}</p>
                         </div>

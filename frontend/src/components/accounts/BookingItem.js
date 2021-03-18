@@ -66,7 +66,7 @@ const BookingItem = ({ ordersLoading, order, orders, index, getOrders, setOrder,
             order.order_items && (
               order.order_items.map(orderItem => (
                 <li key={orderItem.id} className="collection-item avatar">
-                  <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}></div>
+                  <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail ? orderItem.product.thumbnail : '/static/frontend/img/no-image.jpg'})` }}></div>
                   <p className="title">{orderItem.product.name} - {orderItem.product_variant.name}</p>
                   {orderItem.is_delivered && (
                     orderItem.is_reviewed ? (

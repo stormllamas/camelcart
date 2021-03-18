@@ -362,7 +362,7 @@ const FoodCart = ({
                         currentOrder.order_items !== undefined && (
                           currentOrder.order_items.map(orderItem => (
                             <li key={orderItem.id} className={`collection-item avatar pr-5 relative ${!orderItem.product.is_published ? 'grey lighten-3 grey-text text-lighten-1' : ''}`}>
-                              <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}></div>
+                              <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail ? orderItem.product.thumbnail : '/static/frontend/img/no-image.jpg'})` }}></div>
                               <p className="title">{orderItem.product.name} - {orderItem.product_variant.name}</p>
 
                               <div className="product-quantity flex-row middle">

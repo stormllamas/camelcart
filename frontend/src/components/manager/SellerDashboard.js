@@ -237,7 +237,7 @@ const SellerDashboard = ({
                         {dashboardData.products.map(product => (
                           <tr key={product.id} className="collection-item avatar pr-5 relative mt-3">
                             <td className="title flex-row valign-wrapper">
-                              <div className="grey lighten-2 circle bg-cover mr-2" style={{ backgroundImage: `url(${product.thumbnail})`, height: "50px", width: "50px"}}></div>
+                              <div className="grey lighten-2 circle bg-cover mr-2" style={{ backgroundImage: `url(${product.thumbnail ? product.thumbnail : '/static/frontend/img/no-image.jpg'})`, height: "50px", width: "50px"}}></div>
                               {product.name}
                             </td>
                             <td className="title mw-medium">₱ {(product.final_price).toFixed(2)}</td>

@@ -103,7 +103,7 @@ const ItemDetail = ({
                 <div className="col s12 m12 l7">
                   <div className="row">
                     <div className="col s12">
-                      <img className="responsive-img" src={product.thumbnail}/>
+                      <img className="responsive-img" src={product.thumbnail ? product.thumbnail : '/static/frontend/img/no-image.jpg'}/>
                     </div>
                   </div>
                   <div className="row">

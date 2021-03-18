@@ -117,7 +117,7 @@ class SellerAPI(GenericAPIView):
         'name': feature.seller.name,
         'name_to_url': feature.seller.name_to_url
       },
-      'thumbnail': feature.thumbnail.url
+      'thumbnail': feature.thumbnail.url if feature.thumbnail else None
     } for feature in Product.objects.filter(seller=seller.id, feature=True)]
 
     return Response({
@@ -198,7 +198,7 @@ class ProductsAPI(GenericAPIView):
         'id': category.id
       } for category in product.categories.all()],
       'description': product.description,
-      'thumbnail': product.thumbnail.url,
+      'thumbnail': product.thumbnail.url if product.thumbnail else None,
       'photo_1': product.photo_1.url if product.photo_1 else None,
       'photo_2': product.photo_2.url if product.photo_2 else None,
       'photo_3': product.photo_3.url if product.photo_3 else None,
@@ -256,7 +256,7 @@ class ProductAPI(GenericAPIView):
         'name_to_url': product.seller.name_to_url,
       },
       'categories': categories,
-      'thumbnail': product.thumbnail.url,
+      'thumbnail': product.thumbnail.url if product.thumbnail else None,
       'photo_1': product.photo_1.url if product.photo_1 else None,
       'photo_2': product.photo_2.url if product.photo_2 else None,
       'photo_3': product.photo_3.url if product.photo_3 else None,
@@ -333,7 +333,7 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
         'id': order_item.product_variant.product.id,
         'name': order_item.product_variant.product.name,
         'description': order_item.product_variant.product.description,
-        'thumbnail': order_item.product_variant.product.thumbnail.url,
+        'thumbnail': order_item.product_variant.product.thumbnail.url if order_item.product_variant.product.thumbnail else None,
         'is_published': order_item.product_variant.product.is_published,
       },
       'product_variant': {
@@ -519,7 +519,7 @@ class OrdersAPI(GenericAPIView):
         'product': {
           'id': order_item.product_variant.product.id,
           'name': order_item.product_variant.product.name,
-          'thumbnail': order_item.product_variant.product.thumbnail.url,
+          'thumbnail': order_item.product_variant.product.thumbnail.url if order_item.product_variant.product.thumbnail else None,
         },
         'product_variant': {
           'id': order_item.product_variant.id,
@@ -658,7 +658,7 @@ class OrderItemAPI(DestroyAPIView, CreateAPIView):
         'id': order_item.product_variant.product.id,
         'name': order_item.product_variant.product.name,
         'description': order_item.product_variant.product.description,
-        'thumbnail': order_item.product_variant.product.thumbnail.url,
+        'thumbnail': order_item.product_variant.product.thumbnail.url if order_item.product_variant.product.thumbnail else None,
       },
       'product_variant': {
         'id': order_item.product_variant.id,
@@ -767,7 +767,7 @@ class ChangeQuantityAPI(UpdateAPIView):
               'id': order_item.product_variant.product.id,
               'name': order_item.product_variant.product.name,
               'description': order_item.product_variant.product.description,
-              'thumbnail': order_item.product_variant.product.thumbnail.url,
+              'thumbnail': order_item.product_variant.product.thumbnail.url if order_item.product_variant.product.thumbnail else None,
             },
             'product_variant': {
               'id': order_item.product_variant.id,
@@ -803,7 +803,7 @@ class ChangeQuantityAPI(UpdateAPIView):
               'id': order_item.product_variant.product.id,
               'name': order_item.product_variant.product.name,
               'description': order_item.product_variant.product.description,
-              'thumbnail': order_item.product_variant.product.thumbnail.url,
+              'thumbnail': order_item.product_variant.product.thumbnail.url if order_item.product_variant.product.thumbnail else None,
             },
             'product_variant': {
               'id': order_item.product_variant.id,

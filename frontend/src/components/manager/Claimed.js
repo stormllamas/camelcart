@@ -404,7 +404,7 @@ const Claimed = ({
                                 </div>
                               </div>
                               <div className="collection-item avatar transparent">
-                                <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail})` }}></div>
+                                <div className="grey lighten-2 circle bg-cover" style={{ backgroundImage: `url(${orderItem.product.thumbnail ? orderItem.product.thumbnail : '/static/frontend/img/no-image.jpg'})` }}></div>
                                 <p className="title">{orderItem.product.name} - {orderItem.product_variant.name}</p>
                                 <p className="grey-text">{orderItem.quantity} x ₱ {orderItem.ordered_price.toFixed(2)}</p>
                                 <p className="title">₱ {(orderItem.quantity*orderItem.ordered_price).toFixed(2)}</p>

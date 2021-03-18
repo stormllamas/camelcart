@@ -288,6 +288,8 @@ const Delivery = ({
       deliveryMarkerDown = newDeliveryMarker
       newDeliveryMarker.setMap(currentMap)
 
+      console.log(newDeliveryMarker.getPosition().lat())
+      console.log(newDeliveryMarker.getPosition().lng())
       setDeliveryLat(newDeliveryMarker.getPosition().lat())
       setDeliveryLng(newDeliveryMarker.getPosition().lng())
 
