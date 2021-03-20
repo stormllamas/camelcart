@@ -103,23 +103,23 @@ const ItemDetail = ({
                 <div className="col s12 m12 l7">
                   <div className="row">
                     <div className="col s12">
-                      <img className="responsive-img" src={product.thumbnail ? product.thumbnail : '/static/frontend/img/no-image.jpg'}/>
+                      <img className="responsive-img white" src={product.thumbnail ? product.thumbnail : '/static/frontend/img/no-image.jpg'}/>
                     </div>
                   </div>
                   <div className="row">
                     {product.photo_1 && (
                       <div className="materialboxed col s3">
-                        <img className="responsive-img" src={product.photo_1}/>
+                        <img className="responsive-img white" src={product.photo_1}/>
                       </div>
                     )}
                     {product.photo_2 && (
                       <div className="materialboxed col s3">
-                        <img className="responsive-img" src={product.photo_2}/>
+                        <img className="responsive-img white" src={product.photo_2}/>
                       </div>
                     )}
                     {product.photo_3 && (
                       <div className="materialboxed col s3">
-                        <img className="responsive-img" src={product.photo_3}/>
+                        <img className="responsive-img white" src={product.photo_3}/>
                       </div>
                     )}
                   </div>

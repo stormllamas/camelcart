@@ -25,7 +25,7 @@ const RestaurantDetailItem = ({ productsLoading, product, products, index, getPr
       <div className="col s12 m6 l4" key={product.id} ref={products.results.length === index + 1 ? lastProductElement : undefined }>
         <div className="card">
           <div className="card-image">
-            <Link to={`/food/restaurant/product?item=${product.name_to_url}&b=${product.seller.name_to_url}`} style={{ backgroundImage: `url(${product.thumbnail ? product.thumbnail : '/static/frontend/img/no-image.jpg'})`}} className="bg-cover blocks-image grey lighten-3"></Link>
+            <Link to={`/food/restaurant/product?item=${product.name_to_url}&b=${product.seller.name_to_url}`} style={{ backgroundImage: `url(${product.thumbnail ? product.thumbnail : '/static/frontend/img/no-image.jpg'})`}} className="bg-cover blocks-image white"></Link>
           </div>
           <div className="card-content grey lighten-3 p-5">
             <p className="no-white-space truncate">
