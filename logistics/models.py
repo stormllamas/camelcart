@@ -18,6 +18,40 @@ from django.utils import timezone
 import datetime
 import math
 
+def duplicate_seller(old_seller_id):
+  new_s = Seller.objects.get(pk=old_seller_id)
+  new_s.pk = None
+  new_s.name = f'{new_s.name} Copy'
+  new_s.save()
+
+  old_s = Seller.objects.get(pk=old_seller_id) 
+
+  for category in old_s.categories.all():
+    new_s.categories.add(category)
+
+  for product in old_s.products.all():
+    old_p_id = product.id
+
+    new_p = product
+    new_p.pk = None
+    new_p.seller = new_s
+    new_p.save()
+
+    old_p = Product.objects.get(pk=old_p_id)
+
+    for category in old_p.categories.all():
+      new_p.categories.add(category)
+
+    for product_variant in old_p.variants.all():
+      new_pv = product_variant
+      new_pv.pk = None
+      new_pv.product = new_p
+      new_pv.save()
+
+    new_p.save()
+
+  new_s.save()
+  
 def generate_id(prf):
   if prf:
     prefix = prf
