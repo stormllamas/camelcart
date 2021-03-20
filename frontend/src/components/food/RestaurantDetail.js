@@ -157,7 +157,7 @@ const RestaurantDetail = ({
                 <div className="col s12 flex-row wrapper">
                   {seller.features.map(feature => (
                     <div key={feature.id} className="p-1">
-                      <Link to={`restaurant/product?item=${feature.name_to_url}&b=${feature.seller.name_to_url}`} className="slider-img bg-cover rad-2 grey lighten-3" style={{ backgroundImage: `url(${feature.thumbnail ? feature.thumbnail : '/static/frontend/img/no-image.jpg'})`}}/>
+                      <Link to={`restaurant/product?item=${feature.name_to_url}&b=${feature.seller.name_to_url}`} className="slider-img bg-cover rad-2 white" style={{ backgroundImage: `url(${feature.thumbnail ? feature.thumbnail : '/static/frontend/img/no-image.jpg'})`}}/>
                       <p className="mt-1 mb-0">{feature.name}</p>
                     </div>
                   ))}
