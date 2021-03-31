@@ -239,6 +239,7 @@ const Profile = ({
     const address = await getAddress(id)
     setSelectedAddress(address)
     setSelectedAddressName(address.name ? address.name : '')
+
   }
 
   const saveAddressChanges = async () => {
