@@ -182,13 +182,17 @@ class SocialAuthAPI(GenericAPIView):
             'domain': current_site.domain,
           }
         )
-        send_mail(
-          mail_subject,
-          message,
-          'Trike <info@trike.com.ph>',
-          [user.email],
-          fail_silently=False
-        )
+        if settings.DEBUG == False:
+          send_mail(
+            mail_subject,
+            message,
+            'Trike <info@trike.com.ph>',
+            [user.email],
+            fail_silently=False
+          )
+        else:
+          print('mail_subject', mail_subject)
+          print('message', message)
 
         _, token = AuthToken.objects.create(user)
         response = Response({
@@ -263,13 +267,18 @@ class SingupAPI(GenericAPIView):
     )
     
     email = user.email
-    send_mail(
-      mail_subject,
-      message,
-      'Trike <info@trike.com.ph>',
-      [email],
-      fail_silently=False
-    )
+
+    if settings.DEBUG == False:
+      send_mail(
+        mail_subject,
+        message,
+        'Trike <info@trike.com.ph>',
+        [email],
+        fail_silently=False
+      )
+    else:
+      print('mail_subject', mail_subject)
+      print('message', message)
 
     return Response({'status': 'okay'})
 
@@ -302,14 +311,18 @@ class ResendActivationAPI(GenericAPIView):
           )
           
           email = user.email
-          # print('send reactivation mail for:', email)
-          send_mail(
-            mail_subject,
-            message,
-            'Trike <info@trike.com.ph>',
-            [email],
-            fail_silently=False
-          )
+          
+          if settings.DEBUG == False:
+            send_mail(
+              mail_subject,
+              message,
+              'Trike <info@trike.com.ph>',
+              [email],
+              fail_silently=False
+            )
+          else:
+            print('mail_subject', mail_subject)
+            print('message', message)
 
           return Response({
             'status': 'okay',
@@ -342,6 +355,7 @@ class ActivateAPI(GenericAPIView):
       user = User.objects.get(id=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
       user = None
+
     if user is not None and account_activation_token.check_token(user, request.data['token']):
       user.is_active = True
       user.save()
@@ -355,13 +369,18 @@ class ActivateAPI(GenericAPIView):
           'domain': current_site.domain,
         }
       )
-      send_mail(
-        mail_subject,
-        message,
-        'Trike <info@trike.com.ph>',
-        [user.email],
-        fail_silently=False
-      )
+      if settings.DEBUG == False:
+        send_mail(
+          mail_subject,
+          message,
+          'Trike <info@trike.com.ph>',
+          [user.email],
+          fail_silently=False
+        )
+      else:
+        print('mail_subject', mail_subject)
+        print('message', message)
+
 
       _, token = AuthToken.objects.create(user)
       response = Response({
@@ -377,6 +396,7 @@ class ActivateAPI(GenericAPIView):
     else:
       return Response({
         'status': 'error',
+        'msg': 'Activation Error',
       })
 
 class LogoutAPI(GenericAPIView):
@@ -478,13 +498,18 @@ class PasswordResetAPI(GenericAPIView):
           'token':account_activation_token.make_token(user),
         }
       )
-      send_mail(
-        mail_subject,
-        message,
-        'Trike <info@trike.com.ph>',
-        [email],
-        fail_silently=False
-      )
+      if settings.DEBUG == False:
+        send_mail(
+          mail_subject,
+          message,
+          'Trike <info@trike.com.ph>',
+          [email],
+          fail_silently=False
+        )
+      else:
+        print('mail_subject', mail_subject)
+        print('message', message)
+
       
       return Response({
         'status': 'okay',

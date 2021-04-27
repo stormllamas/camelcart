@@ -239,7 +239,7 @@ const Bookings = ({
                           <i className="material-icons blue-text">more_vert</i>
                         </div>
                         <div className="col s12 mb-1 flex-col center">
-                          <h6 className="valign-wrapper blue-text"><i className="material-icons mr-1">two_wheeler</i>Escorting Passenger</h6>
+                          <h6 className="valign-wrapper blue-text"><i className="material-icons mr-1">two_wheeler</i>Passenger Escorted</h6>
                         </div>
                       </Fragment>
                     ) : (

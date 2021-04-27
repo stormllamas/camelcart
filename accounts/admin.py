@@ -20,7 +20,7 @@ class AddressInLine(admin.TabularInline):
 
 class PromoCodeInLine(admin.TabularInline):
   model = PromoCode
-  extra = 1
+  extra = 0
   verbose_name_plural = "Referral Codes"
 
 class MyUserAdmin(UserAdmin):

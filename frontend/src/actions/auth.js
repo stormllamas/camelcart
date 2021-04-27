@@ -103,7 +103,6 @@ export const resendActivation = ({ email }, history) => async dispatch => {
   try {
     const res = await axios.post('/api/auth/resend_activation', body)
     if (res.data.status === "okay") {
-      // dispatch({ type: SIGNUP_SUCCESS })
       M.toast({
         html: res.data.msg,
         displayLength: 3500,
@@ -122,7 +121,6 @@ export const resendActivation = ({ email }, history) => async dispatch => {
       }
     }
   } catch (err) {
-    // dispatch({ type: SIGNUP_FAIL });
     M.toast({
       html: 'Something went wrong. Please try again',
       displayLength: 3500,
@@ -172,6 +170,7 @@ export const activate = (uidb64, token, history) => async dispatch => {
   const body = {
     uidb64,
     token,
+    redirect: history ? true : false,
   };
   const res = await axios.post('/api/auth/activate', body)
   if (res.data.status === 'okay') {
@@ -184,14 +183,19 @@ export const activate = (uidb64, token, history) => async dispatch => {
       displayLength: 3500,
       classes: 'green'
     });
-    history.push('/')
+    if (history) {
+      history.push('/')
+    }
+    return {
+      'status': 'okay',
+      'msg': 'You have successfully activated your account!'
+    }
   } else {
-    M.toast({
-      html: 'Activation error',
-      displayLength: 3500,
-      classes: 'red'
-    });
     dispatch({ type: ACTIVATION_FAILED });
+    return {
+      'status': 'error',
+      'msg': res.data.msg
+    }
   }
 }
 

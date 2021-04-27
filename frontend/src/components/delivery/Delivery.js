@@ -58,9 +58,10 @@ const Delivery = ({
 
   const [promoCode, setPromoCode] = useState('');
   const [promoCodeSet, setPromoCodeSet] = useState(false);
+  const [distanceText, setDistanceText] = useState("");
   const [distanceValue, setDistanceValue] = useState("");
-
-  const [userUpdated, setUserUpdated] = useState(false);
+  const [durationText, setDurationText] = useState("");
+  const [durationValue, setDurationValue] = useState("");
   
   const locationGeocode = (latLng, mode) => {
     const geocoder = new google.maps.Geocoder();
@@ -340,12 +341,13 @@ const Delivery = ({
       });
     } else {
       const formData = {
-        riderPaymentNeeded,
-        twoWay,
         vehicleChoice,
         firstName, lastName, contact, email, gender,
         pickupLat, pickupLng, pickupAddress,
         deliveryLat, deliveryLng, deliveryAddress,
+        distanceText, distanceValue, durationText, durationValue,
+        riderPaymentNeeded,
+        twoWay,
         unit, weight, height, width, length, description, promoCode: promoCodeSet
       }
       confirmDelivery({
@@ -419,8 +421,14 @@ const Delivery = ({
           travelMode: 'DRIVING',
         }, async (response, status) => {
           if (status === 'OK' && response.rows[0].elements[0].distance) {
+            const distanceString = response.rows[0].elements[0].distance.text
             const distanceValue = response.rows[0].elements[0].distance.value
+            const durationString = response.rows[0].elements[0].duration.text
+            const durationValue = response.rows[0].elements[0].duration.value
+            setDistanceText(distanceString);
             setDistanceValue(distanceValue);
+            setDurationText(durationString);
+            setDurationValue(durationValue);
 
             let perKmTotal = Math.round((parseInt(distanceValue)/1000)*siteInfo.vehicles.filter(vehicle => vehicle.id === vehicleChoice)[0].per_km_price)
             let total = siteInfo.shipping_base+perKmTotal
@@ -554,10 +562,7 @@ const Delivery = ({
   }, [promoCodeSet]);
 
   useEffect(() => {
-    if (!userUpdated) {
-      loadUser({ updateOnly: true })
-      setUserUpdated(true)
-    }
+    loadUser({ updateOnly: true })
   }, []);
 
   return (

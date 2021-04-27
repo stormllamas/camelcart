@@ -460,63 +460,42 @@ export const foodCheckout = ({ formData, orderSeller, history }) => async (dispa
 export const confirmDelivery = ({ formData, history }) => async (dispatch, getState) => {
   dispatch({ type: CURRENT_ORDER_LOADING });
 
-  const origin = new google.maps.LatLng(formData.pickupLat, formData.pickupLng);
-  const destination =  new google.maps.LatLng(formData.deliveryLat, formData.deliveryLng);
-
   try {
-    const distanceService = new google.maps.DistanceMatrixService();
-    distanceService.getDistanceMatrix({
-      origins: [origin],
-      destinations: [destination],
-      travelMode: 'DRIVING',
-      // transitOptions: TransitOptions,
-      // drivingOptions: DrivingOptions,
-      // unitSystem: UnitSystem,
-      // avoidHighways: Boolean,
-      // avoidTolls: Boolean,
-    }, async (response, status) => {
-      if (status === 'OK') {
-        const distanceString = response.rows[0].elements[0].distance.text
-        const distanceValue = response.rows[0].elements[0].distance.value
-        const durationString = response.rows[0].elements[0].duration.text
-        const durationValue = response.rows[0].elements[0].duration.value
+    const orderBody = {
+      user: getState().auth.user.id,
+      rider_payment_needed: formData.riderPaymentNeeded,
+      two_way: formData.twoWay,
+      vehicle_chosen: formData.vehicleChoice,
 
-        const orderBody = {
-          user: getState().auth.user.id,
-          rider_payment_needed: formData.riderPaymentNeeded,
-          two_way: formData.twoWay,
-          vehicle_chosen: formData.vehicleChoice,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      contact: formData.contact,
+      email: formData.email,
+      gender: formData.gender,
 
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          contact: formData.contact,
-          email: formData.email,
-          gender: formData.gender,
+      description: formData.description,
+      
+      unit: formData.unit ? formData.unit : null,
+      weight: formData.weight ? formData.weight : 0,
+      height: formData.height ? formData.height : 0,
+      width: formData.width ? formData.width : 0,
+      length: formData.length ? formData.length : 0,
+      
+      promo_code: formData.promoCode,
 
-          unit: formData.unit ? formData.unit : null,
-          weight: formData.weight ? formData.weight : 0,
-          height: formData.height ? formData.height : 0,
-          width: formData.width ? formData.width : 0,
-          length: formData.length ? formData.length : 0,
-          description: formData.description,
-          
-          promo_code: formData.promoCode,
-
-          loc1_latitude: parseFloat(formData.pickupLat),
-          loc1_longitude: parseFloat(formData.pickupLng),
-          loc1_address: formData.pickupAddress,
-          loc2_latitude: parseFloat(formData.deliveryLat),
-          loc2_longitude: parseFloat(formData.deliveryLng),
-          loc2_address: formData.deliveryAddress,
-          distance_text: distanceString,
-          distance_value: distanceValue,
-          duration_text: durationString,
-          duration_value: durationValue,
-        }
-        const currentOrder = await axios.put(`/api/current_order/delivery/`, orderBody, tokenConfig(getState))
-        history.push('/delivery/payments')
-      }
-    });
+      loc1_latitude: parseFloat(formData.pickupLat),
+      loc1_longitude: parseFloat(formData.pickupLng),
+      loc1_address: formData.pickupAddress,
+      loc2_latitude: parseFloat(formData.deliveryLat),
+      loc2_longitude: parseFloat(formData.deliveryLng),
+      loc2_address: formData.deliveryAddress,
+      distance_text: formData.distanceText,
+      distance_value: formData.distanceValue,
+      duration_text: formData.durationText,
+      duration_value: formData.durationValue,
+    }
+    const res = await axios.put(`/api/current_order/delivery/`, orderBody, tokenConfig(getState))
+    history.push('/delivery/payments')
   } catch (err) {
     console.log('error', err.data)
   }

@@ -5,6 +5,7 @@ urlpatterns = [
   path('', views.IndexView.as_view(), name='index'),
   path('signup', views.IndexView.as_view(), name='signup'),
   path('activate/<uidb64>/<token>/', views.IndexView.as_view(), name='activate'),
+  path('activate_account/<uidb64>/<token>/', views.IndexView.as_view(), name='activate_account'),
   path('confirm_email/<email>', views.IndexView.as_view(), name='confirm_email'),
   path('login', views.IndexView.as_view(), name='login'),
   path('logout', views.IndexView.as_view(), name='logout'),
