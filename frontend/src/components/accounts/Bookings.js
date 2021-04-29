@@ -62,7 +62,7 @@ const Bookings = ({
   }, [ordersLoading]);
   
   useEffect(() => {
-    let wsStart = 'ws://'
+    let wsStart = 'wss://'
     let port = ''
     if (window.location.protocol === 'https:') {
       wsStart = 'wss://'

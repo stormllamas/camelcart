@@ -157,7 +157,7 @@ class SellerDashboardDataAPI(RetrieveAPIView):
       'id': product.id,
       'is_published': product.is_published,
       'name': product.name,
-      'thumbnail': product.thumbnail.url,
+      'thumbnail': product.thumbnail.url if product.thumbnail else None,
       'final_price': product.cheapest_variant.price,
       'total_orders': product.total_orders,
     } for product in sorted(Product.objects.filter(seller=user_seller), key=lambda a: (a.total_orders, -a.id), reverse=True)]
@@ -315,7 +315,7 @@ class OrderAPI(RetrieveAPIView):
         'id': order_item.product_variant.product.id,
         'name': order_item.product_variant.product.name,
         'description': order_item.product_variant.product.description,
-        'thumbnail': order_item.product_variant.product.thumbnail.url,
+        'thumbnail': order_item.product_variant.product.thumbnail.url if order_item.product_variant.product.thumbnail else None,
       },
       'product_variant': {
         'id': order_item.product_variant.id,
