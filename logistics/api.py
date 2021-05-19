@@ -993,6 +993,7 @@ class CompleteOrderAPI(UpdateAPIView):
         })
 
     else:
+      # if order.loc1_latitude and order.loc_1:
       order.is_ordered = True
       order.date_ordered = timezone.now()
       order.ordered_shipping = order.shipping

@@ -532,7 +532,6 @@ const Delivery = ({
         setDeliveryLng(currentOrder.loc2_longitude ? currentOrder.loc2_longitude : "")
         setDeliveryAddress(currentOrder.loc2_address ? currentOrder.loc2_address : "")
 
-
         setUnit(currentOrder.unit ? currentOrder.unit : "")
         setWeight(currentOrder.weight ? currentOrder.weight : "")
         setHeight(currentOrder.height ? currentOrder.height : "")

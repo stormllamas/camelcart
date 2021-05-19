@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import UserCreationForm
 from .models import User, Address
 from logistics.models import Favorite, CommissionPayment, PromoCode
 
@@ -23,19 +24,33 @@ class PromoCodeInLine(admin.TabularInline):
   extra = 0
   verbose_name_plural = "Referral Codes"
 
-class MyUserAdmin(UserAdmin):
-    fieldsets = UserAdmin.fieldsets + (
-        ('Contact Info', {'fields': ['contact']}),
-        ('Rider Info', {'fields': ['plate_number', 'picture']}),
-        ('Social Auth', {'fields': ['facebook_id']}),
-        ('Other', {'fields': ['promo_codes_used']}),
-    )
-    list_display = ('email', 'date_joined', 'first_name', 'last_name', 'username', 'contact')
-    list_display_links = ('email',)
-    list_filter = ('is_active', 'is_staff', 'is_superuser')
-    list_per_page = 25
-    search_fields = ('username', 'first_name', 'last_name', 'email')
+class UserCreateForm(UserCreationForm):
+  class Meta:
+    model = User
+    fields = ('username', 'first_name' , 'last_name', )
 
-    inlines = [FavoritesInLine, AddressInLine, CommissionPaymentInLine, PromoCodeInLine]
+class MyUserAdmin(UserAdmin):
+  add_form = UserCreateForm
+  prepopulated_fields = {'username': ('first_name' , 'last_name', )}
+
+  add_fieldsets = (
+    (None, {
+      'classes': ('wide',),
+      'fields': ('first_name', 'last_name', 'email', 'username', 'password1', 'password2', ),
+    }),
+  )
+  fieldsets = UserAdmin.fieldsets + (
+    ('Contact Info', {'fields': ['contact']}),
+    ('Rider Info', {'fields': ['plate_number', 'picture']}),
+    ('Social Auth', {'fields': ['facebook_id']}),
+    ('Other', {'fields': ['promo_codes_used']}),
+  )
+  list_display = ('email', 'date_joined', 'first_name', 'last_name', 'username', 'contact')
+  list_display_links = ('email',)
+  list_filter = ('is_active', 'is_staff', 'is_superuser')
+  list_per_page = 25
+  search_fields = ('username', 'first_name', 'last_name', 'email')
+
+  inlines = [FavoritesInLine, AddressInLine, CommissionPaymentInLine, PromoCodeInLine]
 
 admin.site.register(User, MyUserAdmin)
