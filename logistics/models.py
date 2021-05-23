@@ -423,6 +423,18 @@ class Order(models.Model):
       return round(total, 0)
 
   @property
+  def promo_discount(self):
+    if self.promo_code:
+      per_km_total = round(((self.distance_value/1000)*(self.vehicle_chosen.per_km_price if self.vehicle_chosen else Vehicle.objects.get(name="motorcycle").per_km_price)), 0)
+      total = float(site_config.shipping_base)+per_km_total
+      if self.two_way:
+        total = total*float(site_config.two_way_multiplier)
+
+      return round((total*(float(self.promo_code.delivery_discount))), 0)
+    else:
+      return None
+
+  @property
   def total(self):
     return float(self.subtotal)+float(self.shipping)
 

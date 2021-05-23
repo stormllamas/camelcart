@@ -384,6 +384,8 @@ class CurrentOrderAPI(RetrieveAPIView, UpdateAPIView):
       'subtotal': order.subtotal,
       'checkout_subtotal': order.checkout_subtotal,
 
+      'promo_discount': order.promo_discount,
+
       'total': order.total,
       'checkout_total': order.checkout_total,
 
@@ -492,6 +494,8 @@ class OrdersAPI(GenericAPIView):
       
       'ordered_subtotal': sum([item.quantity*item.ordered_price if item.is_ordered and item.ordered_price else 0 for item in order.order_items.all()]),
       'date_ordered': order.date_ordered,
+
+      'promo_discount': order.promo_discount,
 
       'rider': {
         'id': order.rider.id if order.rider else None,
@@ -924,44 +928,86 @@ class CompleteOrderAPI(UpdateAPIView):
   def update(self, request, paid=None, order_type=None):
     order = self.get_object()
     carried_order_items = []
+    if order.first_name and order.last_name and order.contact and order.email and order.gender and order.loc1_latitude and order.loc1_longitude and order.loc1_address and order.loc2_latitude and order.loc2_longitude and order.loc2_address:
 
-    if order.promo_code:
-      request.user.promo_codes_used.add(order.promo_code)
+      if order.promo_code:
+        request.user.promo_codes_used.add(order.promo_code)
 
-    if order.order_type == 'food':
-      if order.has_valid_item:
-        # Check first if all items with valid checkout has is_published products upon checkout
-        for order_item in order.order_items.all():
-          if order_item.checkout_valid:
-            if not order_item.product_variant.product.is_published:
-              return Response({
-                'status': 'error',
-                'msg': 'Invalid Checkout. Some products may have become unavailable',
-                'seller_name_to_url': order.seller.name_to_url,
-              })
+      if order.order_type == 'food':
+        if order.has_valid_item:
+          # Check first if all items with valid checkout has is_published products upon checkout
+          for order_item in order.order_items.all():
+            if order_item.checkout_valid:
+              if not order_item.product_variant.product.is_published:
+                return Response({
+                  'status': 'error',
+                  'msg': 'Invalid Checkout. Some products may have become unavailable',
+                  'seller_name_to_url': order.seller.name_to_url,
+                })
 
-        for order_item in order.order_items.all():
-          if order_item.checkout_valid:
-            order_item.is_ordered = True
-            order_item.date_ordered = timezone.now()
-            order_item.ordered_price = order_item.product_variant.final_price
-            order_item.checkout_validity = None
+          for order_item in order.order_items.all():
+            if order_item.checkout_valid:
+              order_item.is_ordered = True
+              order_item.date_ordered = timezone.now()
+              order_item.ordered_price = order_item.product_variant.final_price
+              order_item.checkout_validity = None
+              order_item.save()
+
+              order_item.product_variant.orders += order_item.quantity
+              order_item.product_variant.save()
+            else:
+              carried_order_items.append(order_item)
+
+          order.is_ordered = True
+          order.date_ordered = timezone.now()
+          order.ordered_shipping = order.shipping
+          
+          if order.promo_code:
+            order.ordered_shipping_commission = (order.shipping/(1-float(order.promo_code.delivery_discount)))*float(order.promo_code.rider_commission)
+          else:
+            order.ordered_shipping_commission = order.shipping*float(site_config.rider_commission)
+
+          if order.seller and order.ordered_subtotal > 0:
+            order.ordered_comission = order.ordered_subtotal*order.seller.commission
+
+          order.is_paid = True if paid == 2 else False
+          order.date_paid = timezone.now() if paid == 2 else None
+          order.payment_type = paid
+          order.auth_id = request.data['auth_id'] if paid == 2 else None
+          order.capture_id = request.data['capture_id'] if paid == 2 else None
+          order.save()
+          
+          # Carry invalid order items to new order
+          new_order = Order.objects.create(user=self.request.user, order_type='food', seller=order.seller)
+          
+          for order_item in order.order_items.filter(is_ordered=False):
+            order_item.order = new_order
             order_item.save()
 
-            order_item.product_variant.orders += order_item.quantity
-            order_item.product_variant.save()
-          else:
-            carried_order_items.append(order_item)
+          return Response({
+            'status': 'success',
+            'msg': 'Order Finalized',
+            'ref_code': order.ref_code
+          })
 
+        else:
+          return Response({
+            'status': 'error',
+            'msg': 'Checkout Session Timed Out',
+            'seller_name_to_url': order.seller.name_to_url,
+          })
+
+      else:
         order.is_ordered = True
         order.date_ordered = timezone.now()
         order.ordered_shipping = order.shipping
+        order.ordered_shipping_commission = order.shipping*float(site_config.rider_commission)
         
         if order.promo_code:
           order.ordered_shipping_commission = (order.shipping/(1-float(order.promo_code.delivery_discount)))*float(order.promo_code.rider_commission)
         else:
           order.ordered_shipping_commission = order.shipping*float(site_config.rider_commission)
-
+          
         if order.seller and order.ordered_subtotal > 0:
           order.ordered_comission = order.ordered_subtotal*order.seller.commission
 
@@ -971,13 +1017,6 @@ class CompleteOrderAPI(UpdateAPIView):
         order.auth_id = request.data['auth_id'] if paid == 2 else None
         order.capture_id = request.data['capture_id'] if paid == 2 else None
         order.save()
-        
-        # Carry invalid order items to new order
-        new_order = Order.objects.create(user=self.request.user, order_type='food', seller=order.seller)
-        
-        for order_item in order.order_items.filter(is_ordered=False):
-          order_item.order = new_order
-          order_item.save()
 
         return Response({
           'status': 'success',
@@ -985,32 +1024,10 @@ class CompleteOrderAPI(UpdateAPIView):
           'ref_code': order.ref_code
         })
 
-      else:
-        return Response({
-          'status': 'error',
-          'msg': 'Checkout Session Timed Out',
-          'seller_name_to_url': order.seller.name_to_url,
-        })
-
     else:
-      # if order.loc1_latitude and order.loc_1:
-      order.is_ordered = True
-      order.date_ordered = timezone.now()
-      order.ordered_shipping = order.shipping
-      order.ordered_shipping_commission = order.shipping*float(site_config.rider_commission)
-      if order.seller and order.ordered_subtotal > 0:
-        order.ordered_comission = order.ordered_subtotal*order.seller.commission
-
-      order.is_paid = True if paid == 2 else False
-      order.date_paid = timezone.now() if paid == 2 else None
-      order.payment_type = paid
-      order.auth_id = request.data['auth_id'] if paid == 2 else None
-      order.capture_id = request.data['capture_id'] if paid == 2 else None
-      order.save()
-
       return Response({
-        'status': 'success',
-        'msg': 'Order Finalized',
+        'status': 'error',
+        'msg': 'Incomplete Order',
         'ref_code': order.ref_code
       })
 class NewOrderUpdateAPI(GenericAPIView):
