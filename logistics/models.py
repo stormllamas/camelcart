@@ -418,7 +418,7 @@ class Order(models.Model):
     if self.promo_code:
       # -.1 in the end to solve the rounding of .5 discounts.
       # When .5, round delivery down.
-      return round((total*(1-float(self.promo_code.delivery_discount)))-.1, 0)
+      return round((total*(1-float(self.promo_code.delivery_discount))), 0)
     else:
       return round(total, 0)
 

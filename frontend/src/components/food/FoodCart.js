@@ -419,7 +419,7 @@ const FoodCart = ({
                     <div className="card transparent summary no-shadow">
                       <div className="card-content">
                         <p className="title">Delivery</p>
-                        <p className="secondary-content grey-text text-darken-2"><span className="text-green">{promoCodeSet && `(saved ${siteInfo.promo_code_list.filter(promo_code => promo_code.code.toLowerCase() === promoCode.toLowerCase())[0].delivery_discount*100}%)`}</span> {delivery ? `₱ ${delivery.toFixed(2)}` : '-'}</p>
+                        <p className="secondary-content grey-text text-darken-2"><span className="green-text">{promoCodeSet && `(saved ${siteInfo.promo_code_list.filter(promo_code => promo_code.code.toLowerCase() === promoCode.toLowerCase())[0].delivery_discount*100}%)`}</span> {delivery ? `₱ ${delivery.toFixed(2)}` : '-'}</p>
                       </div>
                     </div>
                     <button className='btn btn-extended btn-large green mt-5 mobile-btn relative modal-close'

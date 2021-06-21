@@ -252,7 +252,7 @@ const Home = ({
         </div>
       </section>
 
-      <button data-target="advertisement-modal" className="btn modal-trigger">Modal</button>
+      {/* <button data-target="advertisement-modal" className="btn modal-trigger">Modal</button> */}
       <div id="advertisement-modal" className="modal advertisement">
         <div className="modal-content full-height orange darken-2">
           <div className="full-height full-width bg-contain" style={{ backgroundImage: `url(/static/frontend/img/valentrike.jpg)` }}></div>

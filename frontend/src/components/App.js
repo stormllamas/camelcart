@@ -76,7 +76,7 @@ const App = () => {
     $('.loader').show();
     store.dispatch(loadUser({ updateOnly: false }));
     store.dispatch(loadSite());
-  });
+  }, []);
 
   return (
     <Provider store={store}>
