@@ -639,6 +639,23 @@ export const proceedWithCOD = ({ history, type, query, socket }) => async (dispa
     }
     $('.loader').fadeOut();
     axios.post('/api/new_order_update/', { 'ref_code': res.data.ref_code }, tokenConfig(getState))
+    const firebaseMessage = await axios.post(`https://fcm.googleapis.com/fcm/send`, 
+      {
+        "condition": "'new-order' in topics",
+        "data": {
+          "hello": "This is a Firebase Cloud Messaging Device Group Message!"
+        }
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'key=AAAAQuwm6JE:APA91bEmGIf6Y7Pxd0jXeRDfoFsSachsIluY5mJBMx7pKUmzLsszevv7mj_5qaL9lzHLNeRcDPCtIpG9dqASb5YwSMHyonoZiWTI6a2A1mHdeyN634yH9aIagPgMse_dpVg8T3smbphZ',
+        }
+      }
+    )
+    socket.send(JSON.stringify({
+      'mark' : 'new_order',
+      'order_id' : getState().logistics.currentOrder.id,
+    }))
   } catch (error) {
     console.log(error)
     dispatch({ type: COMPLETE_ORDER_FAILED });

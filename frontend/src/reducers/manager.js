@@ -23,6 +23,8 @@ import {
 
   PICKUP_ORDER_ITEM,
   PICKUP_ORDER,
+    
+  NEW_ORDER_UPDATE,
 
   TOGGLING_IS_PUBLISHED,
   TOGGLED_IS_PUBLISHED,
@@ -179,16 +181,17 @@ export default (state = initialState, action) => {
         togglingIsPublished: false,
       }
 
-    // case NEW_ORDER_UPDATE:
-    //   return {
-    //     ...state,
-    //     orders: {
-    //       ...state.orders,
-    //       results: [
-    //         ...state.order.results,
-    //       ]
-    //     }
-    //   }
+    case NEW_ORDER_UPDATE:
+      return {
+        ...state,
+        orders: {
+          ...state.orders,
+          results: [
+            (action.payload.mark === 'new_order' ? action.payload.order : null),
+            ...state.orders.results
+          ]
+        }
+      }
     
     default:
       return state

@@ -110,6 +110,7 @@ class SellerDashboardDataAPI(RetrieveAPIView):
     to_date = self.request.query_params.get('to_date', None).split('-')
     
     sales_total = sum([order.ordered_subtotal for order in Order.objects.filter(seller=user_seller, is_paid=True, date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
+    
     sold = sum([order_item.quantity for order_item in OrderItem.objects.filter(order__seller=user_seller, order__is_paid=True, order__date_paid__gte=timezone.make_aware(datetime.datetime(int(from_date[0]), int(from_date[1]), int(from_date[2]))), order__date_paid__lte=timezone.make_aware(datetime.datetime(int(to_date[0]), int(to_date[1]), int(to_date[2]))))])
 
     orders = [{

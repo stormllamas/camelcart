@@ -72,8 +72,10 @@ import { loadSite } from '../actions/siteConfig'
 const App = () => {
 
   useEffect(() => {
-    $('#middle-content').hide();
-    $('.loader').show();
+    $(document).ready(function () {
+      $('#middle-content').hide();
+      $('.loader').show();
+    });
     store.dispatch(loadUser({ updateOnly: false }));
     store.dispatch(loadSite());
   }, []);

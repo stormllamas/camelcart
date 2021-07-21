@@ -31,6 +31,8 @@ import {
   TOGGLED_IS_PUBLISHED,
   IS_PUBLISHED_ERROR,
 
+  NEW_ORDER_UPDATE,
+
   AUTH_ERROR
 } from './types'
 
@@ -583,4 +585,11 @@ export const getRefunds = ({ page, delivered, keywords, range }) => async (dispa
     dispatch({type: ORDER_ITEMS_ERROR});
     $('.loader').fadeOut();
   }
+}
+
+export const newOrder = ({ data }) => async (dispatch, getState) => {
+  dispatch({
+    type: NEW_ORDER_UPDATE,
+    payload: data
+  })
 }

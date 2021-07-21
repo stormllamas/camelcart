@@ -9,7 +9,7 @@ import Preloader from '../common/Preloader'
 import Pagination from '../common/Pagination'
 import ManagerBreadcrumbs from './ManagerBreadcrumbs'
 
-import { claimOrder, getOrders, getOrder } from '../../actions/manager'
+import { claimOrder, getOrders, getOrder, newOrder } from '../../actions/manager'
 
 const Unclaimed = ({
   auth: {
@@ -23,6 +23,7 @@ const Unclaimed = ({
   },
   getOrders,
   getOrder,
+  newOrder,
   claimOrder,
   setCurLocation
 }) => {
@@ -228,6 +229,8 @@ const Unclaimed = ({
     if (socket) {
       socket.onmessage = function(e){
         console.log('message', e)
+        const data = JSON.parse(e.data)
+        newOrder({ data })
       }
       socket.onopen = function(e){
         console.log('open', e)
@@ -455,6 +458,7 @@ const Unclaimed = ({
 Unclaimed.propTypes = {
   getOrders: PropTypes.func.isRequired,
   getOrder: PropTypes.func.isRequired,
+  newOrder: PropTypes.func.isRequired,
   claimOrder: PropTypes.func.isRequired,
 }
 
@@ -463,4 +467,4 @@ const mapStateToProps = state => ({
   manager: state.manager,
 });
 
-export default connect(mapStateToProps, { getOrders, getOrder, claimOrder })(Unclaimed);
+export default connect(mapStateToProps, { getOrders, getOrder, newOrder, claimOrder })(Unclaimed);
