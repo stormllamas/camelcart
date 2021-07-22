@@ -32,6 +32,7 @@ import {
   IS_PUBLISHED_ERROR,
 
   NEW_ORDER_UPDATE,
+  MARK_ORDER,
 
   AUTH_ERROR
 } from './types'
@@ -279,6 +280,10 @@ export const prepareOrder = ({ id }) => async (dispatch, getState) => {
         displayLength: 5000,
         classes: 'orange'
       });
+      socket.send(JSON.stringify({
+        'mark' : 'canceled',
+        'order_id' : id,
+      }))
     }
     $('.loader').fadeOut();
   } catch (err) {
@@ -290,7 +295,7 @@ export const prepareOrder = ({ id }) => async (dispatch, getState) => {
     $('.loader').fadeOut();
   }
 }
-export const cancelOrder = ({ id }) => async (dispatch, getState) => {
+export const cancelOrder = ({ id, socket }) => async (dispatch, getState) => {
   $('.loader').fadeIn();
   try {
     const res = await axios.put(`/api/manager/cancel_order/${id}/`, null, tokenConfig(getState))
@@ -319,6 +324,10 @@ export const cancelOrder = ({ id }) => async (dispatch, getState) => {
         displayLength: 5000,
         classes: 'orange'
       });
+      socket.send(JSON.stringify({
+        'mark' : 'cancel',
+        'order_id' : id,
+      }))
     }
     $('.loader').fadeOut();
   } catch (err) {
@@ -337,7 +346,7 @@ export const cancelOrder = ({ id }) => async (dispatch, getState) => {
     $('.loader').fadeOut();
   }
 }
-export const unclaimOrder = ({ id }) => async (dispatch, getState) => {
+export const unclaimOrder = ({ id, socket }) => async (dispatch, getState) => {
   $('.loader').fadeIn();
   try {
     const res = await axios.put(`/api/manager/unclaim_order/${id}/`, null, tokenConfig(getState))
@@ -366,6 +375,10 @@ export const unclaimOrder = ({ id }) => async (dispatch, getState) => {
         displayLength: 5000,
         classes: 'blue'
       });
+      socket.send(JSON.stringify({
+        'mark' : 'unclaim',
+        'order_id' : id,
+      }))
     }
     $('.loader').fadeOut();
   } catch (err) {
@@ -588,8 +601,24 @@ export const getRefunds = ({ page, delivered, keywords, range }) => async (dispa
 }
 
 export const newOrder = ({ data }) => async (dispatch, getState) => {
+  let orderExists = false
+  getState().manager.orders.results.forEach(order => {
+    if (order.id === data.order.id) {
+      orderExists = true;
+      return
+    } 
+  })
+  if (!orderExists) {
+    dispatch({
+      type: NEW_ORDER_UPDATE,
+      payload: data
+    })
+  }
+}
+
+export const markOrder = ({ data }) => async (dispatch, getState) => {
   dispatch({
-    type: NEW_ORDER_UPDATE,
+    type: MARK_ORDER,
     payload: data
   })
 }

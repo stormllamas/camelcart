@@ -145,7 +145,9 @@ const DeliveryPayments = ({
       port = ':8001'
     }
     let endpoint = wsStart + window.location.host + port
-    setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
+    $(document).ready(function () {
+      setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
+    });
   }, []);
 
   useEffect(() => {
@@ -161,6 +163,11 @@ const DeliveryPayments = ({
       }
       socket.onclose = function(e){
         console.log('close', e)
+      }
+    }
+    return () => {
+      if (socket) {
+        socket.close()
       }
     }
   }, [socket]);

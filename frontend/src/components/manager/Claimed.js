@@ -9,7 +9,7 @@ import Preloader from '../common/Preloader'
 import Pagination from '../common/Pagination'
 import ManagerBreadcrumbs from './ManagerBreadcrumbs'
 
-import { pickupOrderItem, pickupOrder, cancelOrder, unclaimOrder, getOrders, getOrder } from '../../actions/manager'
+import { pickupOrderItem, pickupOrder, cancelOrder, unclaimOrder, getOrders, getOrder, markOrder } from '../../actions/manager'
 
 const Claimed = ({
   manager: {
@@ -23,6 +23,7 @@ const Claimed = ({
   pickupOrderItem, pickupOrder,
   cancelOrder,
   unclaimOrder,
+  markOrder,
   setCurLocation
 }) => {
   const history = useHistory()
@@ -230,14 +231,19 @@ const Claimed = ({
       port = ':8001'
     }
     let endpoint = wsStart + window.location.host + port
-    console.log(endpoint)
-    setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
+    $(document).ready(function () {
+      setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
+    });
   }, []);
 
   useEffect(() => {
     if (socket) {
       socket.onmessage = function(e){
-        console.log('message', e)
+        const data = JSON.parse(e.data)
+        console.log(data)
+        if (data.mark === 'pickup' || data.mark === 'deliver') {
+          markOrder({ data })
+        }
       }
       socket.onopen = function(e){
         console.log('open', e)
@@ -247,6 +253,31 @@ const Claimed = ({
       }
       socket.onclose = function(e){
         console.log('close', e)
+      }
+    }
+    return () => {
+      if (socket) {
+        socket.onmessage = function(e){
+          const data = JSON.parse(e.data)
+          console.log(data)
+          if (data.mark === 'pickup' || data.mark === 'deliver') {
+            markOrder({ data })
+          }
+        }
+        socket.onopen = function(e){
+          console.log('open', e)
+        }
+        socket.onerror = function(e){
+          console.log('error', e)
+        }
+        socket.onclose = function(e){
+          console.log('close', e)
+        }
+      }
+      return () => {
+        if (socket) {
+          socket.close()
+        }
       }
     }
   }, [socket]);
@@ -478,14 +509,14 @@ const Claimed = ({
           <div id="cancel-modal" className="modal">
             <div className="modal-content center">
               <h5>Are you sure?</h5>
-              <a className="modal-action modal-close btn btn-large btn-extended red" onClick={() => cancelOrder({ id: orderToDelete })}>Cancel Order</a>
+              <a className="modal-action modal-close btn btn-large btn-extended red" onClick={() => cancelOrder({ id: orderToDelete, socket })}>Cancel Order</a>
               <a className="modal-action modal-close cancel"><i className="material-icons grey-text">close</i></a>
             </div>
           </div>
           <div id="unclaim-modal" className="modal">
             <div className="modal-content center">
               <h5>Are you sure?</h5>
-              <a className="modal-action modal-close btn btn-large btn-extended blue" onClick={() => unclaimOrder({ id: orderToDelete })}>Unclaim Order</a>
+              <a className="modal-action modal-close btn btn-large btn-extended blue" onClick={() => unclaimOrder({ id: orderToDelete, socket })}>Unclaim Order</a>
               <a className="modal-action modal-close cancel"><i className="material-icons grey-text">close</i></a>
             </div>
           </div>
@@ -502,10 +533,11 @@ Claimed.propTypes = {
   pickupOrder: PropTypes.func.isRequired,
   cancelOrder: PropTypes.func.isRequired,
   unclaimOrder: PropTypes.func.isRequired,
+  markOrder: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
   manager: state.manager,
 });
 
-export default connect(mapStateToProps, { getOrders, getOrder, pickupOrderItem, pickupOrder, cancelOrder, unclaimOrder })(Claimed);
+export default connect(mapStateToProps, { getOrders, getOrder, pickupOrderItem, pickupOrder, cancelOrder, unclaimOrder, markOrder })(Claimed);

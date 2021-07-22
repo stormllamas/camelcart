@@ -25,6 +25,7 @@ import {
   PICKUP_ORDER,
     
   NEW_ORDER_UPDATE,
+  MARK_ORDER,
 
   TOGGLING_IS_PUBLISHED,
   TOGGLED_IS_PUBLISHED,
@@ -186,10 +187,21 @@ export default (state = initialState, action) => {
         ...state,
         orders: {
           ...state.orders,
+          count: state.count += 1,
           results: [
-            (action.payload.mark === 'new_order' ? action.payload.order : null),
+            action.payload.order,
             ...state.orders.results
           ]
+        }
+      }
+    
+    case MARK_ORDER:
+      return {
+        ...state,
+        orders: {
+          ...state.orders,
+          count: state.count -= 1,
+          results: state.orders.results.filter(order => order.id !== action.payload.order.id)
         }
       }
     

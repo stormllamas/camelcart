@@ -9,7 +9,7 @@ import Preloader from '../common/Preloader'
 import Pagination from '../common/Pagination'
 import ManagerBreadcrumbs from './ManagerBreadcrumbs'
 
-import { deliverOrderItem, deliverOrder, getOrders, getOrder } from '../../actions/manager'
+import { deliverOrderItem, deliverOrder, getOrders, getOrder, markOrder } from '../../actions/manager'
 
 const Undelivered = ({
   manager: {
@@ -21,6 +21,7 @@ const Undelivered = ({
   getOrders,
   getOrder,
   deliverOrderItem, deliverOrder,
+  markOrder,
   setCurLocation
 }) => {
   const history = useHistory()
@@ -225,13 +226,19 @@ const Undelivered = ({
       port = ':8001'
     }
     let endpoint = wsStart + window.location.host + port
-    setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
+    $(document).ready(function () {
+      setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
+    });
   }, []);
 
   useEffect(() => {
     if (socket) {
       socket.onmessage = function(e){
-        console.log('message', e)
+        const data = JSON.parse(e.data)
+        console.log(data)
+        if (data.mark === 'deliver') {
+          markOrder({ data })
+        }
       }
       socket.onopen = function(e){
         console.log('open', e)
@@ -241,6 +248,11 @@ const Undelivered = ({
       }
       socket.onclose = function(e){
         console.log('close', e)
+      }
+    }
+    return () => {
+      if (socket) {
+        socket.close()
       }
     }
   }, [socket]);
@@ -468,10 +480,11 @@ Undelivered.propTypes = {
   getOrder: PropTypes.func.isRequired,
   deliverOrderItem: PropTypes.func.isRequired,
   deliverOrder: PropTypes.func.isRequired,
+  markOrder: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
   manager: state.manager,
 });
 
-export default connect(mapStateToProps, { getOrders, getOrder, deliverOrderItem, deliverOrder })(Undelivered);
+export default connect(mapStateToProps, { getOrders, getOrder, deliverOrderItem, deliverOrder, markOrder })(Undelivered);

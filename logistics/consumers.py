@@ -40,6 +40,7 @@ class OrderConsumer(AsyncConsumer):
   async def mark_order(self, event):
     print('message', event)
     order = await self.get_order(int(event['text']['order_id']))
+    print(order)
     mark = event['text']['mark']
     
     await self.send({
@@ -74,7 +75,9 @@ class OrderConsumer(AsyncConsumer):
           'rider_payment_needed': order['rider_payment_needed'],
           'two_way': order['two_way'],
           'subtotal': float(order['subtotal']),
+          'is_ordered': order['is_ordered'],
           'date_ordered': str(order['date_ordered']),
+          'is_delivered': order['is_delivered'],
           'date_delivered': str(order['date_delivered']),
         },
       })
@@ -114,7 +117,9 @@ class OrderConsumer(AsyncConsumer):
       'rider_payment_needed': order.rider_payment_needed,
       'two_way': order.two_way,
       'subtotal': sum([item.quantity*item.ordered_price if item.ordered_price else 0 for item in order.order_items.all()]),
+      'is_ordered': order.is_ordered,
       'date_ordered': order.date_ordered,
+      'is_delivered': order.is_delivered,
       'date_delivered': order.date_delivered,
     }
 

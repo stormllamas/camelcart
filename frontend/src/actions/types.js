@@ -147,3 +147,4 @@ export const IS_PUBLISHED_ERROR = 'IS_PUBLISHED_ERROR';
 
 export const SYNC_ORDER = 'SYNC_ORDER';
 export const NEW_ORDER_UPDATE = 'NEW_ORDER_UPDATE';
+export const MARK_ORDER = 'MARK_ORDER';

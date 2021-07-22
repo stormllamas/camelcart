@@ -9,7 +9,7 @@ import Preloader from '../common/Preloader'
 import Pagination from '../common/Pagination'
 import ManagerBreadcrumbs from './ManagerBreadcrumbs'
 
-import { claimOrder, getOrders, getOrder, newOrder } from '../../actions/manager'
+import { claimOrder, getOrders, getOrder, newOrder, markOrder } from '../../actions/manager'
 
 const Unclaimed = ({
   auth: {
@@ -23,8 +23,9 @@ const Unclaimed = ({
   },
   getOrders,
   getOrder,
-  newOrder,
   claimOrder,
+  newOrder,
+  markOrder,
   setCurLocation
 }) => {
   const history = useHistory()
@@ -160,20 +161,22 @@ const Unclaimed = ({
   }, [history]);
 
   useEffect(() => {
-    if (!ordersLoading) {
-      $('.loader').fadeOut();
-      $('.middle-content').fadeIn();
-  
-      $('.modal').modal({
-        dismissible: true,
-        inDuration: 300,
-        outDuration: 200,
-      });
-      showGoogleMaps();
-    } else {
-      $('.loader').show();
-      $('.middle-content').hide();
-    }
+    $(document).ready(function () {
+      if (!ordersLoading) {
+        $('.loader').fadeOut();
+        $('.middle-content').fadeIn();
+    
+        $('.modal').modal({
+          dismissible: true,
+          inDuration: 300,
+          outDuration: 200,
+        });
+        showGoogleMaps();
+      } else {
+        $('.loader').show();
+        $('.middle-content').hide();
+      }
+    });
   }, [ordersLoading]);
   
   useEffect(() => {
@@ -222,15 +225,23 @@ const Unclaimed = ({
       port = ':8001'
     }
     let endpoint = wsStart + window.location.host + port
-    setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
+    
+    $(document).ready(function () {
+      setSocket(new ReconnectingWebSocket(endpoint+'/order_update/'))
+    });
   }, []);
 
   useEffect(() => {
     if (socket) {
       socket.onmessage = function(e){
-        console.log('message', e)
         const data = JSON.parse(e.data)
-        newOrder({ data })
+        console.log(data)
+        if (data.mark === 'new_order' || data.mark === 'unclaim') {
+          newOrder({ data })
+        }
+        if (data.mark === 'claim' || data.mark === 'pickup' || data.mark === 'deliver' || data.mark === 'cancel') {
+          markOrder({ data })
+        }
       }
       socket.onopen = function(e){
         console.log('open', e)
@@ -240,6 +251,11 @@ const Unclaimed = ({
       }
       socket.onclose = function(e){
         console.log('close', e)
+      }
+    }
+    return () => {
+      if (socket) {
+        socket.close()
       }
     }
   }, [socket]);
@@ -458,8 +474,9 @@ const Unclaimed = ({
 Unclaimed.propTypes = {
   getOrders: PropTypes.func.isRequired,
   getOrder: PropTypes.func.isRequired,
-  newOrder: PropTypes.func.isRequired,
   claimOrder: PropTypes.func.isRequired,
+  newOrder: PropTypes.func.isRequired,
+  markOrder: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
@@ -467,4 +484,4 @@ const mapStateToProps = state => ({
   manager: state.manager,
 });
 
-export default connect(mapStateToProps, { getOrders, getOrder, newOrder, claimOrder })(Unclaimed);
+export default connect(mapStateToProps, { getOrders, getOrder, newOrder, claimOrder, markOrder })(Unclaimed);
