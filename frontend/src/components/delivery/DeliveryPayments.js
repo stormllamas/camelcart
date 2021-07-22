@@ -165,11 +165,6 @@ const DeliveryPayments = ({
         console.log('close', e)
       }
     }
-    return () => {
-      if (socket) {
-        socket.close()
-      }
-    }
   }, [socket]);
 
   return (

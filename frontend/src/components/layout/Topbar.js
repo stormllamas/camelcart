@@ -14,19 +14,23 @@ const Topbar = ({
   const history = useHistory()
 
   useEffect(() => {
-    $('.topbar-links').hide()
-
-    $('.collapsible').collapsible({
-      accordion: false
+    $(document).ready(function () {
+      $('.topbar-links').hide()
+  
+      $('.collapsible').collapsible({
+        accordion: false
+      });
     });
   }, [])
 
   useEffect(() => {
-    $('.dropdown-trigger').dropdown();
-    if (!userLoading) {
-      $('.sidenav').sidenav();
-      $('.topbar-links').fadeIn()
-    }
+    $(document).ready(function () {
+      $('.dropdown-trigger').dropdown();
+      if (!userLoading) {
+        $('.sidenav').sidenav();
+        $('.topbar-links').fadeIn()
+      }
+    });
   }, [userLoading])
   
   return (

@@ -652,6 +652,10 @@ export const proceedWithCOD = ({ history, type, query, socket }) => async (dispa
         }
       }
     )
+    console.log({
+      'mark' : 'new_order',
+      'order_id' : getState().logistics.currentOrder.id,
+    })
     socket.send(JSON.stringify({
       'mark' : 'new_order',
       'order_id' : getState().logistics.currentOrder.id,
